@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+"""
+epic-pool
+
+UNRELEASED SOFTWARE DO NOT DISTRIBUTE!
+(Visit github.com/endrebak/epic for examples and help.)
+
+Usage:
+    epic-pool [--nb-cpu=CPU] [--chunksize=CNK] [--output-prefix=OUT] FILE...
+    epic-pool --help
+
+Arguments:
+    FILE                        a list of bin files to merge
+
+Options:
+    -h --help                   show this help message
+
+    -c CNK --chunksize=CNK      size of each chunk to merge in number of lines [default: 1e5]
+    -o OUT --output-prefix      prefix of files to write results to [default: epic_pool]
+    -n CPU --nb-cpu=CPU         how many cores to use [default: 1]
+
+"""
+
+from __future__ import print_function
+
+import logging
+from docopt import docopt
+from os.path import abspath, join
+
+import pandas as pd
+
+from epic.pool.merge.merge_files import merge_files
+from epic.pool.post_process.get_merged_df_with_island_count_sum import get_merged_df_with_island_count_sum
+from epic.pool.post_process.get_number_of_islands_in_each_bin_per_sample import get_number_of_islands_in_each_bin_per_sample
+
+if __name__ == '__main__':
+
+    args = docopt(__doc__)
+
+    bin_files = args["FILE"]
+    nb_cpu = int(args["--nb-cpu"])
+    chunksize = int(float(args["--chunksize"]))
+    output_prefix = abspath(args["--output-prefix"])
+
+    # get paths
+    output_merged_path_temp = output_prefix + "_merged_temp.csv"
+    output_merged_path_final = output_prefix + "_merged.csv"
+    output_island_info_path = output_prefix + "_island_info.csv"
+
+    logging.info("\n".join(["Output files:", output_merged_path_temp,
+                            output_island_info_path]))
+
+    merge_files(bin_files, output_merged_path_temp, chunksize)
+
+    # read merged file just created
+    df = pd.read_table(output_merged_path_temp, sep="\t", index_col=[0, 1])
+
+    # extract relevant data
+    logging.info("Add sum of island counts per bin to data.")
+    summed_islands_df = get_merged_df_with_island_count_sum(df)
+    logging.info("For each file, fetch info about whether bin was island.")
+    island_info_df = get_number_of_islands_in_each_bin_per_sample(df)
+
+    # write data to files
+    logging.info("Writing data to outfiles.")
+    summed_islands_df.to_csv(output_merged_path_final, sep="\t")
+    island_info_df.to_csv(output_island_info_path, sep="\t")
+    logging.info("Done.")

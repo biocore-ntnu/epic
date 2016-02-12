@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+"""
+epic
+
+UNRELEASED SOFTWARE DO NOT DISTRIBUTE!
+(Visit github.com/endrebak/epic for examples and help.)
+
+Usage:
+    epic [--input-string=STR] [--fragment-size=FRG] [--window-size=WIN] [--gaps-allowed=GAP]
+         [--nb-cpu=CPU] [--fdr-cutoff=FDR] [--keep-duplicates] [--pandas-only] [--genome=GEN] FILE...
+    epic --help
+
+Arguments:
+    FILE                        a list of chip _and_ input files
+
+Options:
+    -h --help                   show this help message
+    -i STR --input-string=STR   case insensitive string used to distinguish input/control-files [default: input]
+    -f FRG --fragment-size=FRG  estimated length of dna fragments [default: 150]
+    -w WIN --window-size=WIN    size of bins [default: 200]
+    -g GAP --gaps-allowed=GAP   number of gaps allowed [default: 3]
+    -v GEN --genome=GEN         genome-version to use  [default: hg19]
+    -q FDR --fdr-cutoff         false-discovery rate cutoff [default: 1.0]
+    -n CPU --nb-cpu             number of cpus to use [default: 1]
+    -k --keep-duplicates        do not delete duplicate reads with equal chromosome, start and end coordinates
+    -p --pandas-only            use pandas for all taks (does not rely on GNU coretools, but is slower)
+    -b --bin-file=NAME          write the count of all bins and their counts to a file named NAME
+
+Note:
+    The suggested settings for the different types of modifications are as following:
+        H3K27me3: --window-size=200 --gaps=3
+        H3K4me3:  --window-size=200 --gaps=1
+"""
+
+from __future__ import print_function
+
+from docopt import docopt
+
+import logging
+
+if __name__ == '__main__':
+
+    args = docopt(__doc__)
+
+    from sys import argv, exit as sys_exit
+
+    from ebs.args import turn_docopt_arg_names_into_valid_var_names
+
+    # from epic.pool.pool_data import run_epic
+    from epic.run.run_epic import run_epic
+    from epic.config import logging_settings
+    from epic.utils.helper_functions import _print_args
+
+    _print_args(argv[0], args)
+
+    args = turn_docopt_arg_names_into_valid_var_names(args)
+    input_pattern = args["input_string"]
+    nb_cpu = int(args["nb_cpu"])
+    bed_files = args["FILE"]
+
+    fragment_size = int(args["fragment_size"])
+    window_size = int(args["window_size"])
+    nb_cpu = int(args["nb_cpu"])
+    gaps_allowed = int(args["gaps_allowed"])
+
+    fdr_cutoff = float(args["fdr_cutoff"])
+
+    genome = args["genome"]
+    pandas_only = args["pandas_only"]
+    keep_duplicates = args["keep_duplicates"]
+
+    run_epic(bed_files, fdr_cutoff, genome, fragment_size, window_size,
+             gaps_allowed, input_pattern, keep_duplicates, nb_cpu, pandas_only)

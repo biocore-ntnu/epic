@@ -1,0 +1,13 @@
+.cache/
+joblib/
+*egg-info*
+dist/
+*.c
+build/
+noinclude/
+*swp
+*swo
+*txt
+chr*
+*.pyc
+*fuse*

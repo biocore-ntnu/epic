@@ -1,0 +1,89 @@
+import pytest
+
+import pandas as pd
+import numpy as np
+
+from io import StringIO
+
+from epic.pool.post_process.get_merged_df_with_island_count_sum import get_merged_df_with_island_count_sum
+
+
+@pytest.fixture
+def df():
+
+    contents = """Chromosome	Bin	18h_Island	Exp2_18_Polymerase_II	Exp1_18_Polymerase_II	Exp2_18h_Input	Exp1_18h_Input	21h_Island	Exp2_21_Polymerase_II	Exp1_21_Polymerase_II	Exp2_21h_Input	Exp1_21h_Input	24h_Island	Exp1_24_Polymerase_II	Exp2_24_Polymerase_II	Exp1_24h_Input	Exp2_24h_Input
+chr1	10000	1	4	1	2	5	1	3	3	1	1	0	5	0	1	1
+chr1	10050	1	2	1	2	2	1	3	1	1	2	1	4	2	4	2
+chr1	10100	1	1	2	0	2	1	4	2	0	0	1	4	2	3	5
+chr1	10150	1	5	6	2	2	1	6	6	0	8	1	1	2	7	3
+chr1	10200	1	6	1	4	2	1	4	8	4	4	1	2	1	2	2
+chr1	10250	1	2	2	1	3	1	0	3	2	2	1	7	2	2	6
+chr1	10300	1	5	1	4	2	1	3	5	2	5	1	1	4	2	1
+chr1	10350	1	5	4	6	4	1	6	2	2	2	1	5	2	4	3
+chr1	10400	1	1	3	2	1	1	1	2	1	0	1	1	1	3	2
+chrY	59362200	0	1	4	1	0	0	0	0	0	0	0	0	0	0	0
+chrY	59362250	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0
+chrY	59362300	0	1	0	1	0	0	2	0	1	0	0	0	0	0	0
+chrY	59362350	0	0	0	0	0	0	2	0	0	1	0	0	0	0	0
+chrY	59362400	0	1	0	1	1	0	0	1	0	3	0	0	0	0	0
+chrY	59362450	0	1	1	0	1	0	0	0	0	0	0	0	2	0	1
+chrY	59362750	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0
+chrY	59362800	0	0	1	1	0	0	0	0	0	0	0	2	0	1	0
+chrY	59362900	0	1	0	2	1	0	3	0	0	0	0	1	0	1	1
+chrY	59362950	0	1	1	0	0	0	2	2	0	0	0	0	0	0	0
+chrY	59363000	0	0	0	0	0	0	0	0	0	0	0	0	1	0	1
+chrY	59363100	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0
+chrY	59363200	0	0	0	0	0	0	2	3	0	0	0	0	0	0	0
+chrY	59363300	0	4	0	1	0	0	1	2	1	1	0	2	2	1	0
+chrY	59363350	0	0	0	0	0	0	1	0	1	0	0	1	0	1	0
+chrY	59363450	0	3	0	1	0	0	1	1	0	4	0	2	1	2	0
+chrY	59363500	0	0	1	1	0	0	0	0	0	0	0	1	0	0	1"""
+
+    return pd.read_table(StringIO(contents), sep="\s+", index_col=[0, 1])
+
+
+@pytest.fixture
+def expected_result():
+    # yapf: disable
+    return pd.read_table(StringIO("""Chromosome Bin Islands Exp2_18_Polymerase_II Exp1_18_Polymerase_II Exp2_18h_Input Exp1_18h_Input Exp2_21_Polymerase_II Exp1_21_Polymerase_II Exp2_21h_Input Exp1_21h_Input Exp1_24_Polymerase_II Exp2_24_Polymerase_II Exp1_24h_Input Exp2_24h_Input
+chr1 10000 2 4 1 2 5 3 3 1 1 5 0 1 1
+chr1 10050 3 2 1 2 2 3 1 1 2 4 2 4 2
+chr1 10100 3 1 2 0 2 4 2 0 0 4 2 3 5
+chr1 10150 3 5 6 2 2 6 6 0 8 1 2 7 3
+chr1 10200 3 6 1 4 2 4 8 4 4 2 1 2 2
+chr1 10250 3 2 2 1 3 0 3 2 2 7 2 2 6
+chr1 10300 3 5 1 4 2 3 5 2 5 1 4 2 1
+chr1 10350 3 5 4 6 4 6 2 2 2 5 2 4 3
+chr1 10400 3 1 3 2 1 1 2 1 0 1 1 3 2
+chrY 59362200 0 1 4 1 0 0 0 0 0 0 0 0 0
+chrY 59362250 0 0 0 0 0 1 0 0 1 0 0 0 0
+chrY 59362300 0 1 0 1 0 2 0 1 0 0 0 0 0
+chrY 59362350 0 0 0 0 0 2 0 0 1 0 0 0 0
+chrY 59362400 0 1 0 1 1 0 1 0 3 0 0 0 0
+chrY 59362450 0 1 1 0 1 0 0 0 0 0 2 0 1
+chrY 59362750 0 0 0 0 0 0 0 0 0 1 1 0 0
+chrY 59362800 0 0 1 1 0 0 0 0 0 2 0 1 0
+chrY 59362900 0 1 0 2 1 3 0 0 0 1 0 1 1
+chrY 59362950 0 1 1 0 0 2 2 0 0 0 0 0 0
+chrY 59363000 0 0 0 0 0 0 0 0 0 0 1 0 1
+chrY 59363100 0 0 0 0 0 0 0 0 0 1 0 0 0
+chrY 59363200 0 0 0 0 0 2 3 0 0 0 0 0 0
+chrY 59363300 0 4 0 1 0 1 2 1 1 2 2 1 0
+chrY 59363350 0 0 0 0 0 1 0 1 0 1 0 1 0
+chrY 59363450 0 3 0 1 0 1 1 0 4 2 1 2 0
+chrY 59363500 0 0 1 1 0 0 0 0 0 1 0 0 1
+    """),
+                         sep="\s+", index_col=[0, 1])
+# yapf: enable
+
+
+
+
+
+@pytest.mark.mergepools
+def test_get_merged_df_with_island_count_sum(df, expected_result):
+
+    result = get_merged_df_with_island_count_sum(df)
+    print(result.to_csv(sep=" "))
+    print(expected_result.to_csv(sep=" "))
+    assert result.equals(expected_result)
