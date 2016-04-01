@@ -11,10 +11,10 @@ if sys.version_info[0] == 2:
 setup(
     name="bioepic",
     packages=find_packages(),
-    ext_modules=cythonize(
-        "epic/statistics/add_to_island_expectations_cython.pyx"),
-    scripts=["bin/epic", "bin/epic-pool", "bin/epic-mergepools"],
-    version="0.0.1",
+    # ext_modules=cythonize(
+    #      "epic/statistics/add_to_island_expectations_cython.pyx"),
+    scripts=["bin/epic"],
+    version="0.0.3",
     description="Chip-Seq broad peak/domain finder.",
     author="Endre Bakken Stovner",
     author_email="endrebak@stud.ntnu.no",

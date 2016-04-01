@@ -4,7 +4,7 @@ from numpy import log
 
 from epic.config.constants import BIN_SIZE, E_VALUE_THRESHOLD
 from epic.statistics.generate_cumulative_distribution import generate_cumulative_dist
-from epic.statistics.add_to_island_expectations_cython import add_to_island_expectations_cython
+from epic.statistics.add_to_island_expectations import add_to_island_expectations_dict
 
 
 def compute_score_threshold(average_window_readcount,
@@ -42,7 +42,7 @@ def compute_score_threshold(average_window_readcount,
         if current_scaled_score > current_max_scaled_score:
 
             # logging.debug(island_expectations_d)
-            island_expectations_d = add_to_island_expectations_cython(
+            island_expectations_d = add_to_island_expectations_dict(
                 average_window_readcount, current_max_scaled_score,
                 island_enriched_threshold, island_expectations_d,
                 gap_contribution)
