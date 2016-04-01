@@ -23,12 +23,10 @@ see whether the region should be considered enriched for ChIP signal.
 
 1.1 Quickstart
 
-```
-pip install bioepic
-# you only need git clone to get the test data
-git clone https://github.com/endrebak/epic.git
-epic -i control epic/examples/test.bed epic/examples/control.bed
-```
+$ pip install bioepic
+$ # you only need git clone to get the test data
+$ git clone https://github.com/endrebak/epic.git
+$ epic -i control epic/examples/test.bed epic/examples/control.bed
 
 2. Methods
 
@@ -89,8 +87,6 @@ epic can compare an arbitrary number of ChIP files to Input files.
 The original SICER contained hard-coded restrictions on the size of the files it
 could analyze (for reasons of computational efficiency), that no longer make
 sense in light of the explosive growth in the size of biological datasets.
-
-epic corrects a few (non-critical) bugs in the original implementation of SICER.
 
 epic implements a test-suite to 1) ensure correct behavior, 2) greatly lessen
 the time and effort required to accept community contributions, and 3) serve as
