@@ -19,6 +19,13 @@ git clone https://github.com/endrebak/epic.git
 epic -i control epic/examples/test.bed epic/examples/control.bed
 ```
 
+#### Difference from the original SICER
+
+Note that the island enriched threshold computation produces results that are < ~10% more conservative than in the original SICER.
+This is due to numerics (summing many very small numbers is done in both implementations, albeit slightly differently).
+
+This gives a different cutoff than the original, but produces virtually identical results (since epic and SICER produces the same candidate island list, with the same order, but epic selects slightly fewer islands from this list).
+
 #### Why another one?
 
 MACS2 is great for narrow peaks, but epic performs better on diffuse domains. For medium size domains, such as PolII, our tests indicate that both perform about equally well, but epic uses only a fraction of the time.
@@ -29,7 +36,9 @@ SICER is a wonderful algorithm, but advances in the Python data science librarie
 
 #### Credit
 
-Chongzhi Zang, Dustin E. Schones, Chen Zeng, Kairong Cui, Keji Zhao and Weiqun Peng for the original SICER. Please consider citing their paper (*in addition* to our pre-print) if you use epic.
+Chongzhi Zang, Dustin E. Schones, Chen Zeng, Kairong Cui, Keji Zhao and Weiqun Peng for the original SICER. Please consider citing their paper (*in addition* to our pre-print) if you use epic. And if you use any (helper) scripts in SICER that are not included in epic you should of course cite the SICER paper!
+
+Most of the improvements in epic were possible due to Python Science libraries that were not available when SICER was originally written. Thanks to the Pandas developers!
 
 Endre Bakken Stovner for the implementation of epic.
 
