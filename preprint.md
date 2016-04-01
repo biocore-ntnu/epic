@@ -3,9 +3,9 @@ Quickly find enriched diffuse domains in ChIP-seq data using epic
 
 epic is a software package for finding medium to diffusely enriched domains in
 chip-seq data. It is a fast, parallel and memory-efficient implementation of the
-SICER algorithm (1). By running epic on a set of data ("ChIP") files and a set
-of control ("Input") files, epic is able to quickly identify differentially
-enriched regions.
+SICER algorithm with some new features (1). By running epic on a set of data
+("ChIP") files and a set of control ("Input") files, epic is able to quickly
+identify differentially enriched regions.
 
 epic is an improvement over the original SICER by being faster, more memory
 efficient, multicore, and being significantly much easier to install and use.
