@@ -2,9 +2,9 @@
 
 diffuse domain chip seq caller based on SICER.
 
-This is a pre-alpha release. Please do aggressively report issues, quirks, complaints and anything that just feels slightly not right to the issue tracker. Also please ask questions and docrequests - there are loads of neat stuff I have not documented.
+This is a pre-alpha release. Please do aggressively report issues, quirks, complaints and anything that just feels slightly off to the issue tracker. Also please ask questions and make docrequests - there are loads of neat stuff I have not documented.
 
-I have been using it with great success, but no others have looked at it so you are likely to encounter some issues.
+I have been using epic with great success, but no others have looked at it so you are likely to encounter some issues.
 
 #### License
 
@@ -51,6 +51,13 @@ Endre Bakken Stovner for the implementation of epic.
 
 It stands for electronic pic [sic] caller or epigenome cartographer, whichever you prefer. Or perhaps it isn't just another bogus bioinformatics acronym. Hope you find the name fitting.
 
+#### Other pieces of software you might prefer
+
+* [SICER](http://home.gwu.edu/~wpeng/Software.htm) - great diffuse domain ChIP-Seq caller (which epic is based on.)
+* [SICERpy](https://github.com/dariober/SICERpy) - a wrapper around SICER for convenience/parallelism.
+* [csaw](https://github.com/LTLA/csaw) - R package. Uses an approach to island finding that complements epic very well. Requires more statistical sophistication and programming skill to use.
+* [MACS2](https://github.com/taoliu/MACS) - my preferred peak caller.
+
 #### Bug in the original SICER?
 
-I would appreciate it if anyone can send me the output islands with FDR from running the original SICER on the example data they provide. I seem to remember finding a bug in the original, but cannot be bothered to get SICER running again.
+I would appreciate it if anyone can send me the output islands with FDR from running the original SICER on the example data they provide. I seem to remember finding a bug in the original, but cannot be bothered to get SICER running again. (It wasn't critical or anything just giving slightly inaccurate counts for islands.)
