@@ -1,5 +1,8 @@
-from pyfaidx import Fasta
+import time
 from collections import defaultdict
+from sys import stderr
+
+from pyfaidx import Fasta
 
 from joblib import Parallel, delayed
 
@@ -34,7 +37,10 @@ def compute_number_effective_chromosome_reads(chromosome, read_length):
         if not "N" in sequence:
             read_counts[sequence] += 1
 
-    return len(read_counts)  #, sum(read_counts.values())
+    nb_reads = len(read_counts)
+    print(time.localtime.tm_hour, time.localtime.tm_min, file=stderr)
+    print(chromosome + ":", nb_reads, file=stderr)
+    return len(nb_reads)  #, sum(read_counts.values())
 
 # def chromosome_chunks(chromosome, chunk_length, read_length):
 #     """Split chromosome into chunks that overlap by read_length."""
