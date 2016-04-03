@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+"""
+epic-effective
+
+(Visit github.com/endrebak/epic for examples and help.)
+Usage:
+    epic-effective [--read-length=LEN] FILE
+    epic-effective --help
+
+Arguments:
+    FILE             Fasta genome
+
+Options:
+    -h --help        show this help message
+    -r --read-length length of reads  [default: 30]
+"""
+
+from docopt import docopt
+
+args = docopt(__doc__)
+
+from epic.scripts.effective_genome_size import effective_genome_size
+
+if __name__ == '__main__':
+    fasta, read_length = args["FILE"], args["--read-length"]
+    egs1, egs2 = effective_genome_size(fasta, read_length)
+    print(fasta)
+    print(egs1, egs2)
