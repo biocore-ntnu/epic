@@ -4,7 +4,7 @@ from collections import defaultdict
 from joblib import Parallel, delayed
 
 
-def effective_genome_size(fasta, read_length, nb_cores=1):
+def effective_genome_size(fasta, read_length, nb_cores):
     """Compute effective genome size for genome."""
 
     idx = Fasta(fasta, read_ahead=int(10e5))
