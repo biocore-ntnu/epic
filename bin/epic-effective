@@ -6,16 +6,16 @@ Compute the effective genome size.
 (Visit github.com/endrebak/epic for examples and help.)
 
 Usage:
-    epic-effective [--read-length=LEN] FILE
+    epic-effective [--read-length=LEN] [--nb-cpu=CPU] FILE
     epic-effective --help
 
 Arguments:
     FILE             Fasta genome
 
 Options:
-    -h --help        show this help message
-    -r --read-length length of reads  [default: 30]
-    -n --nb-cpu      number of cores to use (more cores requires more mem!)
+    -h --help                 show this help message
+    -r LEN --read-length LEN  length of reads  [default: 30]
+    -n CPU --nb-cpu CPU       number of cores to use (more cores requires more RAM)  [default: 1]
 """
 
 from docopt import docopt
