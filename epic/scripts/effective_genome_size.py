@@ -38,7 +38,7 @@ def compute_number_effective_chromosome_reads(chromosome, read_length):
             read_counts[sequence] += 1
 
     nb_reads = len(read_counts)
-    print(time.localtime.tm_hour, time.localtime.tm_min, file=stderr)
+    print(time.localtime().tm_hour, time.localtime().tm_min, file=stderr)
     print(chromosome + ":", nb_reads, file=stderr)
     return len(nb_reads)  #, sum(read_counts.values())
 
