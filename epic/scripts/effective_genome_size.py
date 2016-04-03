@@ -15,10 +15,10 @@ def effective_genome_size(fasta, read_length, nb_cores=1):
         delayed(compute_number_effective_chromosome_reads)(
             chromosome, read_length) for chromosome in idx)
 
-    read_counts = sum([r[0] for r in results])
-    total_reads = sum([r[1] for r in results])
+    read_counts = sum(results)
+    # total_reads = sum([r[1] for r in results])
 
-    effective_genome_size = read_counts / total_reads
+    # effective_genome_size = read_counts / total_reads
     effective_genome_size_with_n = read_counts / genome_length
 
     return effective_genome_size, effective_genome_size_with_n
@@ -34,7 +34,7 @@ def compute_number_effective_chromosome_reads(chromosome, read_length):
         if not "N" in sequence:
             read_counts[sequence] += 1
 
-    return len(read_counts), sum(read_counts.values())
+    return len(read_counts)  #, sum(read_counts.values())
 
 # def chromosome_chunks(chromosome, chunk_length, read_length):
 #     """Split chromosome into chunks that overlap by read_length."""
