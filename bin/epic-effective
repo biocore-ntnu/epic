@@ -25,8 +25,8 @@ args = docopt(__doc__)
 from epic.scripts.effective_genome_size import effective_genome_size
 
 if __name__ == '__main__':
-    fasta, read_length, nb_cpu = args["FILE"], args["--read-length"], args[
-        "--nb-cpu"]
+    fasta, read_length, nb_cpu = args["FILE"], int(args["--read-length"])
+    nb_cpu = int(args["--nb-cpu"])
     egs1, egs2 = effective_genome_size(fasta, read_length, nb_cpu)
     print(fasta)
     print(egs1, egs2)
