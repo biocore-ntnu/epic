@@ -24,7 +24,7 @@ def effective_genome_size(fasta, read_length, nb_cores):
     # effective_genome_size = read_counts / total_reads
     effective_genome_size_with_n = read_counts / genome_length
 
-    return effective_genome_size, effective_genome_size_with_n
+    return effective_genome_size_with_n
 
 
 def compute_number_effective_chromosome_reads(chromosome, read_length):
