@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 from Cython.Build import cythonize
 
 install_requires = ["scipy", "pandas", "numpy", "natsort", "ebs", "docopt",
-                    "joblib"]
+                    "joblib", "pyfaidx"]
 
 if sys.version_info[0] == 2:
     install_requires.append("functools32")
@@ -14,12 +14,12 @@ setup(
     # ext_modules=cythonize(
     #      "epic/statistics/add_to_island_expectations_cython.pyx"),
     scripts=["bin/epic", "bin/epic-effective"],
-    version="0.0.3",
+    version="0.0.4",
     description="Chip-Seq broad peak/domain finder.",
     author="Endre Bakken Stovner",
     author_email="endrebak@stud.ntnu.no",
     url="http://github.com/endrebak/epic",
-    keywords=["Chip-seq"],
+    keywords=["ChIP-Seq"],
     license=["MIT"],
     install_requires=install_requires,
     classifiers=[

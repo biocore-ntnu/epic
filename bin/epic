@@ -2,7 +2,7 @@
 """
 epic
 
-UNRELEASED SOFTWARE DO NOT DISTRIBUTE!
+Diffuse domain ChIP-Seq caller based on SICER.
 (Visit github.com/endrebak/epic for examples and help.)
 
 Usage:

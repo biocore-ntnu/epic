@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 epic-effective
-Compute the effective genome size.
+Compute the effective genome size from a fasta file.
 
 (Visit github.com/endrebak/epic for examples and help.)
 
@@ -27,8 +27,10 @@ from epic.config import logging_settings
 from epic.scripts.effective_genome_size import effective_genome_size
 
 if __name__ == '__main__':
+
     fasta, read_length = args["FILE"], int(args["--read-length"])
     nb_cpu = int(args["--nb-cpu"])
+
+    logging.info("Computing the effective genome size of " + fasta)
     egs2 = effective_genome_size(fasta, read_length, nb_cpu)
-    logging.info("Fasta file: " + fasta)
     logging.info("Effective genome size: " + str(egs2))

@@ -42,7 +42,8 @@ def compute_number_effective_chromosome_reads(fasta_file, chromosome_name,
             read_counts[sequence] += 1
 
     nb_reads = len([i for i in read_counts.values() if i == 1])
-    logging.info(str(chromosome.name) + ": " + str(nb_reads))
+    logging.info(str(chromosome.name) + " effective chromosome size: " + str(
+        nb_reads / len(chromosome)))
 
     return nb_reads
 
