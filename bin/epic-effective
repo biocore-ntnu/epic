@@ -17,16 +17,18 @@ Options:
     -r LEN --read-length LEN  length of reads  [default: 30]
     -n CPU --nb-cpu CPU       number of cores to use (more cores requires more RAM)  [default: 1]
 """
+import logging
 
 from docopt import docopt
 
 args = docopt(__doc__)
 
+from epic.config import logging_settings
 from epic.scripts.effective_genome_size import effective_genome_size
 
 if __name__ == '__main__':
     fasta, read_length = args["FILE"], int(args["--read-length"])
     nb_cpu = int(args["--nb-cpu"])
     egs2 = effective_genome_size(fasta, read_length, nb_cpu)
-    print(fasta)
-    print(egs2)
+    logging.info("Fasta file: " + fasta)
+    logging.info("Effective genome size: " + str(egs2))

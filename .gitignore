@@ -1,4 +1,5 @@
 .cache/
+*fai
 joblib/
 *egg-info*
 dist/

@@ -1,3 +1,4 @@
+import logging
 import time
 from collections import defaultdict
 from sys import stderr
@@ -5,6 +6,8 @@ from sys import stderr
 from pyfaidx import Fasta
 
 from joblib import Parallel, delayed
+
+from epic.config import logging_settings
 
 
 def effective_genome_size(fasta, read_length, nb_cores):
@@ -16,18 +19,19 @@ def effective_genome_size(fasta, read_length, nb_cores):
 
     results = Parallel(n_jobs=nb_cores)(
         delayed(compute_number_effective_chromosome_reads)(
-            chromosome, read_length) for chromosome in idx)
+            fasta, chromosome.name, read_length) for chromosome in idx)
 
     read_counts = sum(results)
-    # total_reads = sum([r[1] for r in results])
 
-    # effective_genome_size = read_counts / total_reads
     effective_genome_size_with_n = read_counts / genome_length
 
     return effective_genome_size_with_n
 
 
-def compute_number_effective_chromosome_reads(chromosome, read_length):
+def compute_number_effective_chromosome_reads(fasta_file, chromosome_name,
+                                              read_length):
+
+    chromosome = Fasta(fasta_file, read_ahead=int(10e5))[chromosome_name]
 
     read_counts = defaultdict(int)
 
@@ -37,10 +41,10 @@ def compute_number_effective_chromosome_reads(chromosome, read_length):
         if not "N" in sequence:
             read_counts[sequence] += 1
 
-    nb_reads = len(read_counts)
-    print(time.localtime().tm_hour, time.localtime().tm_min, file=stderr)
-    print(str(chromosome.name) + ":", nb_reads, file=stderr)
-    return nb_reads  #, sum(read_counts.values())
+    nb_reads = len([i for i in read_counts.values() if i == 1])
+    logging.info(str(chromosome.name) + ": " + str(nb_reads))
+
+    return nb_reads
 
 # def chromosome_chunks(chromosome, chunk_length, read_length):
 #     """Split chromosome into chunks that overlap by read_length."""
