@@ -93,7 +93,7 @@ epic can be run from whichever location with files found anywhere on the disk.
 
 This is a pre-alpha release. Please do aggressively report issues, quirks, complaints and anything that just feels slightly off to the issue tracker. Also please ask questions and make docrequests - there are loads of neat stuff I have not documented.
 
-I have been using epic with great success, but no others have looked at it so you are likely to encounter some issues.
+I have been using epic with great success.
 
 ## License
 
@@ -101,7 +101,7 @@ MIT
 
 ## Requirements
 
-Python data science stack and a fairly recent version of Pandas (0.17 =<).
+Python data science stack and a fairly recent version of Pandas (0.17 >=).
 Python 2.7 or 3+
 
 ## Quickstart
@@ -113,17 +113,24 @@ git clone https://github.com/endrebak/epic.git
 epic -i control epic/examples/test.bed epic/examples/control.bed
 ```
 
-## Helper scripts
+<!-- ## Helper scripts -->
 
-Various helpful utilities will be added to epic. Currently it includes:
+<!-- Various helpful utilities will be added to epic. Currently it includes: -->
 
-#### epic-effective
+<!-- #### epic-effective -->
 
-A perennial question on bioinformatics sites is how to compute the effective
-genome size for a genome. epic includes a script called `epic-effective` to do
-just this. It can use multiple cores, but is not optimized for memory
-consumption so run it on a bioinformatics cluster/server. Please share
-your results on the issue tracker.
+<!-- A perennial question on bioinformatics sites is how to compute the effective -->
+<!-- genome size for a genome. epic includes a script called `epic-effective` to do -->
+<!-- just this. It can use multiple cores, but is not optimized for memory -->
+<!-- consumption so run it on a bioinformatics cluster/server. Please share -->
+<!-- your results on the issue tracker. Currently only finds effective genome size -->
+
+## TODO
+
+* Change to argparse so that can take separate ChIP/Input lists.
+* Fix "bug" that prints chromosome start and end in output as floats.
+* Print command line args exactly as recieved.
+* Change output format to use tab as delimiter and underscore as within name delimiter ("P_value", not "P value")
 
 ## NAQ/Various
 
