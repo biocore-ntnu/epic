@@ -1,6 +1,7 @@
 from epic.config.genomes import get_effective_genome_length
 from scipy.stats import poisson, rankdata
 
+
 def compute_fdr(df, total_chip_reads, total_input_reads, genome, fdr_cutoff):
 
     total_island_input_reads = df["Input"].sum()
@@ -21,17 +22,17 @@ def compute_fdr(df, total_chip_reads, total_input_reads, genome, fdr_cutoff):
     avg = df["Input"] * scaling_factor
     avg[df["Input"] == 0] = avg_0_denom[df["Input"] == 0]
 
-    df["P value"] = poisson.sf(df["ChIP"], avg)
+    df["P_value"] = poisson.sf(df["ChIP"], avg)
     no_differential_expression = df["ChIP"] <= avg
-    df.loc[no_differential_expression, "P value"] = 1
+    df.loc[no_differential_expression, "P_value"] = 1
 
-    df["Fold change"] = df["ChIP"]/avg
+    df["Fold_change"] = df["ChIP"] / avg
 
-    ranked_p_values = rankdata(df["P value"])
-    df["FDR value"] = df["P value"] * len(df) / ranked_p_values
-    fdr_too_high = df["FDR value"] > 1
-    df.loc[fdr_too_high, "FDR value"] = 1
+    ranked_p_values = rankdata(df["P_value"])
+    df["FDR_value"] = df["P_value"] * len(df) / ranked_p_values
+    fdr_too_high = df["FDR_value"] > 1
+    df.loc[fdr_too_high, "FDR_value"] = 1
 
-    df = df[df["FDR value"] < fdr_cutoff]
+    df = df[df["FDR_value"] < fdr_cutoff]
 
     return df

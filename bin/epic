@@ -1,73 +1,130 @@
 #!/usr/bin/env python
-"""
-epic
 
-Diffuse domain ChIP-Seq caller based on SICER.
+from __future__ import print_function
+
+import argparse
+import os
+from epic.version import __version__
+
+parser = argparse.ArgumentParser(
+    description="""Diffuse domain ChIP-Seq caller based on SICER.
+
 (Visit github.com/endrebak/epic for examples and help.)
 
-Usage:
-    epic [--input-string=STR] [--fragment-size=FRG] [--window-size=WIN] [--gaps-allowed=GAP]
-         [--nb-cpu=CPU] [--fdr-cutoff=FDR] [--keep-duplicates] [--pandas-only] [--genome=GEN] FILE...
-    epic --help
+    """,
+    prog=os.path.basename(__file__))
 
-Arguments:
-    FILE                        a list of chip _and_ input files
+parser.add_argument(
+    '--treatment',
+    '-t',
+    required=True,
+    type=str,
+    nargs='+',
+    help='''Treatment (pull-down) file(s) in bam/bed/bed.gz/bed.bz2 format.
+                   ''')
 
-Options:
-    -h --help                   show this help message
-    -i STR --input-string=STR   case insensitive string used to distinguish input/control-files [default: input]
-    -f FRG --fragment-size=FRG  estimated length of dna fragments [default: 150]
-    -w WIN --window-size=WIN    size of bins [default: 200]
-    -g GAP --gaps-allowed=GAP   number of gaps allowed [default: 3]
-    -v GEN --genome=GEN         genome-version to use  [default: hg19]
-    -q FDR --fdr-cutoff         false-discovery rate cutoff [default: 1.0]
-    -n CPU --nb-cpu             number of cpus to use [default: 1]
-    -k --keep-duplicates        do not delete duplicate reads with equal chromosome, start and end coordinates
-    -p --pandas-only            use pandas for all taks (does not rely on GNU coretools, but is slower)
-    -b --bin-file=NAME          write the count of all bins and their counts to a file named NAME
+parser.add_argument(
+    '--control',
+    '-c',
+    required=True,
+    type=str,
+    nargs='+',
+    help='''Control (input) file(s) in bam/bed/bed.gz/bed.bz2 format.''')
 
+parser.add_argument(
+    '--number-cores',
+    '-cpu',
+    required=False,
+    default=1,
+    type=int,
+    help=
+    '''Number of cpus to use. Can use at most one per chromosome. Default: 1.''')
+
+parser.add_argument('--genome',
+                    '-gn',
+                    required=False,
+                    default="hg19",
+                    type=str,
+                    help='''Which genome to analyze. Default: hg19.''')
+
+parser.add_argument(
+    '--keep-duplicates',
+    '-k',
+    required=False,
+    default=True,
+    type=bool,
+    help=
+    '''Keep reads mapping to the same position on the same strand within a library. Default is to remove all but the first duplicate.
+                   ''')
+
+parser.add_argument(
+    '--window-size',
+    '-w',
+    required=False,
+    default=200,
+    type=int,
+    help=
+    '''Size of the windows to scan the genome. WINDOW_SIZE is the smallest possible island. Default 200.
+                   ''')
+
+parser.add_argument(
+    '--gaps-allowed',
+    '-g',
+    required=False,
+    default=3,
+    type=int,
+    help=
+    '''Multiple of window size used to determine the gap size. Must be an integer. Default: 3.
+                   ''')
+
+parser.add_argument(
+    '--fragment-size',
+    '-fs',
+    required=False,
+    default=150,
+    type=int,
+    help=
+    '''Size of the sequenced fragment. The center of the the fragment will be taken as half the fragment size. Default 150.
+                   ''')
+
+parser.add_argument(
+    '--false-discovery-rate-cutoff',
+    '-fdr',
+    required=False,
+    default=1.0,
+    type=float,
+    help=
+    '''Remove all islands with an FDR below cutoff. Default 1.0, that is, all islands included.
+                   ''')
+
+parser.add_argument('--version',
+                    '-v',
+                    action='version',
+                    version='%(prog)s {}'.format(__version__))
+"""
 Note:
     The suggested settings for the different types of modifications are as following:
         H3K27me3: --window-size=200 --gaps=3
         H3K4me3:  --window-size=200 --gaps=1
 """
 
-from __future__ import print_function
-
-from docopt import docopt
+# from docopt import docopt
 
 import logging
+from sys import argv
 
 if __name__ == '__main__':
 
-    args = docopt(__doc__)
+    args = parser.parse_args()
+    print("# epic " + " ".join(argv[1:]))
 
-    from sys import argv, exit as sys_exit
+    from sys import argv
 
-    from ebs.args import turn_docopt_arg_names_into_valid_var_names
-
-    # from epic.pool.pool_data import run_epic
     from epic.run.run_epic import run_epic
     from epic.config import logging_settings
-    from epic.utils.helper_functions import _print_args
 
-    _print_args(argv[0], args)
+    print(args)
 
-    args = turn_docopt_arg_names_into_valid_var_names(args)
-    input_pattern = args["input_string"]
-    nb_cpu = int(args["nb_cpu"])
-    bed_files = args["FILE"]
-
-    fragment_size = int(args["fragment_size"])
-    window_size = int(args["window_size"])
-    nb_cpu = int(args["nb_cpu"])
-    gaps_allowed = int(args["gaps_allowed"])
-
-    fdr_cutoff = float(args["fdr_cutoff"])
-
-    genome = args["genome"]
-    pandas_only = args["pandas_only"]
-    keep_duplicates = args["keep_duplicates"]
-
-    run_epic(bed_files, fdr_cutoff, genome, fragment_size, window_size,
-             gaps_allowed, input_pattern, keep_duplicates, nb_cpu, pandas_only)
+    run_epic(args.treatment, args.control, args.false_discovery_rate_cutoff,
+             args.genome, args.fragment_size, args.window_size,
+             args.gaps_allowed, args.keep_duplicates, args.number_cores)

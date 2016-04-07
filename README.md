@@ -1,4 +1,21 @@
-# epic
+# epic: diffuse domain ChIP-Seq caller based on SICER
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
+**Table of Contents**
+
+- [epic](#epic)
+    - [Install](#install)
+    - [Changelog](#changelog)
+    - [Quickstart](#quickstart)
+    - [Improvements](#improvements)
+    - [Version](#version)
+    - [License](#license)
+    - [Requirements](#requirements)
+    - [TODO](#todo)
+    - [Usage](#usage)
+    - [Credit](#credit)
+    - [NAQ/Various](#naqvarious)
+
+<!-- markdown-toc end -->
 
 epic is a software package for finding medium to diffusely enriched domains in
 chip-seq data. It is a fast, parallel and memory-efficient implementation of the
@@ -11,49 +28,39 @@ efficient, multicore, and significantly much easier to install and use.
 
 The MIT-licensed code is available at https://github.com/endrebak/epic
 
+
+
 ## Install
 
 epic is available for python2.7 and above. It can be installed from the Python
 Package Index with `pip install bioepic` or by cloning the repo at
 https://github.com/endrebak/epic
 
-## Usage
-
-(Might be slightly out of date.)
+## Changelog
 
 ```
-epic
-
-Diffuse domain ChIP-Seq caller based on SICER.
-(Visit github.com/endrebak/epic for examples and help.)
-
-Usage:
-    epic [--input-string=STR] [--fragment-size=FRG] [--window-size=WIN] [--gaps-allowed=GAP]
-         [--nb-cpu=CPU] [--fdr-cutoff=FDR] [--keep-duplicates] [--pandas-only] [--genome=GEN] FILE...
-    epic --help
-
-Arguments:
-    FILE                        a list of chip _and_ input files
-
-Options:
-    -h --help                   show this help message
-    -i STR --input-string=STR   case insensitive string used to distinguish input/control-files [default: input]
-    -f FRG --fragment-size=FRG  estimated length of dna fragments [default: 150]
-    -w WIN --window-size=WIN    size of bins [default: 200]
-    -g GAP --gaps-allowed=GAP   number of gaps allowed [default: 3]
-    -v GEN --genome=GEN         genome-version to use  [default: hg19]
-    -q FDR --fdr-cutoff         false-discovery rate cutoff [default: 1.0]
-    -n CPU --nb-cpu             number of cpus to use [default: 1]
-    -k --keep-duplicates        do not delete duplicate reads with equal chromosome, start and end coordinates
-    -p --pandas-only            use pandas for all taks (does not rely on GNU coretools, but is slower)
-
-Note:
-    The suggested settings for the different types of modifications are as following:
-        H3K27me3: --window-size=200 --gaps=3
-        H3K4me3:  --window-size=200 --gaps=1
+# 0.0.5 (07.04.16)
+- remove Pandas only option. Now unix is required.
+- change to argparse instead of docopt (thanks Dario Beraldi)
+- separate args for control and input files (thanks Dario Beraldi)
+- print cl-args exactly as recieved (thanks to Istvan Albert for pointing out glitch)
+- add version info
+- add support for bam files (requires bedtools)
+- fix "bug" that prints chromosome start and end in output as floats.
+- change output format to use tab as delimiter and underscore as within name delimiter ("P_value", not "P value")
 ```
 
-## Brag brag brag
+## Quickstart
+
+```
+$ pip install bioepic
+$ # you only need git clone to get the test data
+$ git clone https://github.com/endrebak/epic.git
+$ # -t is treatment files, -i input files
+$ epic -t epic/examples/test.bed -i epic/examples/control.bed
+```
+
+## Improvements
 
 #### Actively developed
 
@@ -63,8 +70,8 @@ We hope to make further refinements to the actual algorithm and make it even bet
 
 #### Functionality
 
-epic accepts several input and ChIP files at the same time and accepts
-block-zipped and gzipped input files.
+epic accepts several input and ChIP files at the same time and accepts bed files
+(both block-zipped and gzipped) and bam files.
 
 Works on files of any size.
 
@@ -93,8 +100,6 @@ epic can be run from whichever location with files found anywhere on the disk.
 
 This is a pre-alpha release. Please do aggressively report issues, quirks, complaints and anything that just feels slightly off to the issue tracker. Also please ask questions and make docrequests - there are loads of neat stuff I have not documented.
 
-I have been using epic with great success.
-
 ## License
 
 MIT
@@ -102,16 +107,9 @@ MIT
 ## Requirements
 
 Python data science stack and a fairly recent version of Pandas (0.17 >=).
-Python 2.7 or 3+
+Python 2.7 or 3+.
+Various unix tools found on all major distributions.
 
-## Quickstart
-
-```
-pip install bioepic
-# you only need git clone to get the test data
-git clone https://github.com/endrebak/epic.git
-epic -i control epic/examples/test.bed epic/examples/control.bed
-```
 
 <!-- ## Helper scripts -->
 
@@ -127,13 +125,76 @@ epic -i control epic/examples/test.bed epic/examples/control.bed
 
 ## TODO
 
-* Change to argparse so that can take separate ChIP/Input lists.
-* Fix "bug" that prints chromosome start and end in output as floats.
-* Print command line args exactly as recieved.
-* Change output format to use tab as delimiter and underscore as within name delimiter ("P_value", not "P value")
-* Add bam and paired end support
+* Add paired end support
+* Create script to compute effective genome size
+
+## Usage
+
+(Might be slightly out of date.)
+
+```
+usage: epic [-h] --treatment TREATMENT [TREATMENT ...] --control CONTROL
+            [CONTROL ...] [--number-cores NUMBER_CORES] [--genome GENOME]
+            [--keep-duplicates KEEP_DUPLICATES] [--window-size WINDOW_SIZE]
+            [--gaps-allowed GAPS_ALLOWED] [--fragment-size FRAGMENT_SIZE]
+            [--false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF]
+            [--version]
+
+Diffuse domain ChIP-Seq caller based on SICER. (Visit github.com/endrebak/epic
+for examples and help.)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --treatment TREATMENT [TREATMENT ...], -t TREATMENT [TREATMENT ...]
+                        Treatment (pull-down) file(s) in
+                        bam/bed/bed.gz/bed.bz2 format.
+  --control CONTROL [CONTROL ...], -c CONTROL [CONTROL ...]
+                        Control (input) file(s) in bam/bed/bed.gz/bed.bz2
+                        format.
+  --number-cores NUMBER_CORES, -cpu NUMBER_CORES
+                        Number of cpus to use. Can use at most one per
+                        chromosome. Default: 1.
+  --genome GENOME, -gn GENOME
+                        Which genome to analyze. Default: hg19.
+  --keep-duplicates KEEP_DUPLICATES, -k KEEP_DUPLICATES
+                        Keep reads mapping to the same position on the same
+                        strand within a library. Default is to remove all but
+                        the first duplicate.
+  --window-size WINDOW_SIZE, -w WINDOW_SIZE
+                        Size of the windows to scan the genome. WINDOW_SIZE is
+                        the smallest possible island. Default 200.
+  --gaps-allowed GAPS_ALLOWED, -g GAPS_ALLOWED
+                        Multiple of window size used to determine the gap
+                        size. Must be an integer. Default: 3.
+  --fragment-size FRAGMENT_SIZE, -fs FRAGMENT_SIZE
+                        Size of the sequenced fragment. The center of the the
+                        fragment will be taken as half the fragment size.
+                        Default 150.
+  --false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF, -fdr FALSE_DISCOVERY_RATE_CUTOFF
+                        Remove all islands with an FDR below cutoff. Default
+                        1.0, that is, all islands included.
+  --version, -v         show program's version number and exit
+```
+
+## Credit
+
+Chongzhi Zang, Dustin E. Schones, Chen Zeng, Kairong Cui, Keji Zhao and Weiqun Peng for the original SICER. Please consider citing their paper (*in addition* to our eventual paper) if you use epic. And if you use any (helper) scripts in SICER that are not included in epic you should of course cite the SICER paper!
+
+Most of the improvements in epic were possible due to Python Science libraries that were not available when SICER was originally written. Thanks to the Pandas developers!
+
+#### Contributors
+
+* Endre Bakken Stovner (main author)
+* Pål Sætrom (algorithmic/theoretical discussions, endless patience)
+* Dario Beraldi (argparsing, bam support)
 
 ## NAQ/Various
+
+Answers to some questions no-one has ever asked me.
+
+#### Why is the SICER algorithm so great?
+
+The wonderful thing about the SICER algorithm is that is very careful about dropping windows with few reads in them. All ChIP-seq callers I know have some preprocessing step where this is done liberally. SICER pools these windows together and gives them a composite score, allowing very long stretches of very diffuse signal to be detected.
 
 #### Difference from the original SICER
 
@@ -142,34 +203,30 @@ This is due to numerics (summing many very small numbers is done in both impleme
 
 This gives a different cutoff than the original, but produces virtually identical results (since epic and SICER produces the same candidate island list, with the same order, but epic selects slightly fewer islands from this list).
 
+All in all, a rounding error with no significance.
+
 #### Why another ChIP-Seq domain caller?
 
 MACS2 is great for narrow peaks, but epic performs better on diffuse domains. For medium size domains, such as PolII, our tests indicate that both perform about equally well, but epic uses only a fraction of the time.
 
 #### Why not SICER?
 
-SICER is a wonderful piece of software, but advances in the Python data science libraries has made it possible to implement it much more efficiently. Furthermore, SICER was not made to handle the mountains of data we have now; it simply cannot run on very large datasets due to (sensible) restrictions in the original implementation.
+SICER contains a great algorithm and is a wonderful piece of software, but advances in the Python data science libraries has made it possible to implement it much more efficiently. Furthermore, SICER was not made to handle the mountains of data we have now; it simply cannot run on very large datasets due to (sensible) restrictions in the original implementation.
 
 #### When is your paper coming out?
 
 Dunno. We do not want to write a methods paper, but rather just include a section about epic in an appropriate biology paper sometime.
 
-#### Credit
-
-Chongzhi Zang, Dustin E. Schones, Chen Zeng, Kairong Cui, Keji Zhao and Weiqun Peng for the original SICER. Please consider citing their paper (*in addition* to our eventual paper) if you use epic. And if you use any (helper) scripts in SICER that are not included in epic you should of course cite the SICER paper!
-
-Most of the improvements in epic were possible due to Python Science libraries that were not available when SICER was originally written. Thanks to the Pandas developers!
-
-Endre Bakken Stovner for the implementation of epic.
-
 #### Why the name epic?
 
 It stands for electronic pic [sic] caller or epigenome cartographer, whichever you prefer. Or perhaps it isn't just another bogus bioinformatics acronym. Hope you find the name fitting.
 
-#### Other pieces of software you might prefer
+But suggestions for better names accepted. On paper I liked the epi/epic/epigenetics link but now when I hear it it sounds so boastful I cringe. exorcised sounds like a slight on the original software... Mad MACS?
+
+#### Which other ChIP-Seq callers do you use?
 
 * [SICER](http://home.gwu.edu/~wpeng/Software.htm) - great diffuse domain ChIP-Seq caller (which epic is based on.)
-* [SICERpy](https://github.com/dariober/SICERpy) - a wrapper around SICER for convenience/parallelism.
+* [SICERpy](https://github.com/dariober/SICERpy) - a wrapper around SICER for convenience/parallelism. Stole some good ideas from there.
 * [csaw](https://github.com/LTLA/csaw) - R package. Uses an approach to island finding that complements epic very well. Requires more statistical sophistication and programming skill to use.
 * [MACS2](https://github.com/taoliu/MACS) - my preferred peak caller.
 

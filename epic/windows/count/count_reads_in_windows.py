@@ -60,6 +60,9 @@ def _count_reads_in_windows(bed_file, fragment_size, window_size,
         grep = "zgrep "
     elif bed_file.endswith(".bz2"):
         grep = "bzgrep "
+    elif bed_file.endswith(".bam"):
+        grep = "bedToBam -i {} | grep".format(bed_file)
+        bed_file = ""
     else:
         grep = "grep "
 

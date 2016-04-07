@@ -14,22 +14,17 @@ from epic.statistics.count_to_pvalue import count_to_pvalue
 from epic.statistics.fdr import compute_fdr
 from epic.utils.helper_functions import merge_chip_and_input, get_total_number_of_reads, merge_same_files
 from epic.windows.cluster.find_islands import find_islands
-from epic.utils.separate_input_and_chip_infiles import separate_input_and_chip_infiles
 
 
-def run_epic(bed_files, fdr_cutoff, genome, fragment_size, window_size,
-             gaps_allowed, input_pattern, keep_duplicates, nb_cpu,
-             pandas_only):
-
-    chip_files, input_files = separate_input_and_chip_infiles(bed_files,
-                                                              input_pattern)
+def run_epic(chip_files, input_files, fdr_cutoff, genome, fragment_size,
+             window_size, gaps_allowed, keep_duplicates, nb_cpu):
 
     chip_windows = multiple_files_count_reads_in_windows(
         chip_files, genome, fragment_size, window_size, gaps_allowed,
-        input_pattern, keep_duplicates, nb_cpu, pandas_only)
+        keep_duplicates, nb_cpu)
     input_windows = multiple_files_count_reads_in_windows(
         input_files, genome, fragment_size, window_size, gaps_allowed,
-        input_pattern, keep_duplicates, nb_cpu, pandas_only)
+        keep_duplicates, nb_cpu)
 
     chip_merged = _merge_files(chip_windows.values(), nb_cpu)
     input_merged = _merge_files(input_windows.values(), nb_cpu)
@@ -55,6 +50,7 @@ def run_epic(bed_files, fdr_cutoff, genome, fragment_size, window_size,
     logging.info("Computing FDR.")
     df = compute_fdr(df, nb_chip_reads, nb_input_reads, genome, fdr_cutoff)
 
+    df[["Start", "End"]] = df[["Start", "End"]].astype(int)
     df.to_csv(stdout, index=False, sep=" ")
 
 
@@ -81,9 +77,9 @@ def get_island_bins(df, window_size, genome):
     return chromosome_island_bins
 
 
-def multiple_files_count_reads_in_windows(
-        bed_files, genome, fragment_size, window_size, gaps_allowed,
-        input_pattern, keep_duplicates, nb_cpu, pandas_only):
+def multiple_files_count_reads_in_windows(bed_files, genome, fragment_size,
+                                          window_size, gaps_allowed,
+                                          keep_duplicates, nb_cpu):
     """Use count_reads on multiple files and store result in dict.
 
     Untested since does the same thing as count reads.
@@ -93,8 +89,7 @@ def multiple_files_count_reads_in_windows(
     for bed_file in bed_files:
         logging.info("Binning " + bed_file)
         chromosome_dfs = count_reads(bed_file, genome, fragment_size,
-                                     window_size, keep_duplicates, nb_cpu,
-                                     pandas_only)
+                                     window_size, keep_duplicates, nb_cpu)
         bed_windows[bed_file] = chromosome_dfs
 
     return bed_windows

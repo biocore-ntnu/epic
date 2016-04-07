@@ -71,21 +71,3 @@ def _merge_same_files(sample1_df, sample2_df):
     merged_df = merged_df.drop(["Count_x", "Count_y"], axis=1)
 
     return merged_df
-
-
-def _print_args(argv_zero, args):
-    """Prints the cl-arguments used to stdout.
-
-    (cannot just use sys.argv due to default values being implicit)
-    """
-
-    arg_list = ["#", argv_zero]
-    for k, v in sorted(args.items()):
-        if str(v) == "False":
-            continue
-        elif str(v) == "True":
-            arg_list.append(k)
-        else:
-            arg_list.append(k + " " + str(v))
-
-    print(" ".join(arg_list))

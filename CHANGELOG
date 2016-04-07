@@ -1,0 +1,9 @@
+# 0.0.5 (07.04.16)
+- remove Pandas only option. Now unix is required.
+- change to argparse instead of docopt (thanks Dario Beraldi)
+- separate args for control and input files (thanks Dario Beraldi)
+- print cl-args exactly as recieved (thanks to Istvan Albert for pointing out glitch)
+- add version info
+- add support for bam files (requires bedtools)
+- fix "bug" that prints chromosome start and end in output as floats.
+- change output format to use tab as delimiter and underscore as within name delimiter ("P_value", not "P value")
