@@ -131,6 +131,7 @@ epic -i control epic/examples/test.bed epic/examples/control.bed
 * Fix "bug" that prints chromosome start and end in output as floats.
 * Print command line args exactly as recieved.
 * Change output format to use tab as delimiter and underscore as within name delimiter ("P_value", not "P value")
+* Add bam and paired end support
 
 ## NAQ/Various
 
