@@ -189,15 +189,15 @@ Compute the effective genome size from a fasta file.
 (Visit github.com/endrebak/epic for examples and help.)
 
 Usage:
-    epic-effective [--read-length=LEN] [--nb-cpu=CPU] FILE
+    epic-effective --read-length=LEN [--nb-cpu=CPU] FILE
     epic-effective --help
 
 Arguments:
     FILE                      Fasta genome
+    -r LEN --read-length LEN  length of reads
 
 Options:
     -h --help                 show this help message
-    -r LEN --read-length LEN  length of reads
     -n CPU --nb-cpu CPU       number of cores to use [default: 1]
 ```
 
