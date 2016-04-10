@@ -1,3 +1,7 @@
+
+# 0.0.6 (10.04.16)
+- add script to compute the effective genome size (thanks to Heng Li for alerting me to the existence of jellyfish2)
+
 # 0.0.5 (07.04.16)
 - remove Pandas only option. Now unix is required.
 - change to argparse instead of docopt (thanks Dario Beraldi)
