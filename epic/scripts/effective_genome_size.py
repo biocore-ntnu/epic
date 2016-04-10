@@ -1,60 +1,47 @@
-import logging
-import time
-from collections import defaultdict
-from sys import stderr
+from __future__ import print_function, division
+
+import sys
+import atexit
+from subprocess import call, check_output
+from os.path import basename
 
 from pyfaidx import Fasta
-
-from joblib import Parallel, delayed
-
-from epic.config import logging_settings
 
 
 def effective_genome_size(fasta, read_length, nb_cores):
     """Compute effective genome size for genome."""
 
-    idx = Fasta(fasta, read_ahead=int(10e5))
+    idx = Fasta(fasta)
 
     genome_length = sum([len(c) for c in idx])
 
-    results = Parallel(n_jobs=nb_cores)(
-        delayed(compute_number_effective_chromosome_reads)(
-            fasta, chromosome.name, read_length) for chromosome in idx)
+    chromosomes = "\n".join([c.name for c in idx])
 
-    read_counts = sum(results)
+    if "_" in chromosomes:
+        print("Warning. The following chromosomes are part of your genome:\n",
+              chromosomes.replace(">", "") + "\n",
+              file=sys.stderr)
+        print(
+            "You probably want to remove all chromosomes in your fasta containing '_' for the effective genome size computation to be accurate.",
+            file=sys.stderr)
 
-    effective_genome_size_with_n = read_counts / genome_length
+    output_file = "/tmp/" + basename(fasta) + ".jf"
+    atexit.register(
+        lambda: call("rm {output_file}".format(output_file=output_file)))
 
-    return effective_genome_size_with_n
+    call(
+        "jellyfish count -t {nb_cores} -m {read_length} -s {genome_length} -L 1 -U 1 --out-counter-len 1 -- counter-len 1 {fasta} -o {output_file}".format(
+            **vars()),
+        shell=True)
 
+    stats = check_output("jellyfish stats {output_file}", shell=True)
 
-def compute_number_effective_chromosome_reads(fasta_file, chromosome_name,
-                                              read_length):
+    unique_kmers = int(stats.split()[1])
 
-    chromosome = Fasta(fasta_file, read_ahead=int(10e5))[chromosome_name]
+    effective_genome_size = unique_kmers / genome_length
 
-    read_counts = defaultdict(int)
-
-    for start in range(0, len(chromosome) - read_length):
-        sequence = str(chromosome[start:start + read_length]).upper()
-
-        if not "N" in sequence:
-            read_counts[sequence] += 1
-
-    nb_reads = len([i for i in read_counts.values() if i == 1])
-    logging.info(str(chromosome.name) + " effective chromosome size: " + str(
-        nb_reads / len(chromosome)))
-
-    return nb_reads
-
-# def chromosome_chunks(chromosome, chunk_length, read_length):
-#     """Split chromosome into chunks that overlap by read_length."""
-
-#     for i in range(0, chunk_length):
-#         yield str(chromosome[i:i + chunk_length - read_length])
-
-#     for i in range(chunk_length, len(chromosome) - 1):
-#         yield str(chromosome[i:i + chunk_length - read_length])
-
-# for i in range(len(chromosome) - read_length, len(chromosome)):
-#     yield str(chromosome[i:i + chunk_length])
+    print("File analyzed: ", fasta)
+    print("Genome length: ", genome_length)
+    print("Number unique {read_length}-mers: ".format(read_length=read_length),
+          unique_kmers)
+    print("Effective genome size: ", effective_genome_size)

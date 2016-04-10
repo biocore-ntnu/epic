@@ -15,7 +15,7 @@ setup(
     packages=find_packages(),
     # ext_modules=cythonize(
     #      "epic/statistics/add_to_island_expectations_cython.pyx"),
-    scripts=["bin/epic"],
+    scripts=["bin/epic", "bin/epic-effective"],
     version=__version__,
     description="Chip-Seq broad peak/domain finder.",
     author="Endre Bakken Stovner",
