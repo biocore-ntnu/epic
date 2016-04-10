@@ -10,12 +10,12 @@ Usage:
     epic-effective --help
 
 Arguments:
-    FILE             Fasta genome
+    FILE                      Fasta genome
 
 Options:
     -h --help                 show this help message
-    -r LEN --read-length LEN  length of reads  [default: 30]
-    -n CPU --nb-cpu CPU       number of cores to use (more cores requires more RAM)  [default: 1]
+    -r LEN --read-length LEN  length of reads
+    -n CPU --nb-cpu CPU       number of cores to use [default: 1]
 """
 import logging
 
@@ -31,6 +31,4 @@ if __name__ == '__main__':
     fasta, read_length = args["FILE"], int(args["--read-length"])
     nb_cpu = int(args["--nb-cpu"])
 
-    logging.info("Computing the effective genome size of " + fasta)
-    egs2 = effective_genome_size(fasta, read_length, nb_cpu)
-    logging.info("Effective genome size: " + str(egs2))
+    effective_genome_size(fasta, read_length, nb_cpu)

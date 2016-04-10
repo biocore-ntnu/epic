@@ -15,7 +15,10 @@ def effective_genome_size(fasta, read_length, nb_cores):
 
     genome_length = sum([len(c) for c in idx])
 
-    chromosomes = "\n".join([c.name for c in idx])
+    print("File analyzed: ", fasta)
+    print("Genome length: ", genome_length)
+
+    chromosomes = ", ".join([c.name for c in idx])
 
     if "_" in chromosomes:
         print("Warning. The following chromosomes are part of your genome:\n",
@@ -27,21 +30,19 @@ def effective_genome_size(fasta, read_length, nb_cores):
 
     output_file = "/tmp/" + basename(fasta) + ".jf"
     atexit.register(
-        lambda: call("rm {output_file}".format(output_file=output_file)))
+        lambda: call("rm {output_file}".format(output_file=output_file), shell=True))
 
     call(
-        "jellyfish count -t {nb_cores} -m {read_length} -s {genome_length} -L 1 -U 1 --out-counter-len 1 -- counter-len 1 {fasta} -o {output_file}".format(
+        "jellyfish count -t {nb_cores} -m {read_length} -s {genome_length} -L 1 -U 1 --out-counter-len 1 --counter-len 1 {fasta} -o {output_file}".format(
             **vars()),
         shell=True)
 
-    stats = check_output("jellyfish stats {output_file}", shell=True)
+    stats = check_output("jellyfish stats {output_file}".format(output_file=output_file), shell=True)
 
     unique_kmers = int(stats.split()[1])
 
     effective_genome_size = unique_kmers / genome_length
 
-    print("File analyzed: ", fasta)
-    print("Genome length: ", genome_length)
     print("Number unique {read_length}-mers: ".format(read_length=read_length),
           unique_kmers)
     print("Effective genome size: ", effective_genome_size)
