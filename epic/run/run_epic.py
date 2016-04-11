@@ -17,14 +17,14 @@ from epic.windows.cluster.find_islands import find_islands
 
 
 def run_epic(chip_files, input_files, fdr_cutoff, genome, fragment_size,
-             window_size, gaps_allowed, keep_duplicates, nb_cpu):
+             window_size, gaps_allowed, keep_duplicates, paired_end, nb_cpu):
 
     chip_windows = multiple_files_count_reads_in_windows(
         chip_files, genome, fragment_size, window_size, gaps_allowed,
-        keep_duplicates, nb_cpu)
+        keep_duplicates, paired_end, nb_cpu)
     input_windows = multiple_files_count_reads_in_windows(
         input_files, genome, fragment_size, window_size, gaps_allowed,
-        keep_duplicates, nb_cpu)
+        keep_duplicates, paired_end, nb_cpu)
 
     chip_merged = _merge_files(chip_windows.values(), nb_cpu)
     input_merged = _merge_files(input_windows.values(), nb_cpu)
@@ -79,7 +79,7 @@ def get_island_bins(df, window_size, genome):
 
 def multiple_files_count_reads_in_windows(bed_files, genome, fragment_size,
                                           window_size, gaps_allowed,
-                                          keep_duplicates, nb_cpu):
+                                          keep_duplicates, paired_end, nb_cpu):
     """Use count_reads on multiple files and store result in dict.
 
     Untested since does the same thing as count reads.
@@ -89,7 +89,8 @@ def multiple_files_count_reads_in_windows(bed_files, genome, fragment_size,
     for bed_file in bed_files:
         logging.info("Binning " + bed_file)
         chromosome_dfs = count_reads(bed_file, genome, fragment_size,
-                                     window_size, keep_duplicates, nb_cpu)
+                                     window_size, keep_duplicates, paired_end,
+                                     nb_cpu)
         bed_windows[bed_file] = chromosome_dfs
 
     return bed_windows

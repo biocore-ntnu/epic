@@ -94,8 +94,15 @@ parser.add_argument(
     default=1.0,
     type=float,
     help=
-    '''Remove all islands with an FDR below cutoff. Default 1.0, that is, all islands included.
+    '''Remove all islands with an FDR below cutoff. Default 1.0 (i.e. all found islands included no matter how bad the adjusted p-value.).
                    ''')
+
+parser.add_argument('--paired-end',
+                    '-pe',
+                    required=False,
+                    default=False,
+                    type=bool,
+                    help='''(Bam-only) Use paired-end reads.''')
 
 parser.add_argument('--version',
                     '-v',
@@ -127,4 +134,5 @@ if __name__ == '__main__':
 
     run_epic(args.treatment, args.control, args.false_discovery_rate_cutoff,
              args.genome, args.fragment_size, args.window_size,
-             args.gaps_allowed, args.keep_duplicates, args.number_cores)
+             args.gaps_allowed, args.keep_duplicates, args.paired_end,
+             args.number_cores)

@@ -4,7 +4,7 @@ from io import StringIO
 import pandas as pd
 from numpy import allclose, array_equal, int32
 
-from epic.windows.count.count_reads_in_windows import count_reads_in_windows
+from epic.windows.count.count_reads_in_windows import count_reads_in_windows, count_reads_in_windows_paired_end
 
 
 @pytest.mark.integration
@@ -59,3 +59,33 @@ chr13	115816130	115816155	U0	0	+
 chr19	43528773	43528798	U0	0	+
 chr19	47109000	47109025	U0	0	-""")
     return str(bed_file)
+
+
+@pytest.fixture
+def paired_end(tmpdir):
+
+    bed_file = tmpdir.join("paired_end_file.bed")
+    bed_file.write(
+        """chr1	33076	33165	chr1	33076	33165	2PJ3LS1:183:C5RR7ACXX:7:1307:11171:75017	0	+	-
+chr1	33076	33165	chr1	33076	33165	2PJ3LS1:183:C5RR7ACXX:8:1115:18054:85095	0	+	-
+chr1	33660	33744	chr1	33660	33744	2PJ3LS1:183:C5RR7ACXX:2:2201:20777:74838	0	+	-
+chr1	33660	33744	chr1	33660	33744	2PJ3LS1:183:C5RR7ACXX:3:1213:9620:83082	0	+	-
+chr1	38474	38571	chr1	38474	38571	2PJ3LS1:183:C5RR7ACXX:4:1216:1576:83235	0	+	-
+chr1	41985	42043	chr1	42040	42131	2PJ3LS1:183:C5RR7ACXX:3:1214:11778:16074	1	+	-
+chr1	42223	42324	chr1	42285	42386	2PJ3LS1:183:C5RR7ACXX:3:1215:18097:73129	0	+	-""")
+    return str(bed_file)
+
+
+@pytest.mark.integration
+def test_count_reads_in_windows_paired_end(paired_end):
+
+    genome, fragment_size, window_size = "hg19", 150, 200
+    keep_duplicates = False
+
+    result = count_reads_in_windows_paired_end(paired_end, genome,
+                                               fragment_size, window_size,
+                                               keep_duplicates, "chr1")
+
+    print(result)
+    assert 0
+    # assert result == expected_result
