@@ -1,6 +1,8 @@
 
 # epic: diffuse domain ChIP-Seq caller based on SICER
 
+[![Build Status](https://travis-ci.org/endrebak/epic.svg?branch=master)](https://travis-ci.org/endrebak/epic)
+
 epic is a software package for finding medium to diffusely enriched domains in
 chip-seq data. It is a fast, parallel and memory-efficient implementation of the
 incredibly popular SICER algorithm. By running epic on a set of data ("ChIP") files and a set of
@@ -11,7 +13,7 @@ epic is an improvement over the original SICER by being faster, more memory
 efficient, multicore, and significantly much easier to install and use.
 
 The MIT-licensed code is available at https://github.com/endrebak/epic
-Please post issues, questions, docrequests or whatever is on your mind on the issue tracker: https://github.com/endrebak/epic/issues
+Please post issues, questions, docrequests or whatever is on your mind on the [issue tracker](https://github.com/endrebak/epic/issues).
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
@@ -39,6 +41,9 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
+# No version bump (01.05.16)
+- added travis ci build info to repo. Current priority is to clean up code and add tests.
+
 # 0.0.6 (10.04.16)
 - add script to compute the effective genome size (thanks to Heng Li for alerting me to the existence of jellyfish2)
 
@@ -118,17 +123,11 @@ To read bam files [bedtools](https://github.com/arq5x/bedtools2) is required.
 
 ## Helper scripts
 
-Various helpful utilities will be added to epic. Currently it includes:
-
-#### epic-effective
-
-A perennial question on bioinformatics sites is how to compute the effective
-genome size for a genome. epic includes a script called `epic-effective` to do
-just this. It can use multiple cores. Please share your results on the issue
-tracker.
+See [this page](helper_scripts.md) for the various helper scripts that are a part of epic.
 
 ## TODO
 
+* Clean up tests
 * Add paired end support
 * Add more examples of usage
 
@@ -178,27 +177,6 @@ optional arguments:
                         Remove all islands with an FDR below cutoff. Default
                         1.0, that is, all islands included.
   --version, -v         show program's version number and exit
-```
-
-And the script to compute the effective genome size has the following CLI:
-
-```
-epic-effective
-Compute the effective genome size from a fasta file.
-
-(Visit github.com/endrebak/epic for examples and help.)
-
-Usage:
-    epic-effective --read-length=LEN [--nb-cpu=CPU] FILE
-    epic-effective --help
-
-Arguments:
-    FILE                      Fasta genome
-    -r LEN --read-length LEN  length of reads
-
-Options:
-    -h --help                 show this help message
-    -n CPU --nb-cpu CPU       number of cores to use [default: 1]
 ```
 
 ## Credit

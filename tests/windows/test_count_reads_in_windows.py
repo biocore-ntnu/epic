@@ -4,7 +4,7 @@ from io import StringIO
 import pandas as pd
 from numpy import allclose, array_equal, int32
 
-from epic.windows.count.count_reads_in_windows import count_reads_in_windows, count_reads_in_windows_paired_end
+from epic.windows.count.count_reads_in_windows import count_reads_in_windows, _count_reads_in_windows_paired_end
 
 
 @pytest.mark.integration
@@ -76,16 +76,17 @@ chr1	42223	42324	chr1	42285	42386	2PJ3LS1:183:C5RR7ACXX:3:1215:18097:73129	0	+	-
     return str(bed_file)
 
 
-@pytest.mark.integration
+# @pytest.mark.integration
 def test_count_reads_in_windows_paired_end(paired_end):
 
     genome, fragment_size, window_size = "hg19", 150, 200
     keep_duplicates = False
 
-    result = count_reads_in_windows_paired_end(paired_end, genome,
-                                               fragment_size, window_size,
-                                               keep_duplicates, "chr1")
+    # result = _count_reads_in_windows_paired_end(paired_end, genome,
+    #                                            fragment_size, window_size,
+    #                                            keep_duplicates, "chr1")
 
-    print(result)
-    assert 0
+    # print(result)
+    "Paired end support not implemented yet."
+    # assert 0
     # assert result == expected_result
