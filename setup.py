@@ -4,8 +4,8 @@ from setuptools import setup, find_packages
 
 from epic.version import __version__
 
-install_requires = ["scipy", "pandas", "numpy", "natsort",
-                    "joblib", "docopt", "pyfaidx"]
+install_requires = ["scipy", "pandas", "numpy", "natsort", "joblib", "docopt",
+                    "pyfaidx"]
 
 if sys.version_info[0] == 2:
     install_requires.append("functools32")
@@ -19,7 +19,7 @@ setup(
     version=__version__,
     description="Chip-Seq broad peak/domain finder.",
     author="Endre Bakken Stovner",
-    author_email="endrebak@stud.ntnu.no",
+    author_email="endrebak85@gmail.com",
     url="http://github.com/endrebak/epic",
     keywords=["ChIP-Seq"],
     license=["MIT"],
