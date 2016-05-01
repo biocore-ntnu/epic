@@ -26,6 +26,5 @@ install:
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION joblib numpy scipy pandas
   - source activate test-environment
   - python setup.py install
-  - cd epic
 
 script: py.test tests
