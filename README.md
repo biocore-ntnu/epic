@@ -122,7 +122,7 @@ See [this page](helper_scripts.md) for the various helper scripts that are a par
 
 ## TODO
 
-* Continuous integration.
+* Clean up tests
 * Add paired end support
 * Add more examples of usage
 
