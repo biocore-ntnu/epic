@@ -39,6 +39,9 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
+# No version bump (01.05.16)
+- added travis ci build info to repo. Current priority is to clean up code and add tests.
+
 # 0.0.6 (10.04.16)
 - add script to compute the effective genome size (thanks to Heng Li for alerting me to the existence of jellyfish2)
 
