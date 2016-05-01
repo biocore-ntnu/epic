@@ -28,4 +28,4 @@ install:
   - python setup.py install
   - cd epic
 
-script: ./tests/run_all_tests.sh
+script: py.test tests
