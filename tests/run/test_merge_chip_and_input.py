@@ -132,7 +132,7 @@ Count Chromosome    Bin
 @pytest.fixture
 def sample2_dfs():
     return [pd.read_table(
-        StringIO("""
+        StringIO(u"""
 Count Chromosome    Bin
 1       chrM    400
 1       chrM   2600
@@ -142,7 +142,7 @@ Count Chromosome    Bin
 1       chrM  14200"""),
         header=0,
         sep="\s+", ), pd.read_table(
-            StringIO("""Count Chromosome        Bin
+            StringIO(u"""Count Chromosome        Bin
 1       chrX    2820000
 1       chrX    2854800
 1       chrX    3001400
