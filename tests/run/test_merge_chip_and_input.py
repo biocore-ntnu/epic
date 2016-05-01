@@ -84,7 +84,7 @@ def _merge_two_bin_dfs(df1, df2):
 @pytest.fixture
 def sample1_dfs():
     return [pd.read_table(
-        StringIO("""
+        StringIO(u"""
 Count Chromosome    Bin
 1       chrM    400
 1       chrM   2600
@@ -94,7 +94,7 @@ Count Chromosome    Bin
 1       chrM  14200"""),
         sep="\s+",
         header=0), pd.read_table(
-            StringIO("""Count Chromosome        Bin
+            StringIO(u"""Count Chromosome        Bin
 1       chrX    2820000
 1       chrX    2854800
 1       chrX    3001400
