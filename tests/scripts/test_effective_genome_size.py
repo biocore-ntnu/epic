@@ -44,7 +44,6 @@ def test_effective_genome_size(fasta):
     result, result_with_n = effective_genome_size(fasta, read_length=30)
     print(result)
     print(result_with_n)
-    assert 0
     # assert isclose(0.9548133595284872, result)
 
 
