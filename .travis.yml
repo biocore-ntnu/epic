@@ -28,4 +28,4 @@ install:
   - python setup.py install
   - cd epic
 
-script: py.test tests
+script: py.test epic/tests
