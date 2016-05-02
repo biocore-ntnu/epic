@@ -1,6 +1,8 @@
 
 # epic: diffuse domain ChIP-Seq caller based on SICER
 
+[![Build Status](https://travis-ci.org/endrebak/epic.svg?branch=master)](https://travis-ci.org/endrebak/epic)
+
 epic is a software package for finding medium to diffusely enriched domains in
 chip-seq data. It is a fast, parallel and memory-efficient implementation of the
 incredibly popular SICER algorithm. By running epic on a set of data ("ChIP") files and a set of
