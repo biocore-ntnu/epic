@@ -1,10 +1,5 @@
 import logging
-import re
-from fnmatch import fnmatch
-from multiprocessing import Pool
-from sys import exit as sys_exit
 
-from epic.config.cache_settings import MEMORY
 from joblib import Parallel, delayed
 
 try:
@@ -60,7 +55,6 @@ def merge_same_files(sample1_dfs, sample2_dfs, nb_cpu):
 
 def _merge_same_files(sample1_df, sample2_df):
 
-    sample1_df_nb_bins = len(sample1_df)
     merged_df = sample1_df.merge(sample2_df,
                                  how="outer",
                                  on=["Chromosome", "Bin"])

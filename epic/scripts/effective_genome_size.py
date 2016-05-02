@@ -8,7 +8,7 @@ from os.path import basename
 from pyfaidx import Fasta
 
 
-def effective_genome_size(fasta, read_length, nb_cores):
+def effective_genome_size(fasta, read_length):
     """Compute effective genome size for genome."""
 
     idx = Fasta(fasta)
@@ -37,7 +37,9 @@ def effective_genome_size(fasta, read_length, nb_cores):
             **vars()),
         shell=True)
 
-    stats = check_output("jellyfish stats {output_file}".format(output_file=output_file), shell=True)
+    stats = check_output("jellyfish stats {output_file}".format(
+        output_file=output_file),
+                         shell=True)
 
     unique_kmers = int(stats.split()[1])
 

@@ -1,5 +1,4 @@
 import pandas as pd
-from numpy import int32
 
 
 def merge_chromosome_dfs(df_tuple):

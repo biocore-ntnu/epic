@@ -12,18 +12,10 @@ from __future__ import print_function
 import logging
 import sys
 
-from numpy import log
-from itertools import count
-from scipy.stats import poisson
-from math import log, factorial, pi, exp
-
-from epic.utils.helper_functions import lru_cache
 from epic.config.genomes import get_effective_genome_length
 from epic.statistics.compute_values_needed_for_recurrence import (
     compute_enriched_threshold, compute_gap_factor, compute_boundary)
 from epic.statistics.compute_score_threshold import compute_score_threshold
-
-from epic.config.cache_settings import MEMORY
 
 
 # @MEMORY.cache(verbose=0)

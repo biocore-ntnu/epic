@@ -53,7 +53,7 @@ def count_reads_in_windows(bed_file,
 
 def _count_reads_in_windows(bed_file, fragment_size, window_size,
                             keep_duplicates, chromosome_size, chromosome,
-                            strand):
+                            strand):  # noqa
 
     halved_fragment_size = fragment_size // 2
     idx = 1 if strand == "+" else 2  # fragment start indices
@@ -81,7 +81,6 @@ def _count_reads_in_windows(bed_file, fragment_size, window_size,
     uniq -c |
     sed -e 's/^[ ]*//'""".format(**locals())
 
-    # debug(command)
     output = check_output(command, shell=True)
 
     out_table = pd.read_table(

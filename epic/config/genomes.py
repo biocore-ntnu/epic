@@ -1,6 +1,3 @@
-from glob import glob
-from collections import OrderedDict
-
 CHROMOSOME_SIZE_DICT = {"hg19": """chr1	249250621
 chr2	243199373
 chr3	198022430
@@ -26,8 +23,7 @@ chr22	51304566
 chrM	16571
 chrX	155270560
 chrY	59373566""",
-
- "hg18": """chr1     247249719
+                        "hg18": """chr1     247249719
  chr2     242951149
  chr3     199501827
  chr4     191273063
@@ -55,7 +51,6 @@ chrY	59373566""",
 
 
 def create_genome_size_dict(genome):
-
     """Creates genome size dict from string containing data."""
 
     size_lines = CHROMOSOME_SIZE_DICT[genome].splitlines()
@@ -67,7 +62,9 @@ def create_genome_size_dict(genome):
 
     return size_dict
 
+
 EFFECTIVE_GENOME_SIZES = {"hg19": 0.74, "hg18": 0.74}
+
 
 def get_effective_genome_length(genome):
 
