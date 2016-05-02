@@ -3,14 +3,9 @@ import logging
 from joblib import Parallel, delayed
 
 try:
-    from functools import lru_cache
+    from functools import lru_cache  # noqa
 except ImportError:
-    from functools32 import lru_cache
-
-try:
-    from itertools import izip_longest
-except ImportError:
-    from itertools import zip_longest as izip_longest
+    from functools32 import lru_cache  # noqa
 
 
 def _merge_chip_and_input(chip_df, input_df):

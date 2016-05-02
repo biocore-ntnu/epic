@@ -53,7 +53,7 @@ def count_reads_in_windows(bed_file,
 
 def _count_reads_in_windows(bed_file, fragment_size, window_size,
                             keep_duplicates, chromosome_size, chromosome,
-                            strand):  # noqa
+                            strand):
 
     halved_fragment_size = fragment_size // 2
     idx = 1 if strand == "+" else 2  # fragment start indices
@@ -73,13 +73,21 @@ def _count_reads_in_windows(bed_file, fragment_size, window_size,
     else:
         grep = "grep "
 
-    command = """{grep} -E '^{chromosome}\\b.*\\{strand}$' {bed_file} |
-    cut -f 1-3,6 - | sort -k2,3n | {duplicate_handling}
-    LC_ALL=C perl -a -ne '$F[{idx}]{strand}={halved_fragment_size}; # shift fragments
-    $F[{idx}]=$F[{idx}]-($F[{idx}] % {window_size}); # turn exact start into bin
-    print "@F[0,{idx}]\n"' |
-    uniq -c |
-    sed -e 's/^[ ]*//'""".format(**locals())
+    command = (
+        "{grep} -E '^{chromosome}\\b.*\\{strand}$' {bed_file} | "
+        "cut -f 1-3,6 - | sort -k2,3n | {duplicate_handling} "
+        "LC_ALL=C perl -a -ne '$F[{idx}]{strand}={halved_fragment_size};"  # shift fragments
+        "$F[{idx}]=$F[{idx}]-($F[{idx}] % {window_size});"  # turn exact start into bin
+        "print \"@F[0,{idx}]\n\"' | "
+        "uniq -c | "
+        "sed -e 's/^[ ]*//'").format(grep=grep,
+                                     chromosome=chromosome,
+                                     strand=strand,
+                                     bed_file=bed_file,
+                                     duplicate_handling=duplicate_handling,
+                                     idx=idx,
+                                     halved_fragment_size=halved_fragment_size,
+                                     window_size=window_size)
 
     output = check_output(command, shell=True)
 

@@ -10,7 +10,6 @@ the faster version.
 from __future__ import print_function
 
 import logging
-import sys
 
 from epic.config.genomes import get_effective_genome_length
 from epic.statistics.compute_values_needed_for_recurrence import (
