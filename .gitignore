@@ -1,4 +1,5 @@
 .cache/
+.coverage
 *fai
 joblib/
 *egg-info*
