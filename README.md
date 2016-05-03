@@ -1,7 +1,7 @@
 
 # epic: diffuse domain ChIP-Seq caller based on SICER
 
-[![Build Status](https://travis-ci.org/endrebak/epic.svg?branch=master)](https://travis-ci.org/endrebak/epic) [![Coverage Status](https://coveralls.io/repos/github/endrebak/epic/badge.svg?branch=master)](https://coveralls.io/github/endrebak/epic?branch=master) [![Code Health](https://landscape.io/github/endrebak/epic/master/landscape.svg?style=flat)](https://landscape.io/github/endrebak/epic/master) [![PyPI version](https://badge.fury.io/py/bioepic.svg)](https://badge.fury.io/py/bioepic)
+[![Build Status](https://travis-ci.org/endrebak/epic.svg?branch=master)](https://travis-ci.org/endrebak/epic) [![Coverage Status](https://coveralls.io/repos/github/endrebak/epic/badge.svg?branch=master)](https://coveralls.io/github/endrebak/epic?branch=master) [![Code Health](https://landscape.io/github/endrebak/epic/master/landscape.svg?style=flat)](https://landscape.io/github/endrebak/epic/master) [![PyPI version](https://badge.fury.io/py/bioepic.svg)](https://badge.fury.io/py/bioepic) [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/bioepic/README.html)
 
 epic is a software package for finding medium to diffusely enriched domains in
 chip-seq data. It is a fast, parallel and memory-efficient implementation of the
@@ -185,11 +185,15 @@ Chongzhi Zang, Dustin E. Schones, Chen Zeng, Kairong Cui, Keji Zhao and Weiqun P
 
 Most of the improvements in epic were possible due to Python Science libraries that were not available when SICER was originally written. Thanks to the Pandas developers!
 
+#### Author
+
+Endre Bakken Stovner
+
 #### Contributors
 
-* Endre Bakken Stovner (main author)
 * Pål Sætrom (algorithmic/theoretical discussions, endless patience)
 * Dario Beraldi (argparsing, bam support)
+* Ryan Dale (bioconda, ideas)
 
 ## NAQ/Various
 
