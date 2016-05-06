@@ -4,69 +4,18 @@ from io import StringIO
 import pandas as pd
 from numpy import allclose, array_equal, int32
 
-from addict import Dict
-
-import argparse
-parser = argparse.ArgumentParser(
-    description="""Diffuse domain ChIP-Seq caller based on SICER.""")
-
-parser.add_argument(
-    '--number-cores',
-    '-cpu',
-    required=False,
-    default=1,
-    type=int,
-    help=
-    '''Number of cpus to use. Can use at most one per chromosome. Default: 1.''')
-
-parser.add_argument('--genome',
-                    '-gn',
-                    required=False,
-                    default="hg19",
-                    type=str,
-                    help='''Which genome to analyze. Default: hg19.''')
-
-parser.add_argument(
-    '--keep-duplicates',
-    '-k',
-    required=False,
-    default=False,
-    type=bool,
-    help=
-    '''Keep reads mapping to the same position on the same strand within a library. Default is to remove all but the first duplicate.
-                   ''')
-
-parser.add_argument(
-    '--window-size',
-    '-w',
-    required=False,
-    default=200,
-    type=int,
-    help=
-    '''Size of the windows to scan the genome. WINDOW_SIZE is the smallest possible island. Default 200.
-                   ''')
-
-parser.add_argument(
-    '--fragment-size',
-    '-fs',
-    required=False,
-    default=150,
-    type=int,
-    help=
-    '''Size of the sequenced fragment. The center of the the fragment will be taken as half the fragment size. Default 150.
-                   ''')
-
 from epic.windows.count.count_reads_in_windows import count_reads_in_windows, _count_reads_in_windows_paired_end
+
+from addict import Dict
 
 
 @pytest.mark.integration
 def test_count_reads_in_windows(expected_result, input_bed_file):
 
-    args = parser.parse_args()
-    # args = Dict()
-    # args.genome, args.fragment_size, args.window_size = "hg19", 150, 200
-    # args.keep_duplicates = False
-    # args.number_cores = 1
+    args = Dict()
+    args.genome, args.fragment_size, args.window_size = "hg19", 150, 200
+    args.keep_duplicates = False
+    args.number_cores = 1
 
     actual_result = count_reads_in_windows(input_bed_file, args)
 
