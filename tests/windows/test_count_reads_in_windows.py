@@ -55,6 +55,14 @@ parser.add_argument(
     '''Size of the sequenced fragment. The center of the the fragment will be taken as half the fragment size. Default 150.
                    ''')
 
+parser.add_argument('--paired-end',
+                    '-pe',
+                    required=False,
+                    default=False,
+                    type=bool,
+                    help='''(Bam-only) Use paired-end reads.''')
+
+
 
 @pytest.mark.integration
 def test_count_reads_in_windows(expected_result, input_bed_file):
