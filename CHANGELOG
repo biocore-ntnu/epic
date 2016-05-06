@@ -1,3 +1,9 @@
+# unreleased (06.05.16)
+- fix default value of keep duplicates (was True, now is False)
+- fix max-gap bug (max gap used was actually max-gap - 1)
+- the difference between SICER and epic I thought was a due to a bug, was caused
+  by having different genome versions as default.
+
 # 0.0.6 (10.04.16)
 - add script to compute the effective genome size (thanks to Heng Li for alerting me to the existence of jellyfish2)
 
