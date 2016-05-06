@@ -20,7 +20,9 @@ def _find_islands(window_size, allowed_gaps, score_threshold, df):
     if df.empty:
         return df
 
-    distance_allowed = window_size * allowed_gaps
+    # adding one to allowed gaps, because if one bin starts at x and another at x + window_size
+    # there is no distance between them
+    distance_allowed = window_size * (allowed_gaps + 1)
     chromosome = df.iloc[0].Chromosome
 
     # Code below could probably be optimized....

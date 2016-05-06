@@ -41,8 +41,9 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
-# unreleased (03.05.16)
+# unreleased (06.05.16)
 - fix default value of keep duplicates (was True, now is False)
+- fix max-gap bug (max gap used was actually max-gap - 1)
 
 # 0.0.6 (10.04.16)
 - add script to compute the effective genome size (thanks to Heng Li for alerting me to the existence of jellyfish2)
