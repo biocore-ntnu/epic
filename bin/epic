@@ -51,7 +51,7 @@ parser.add_argument(
     '--keep-duplicates',
     '-k',
     required=False,
-    default=True,
+    default=False,
     type=bool,
     help=
     '''Keep reads mapping to the same position on the same strand within a library. Default is to remove all but the first duplicate.
