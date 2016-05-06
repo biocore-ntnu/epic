@@ -4,17 +4,20 @@ from io import StringIO
 import pandas as pd
 from numpy import allclose, array_equal, int32
 
+from addict import Dict
+
 from epic.windows.count.count_reads_in_windows import count_reads_in_windows, _count_reads_in_windows_paired_end
 
 
 @pytest.mark.integration
 def test_count_reads_in_windows(expected_result, input_bed_file):
 
-    genome, fragment_size, window_size = "hg19", 150, 200
-    keep_duplicates = False
+    args = Dict()
+    args.genome, args.fragment_size, args.window_size = "hg19", 150, 200
+    args.keep_duplicates = False
+    args.number_cores = 1
 
-    actual_result = count_reads_in_windows(
-        input_bed_file, genome, fragment_size, window_size, keep_duplicates, 1)
+    actual_result = count_reads_in_windows(input_bed_file, args)
 
     actual_result = pd.concat(actual_result)
 
