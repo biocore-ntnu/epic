@@ -41,11 +41,12 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
-# unreleased (06.05.16)
+# 0.0.7 (06.05.16)
 - fix default value of keep duplicates (was True, now is False)
 - fix max-gap bug (max gap used was actually max-gap - 1)
-- the difference between SICER and epic I thought was a due to a bug, was caused
-  by having different genome versions as default.
+- (internal: no more functions with > 5 arguments)
+- (the difference between SICER and epic I thought was a due to a bug, was caused
+  by them having different genome versions as default)
 
 # 0.0.6 (10.04.16)
 - add script to compute the effective genome size (thanks to Heng Li for alerting me to the existence of jellyfish2)
@@ -134,6 +135,10 @@ See [this page](helper_scripts.md) for the various helper scripts that are a par
 * Add paired end support
 * Add more examples of usage
 * Add bigwig output for islands
+* Improve logging messages
+* Write proper docs
+* Explain the effective genome size and test how much it matters
+* Test island threshold difference between SICER and epic on different datasets
 
 ## Usage
 

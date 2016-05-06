@@ -6,23 +6,23 @@ import pandas as pd
 from joblib import Parallel, delayed
 
 
-def find_islands(dfs, window_size, allowed_gaps, score_threshold, nb_cpu):
+def find_islands(dfs, score_threshold, args):
     logging.info("Merging bins into islands.")
-    parallel_find_islands = partial(_find_islands, window_size, allowed_gaps,
-                                    score_threshold)
-    clustered_islands = Parallel(n_jobs=nb_cpu)(
+    parallel_find_islands = partial(_find_islands, args.window_size,
+                                    args.gaps_allowed, score_threshold)
+    clustered_islands = Parallel(n_jobs=args.number_cores)(
         delayed(parallel_find_islands)(df) for df in dfs)
     return clustered_islands
 
 
-def _find_islands(window_size, allowed_gaps, score_threshold, df):
+def _find_islands(window_size, gaps_allowed, score_threshold, df):
 
     if df.empty:
         return df
 
     # adding one to allowed gaps, because if one bin starts at x and another at x + window_size
     # there is no distance between them
-    distance_allowed = window_size * (allowed_gaps + 1)
+    distance_allowed = window_size * (gaps_allowed + 1)
     chromosome = df.iloc[0].Chromosome
 
     # Code below could probably be optimized....
