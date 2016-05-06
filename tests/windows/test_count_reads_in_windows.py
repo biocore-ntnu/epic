@@ -62,8 +62,6 @@ parser.add_argument('--paired-end',
                     type=bool,
                     help='''(Bam-only) Use paired-end reads.''')
 
-
-
 @pytest.mark.integration
 def test_count_reads_in_windows(expected_result, input_bed_file):
 
