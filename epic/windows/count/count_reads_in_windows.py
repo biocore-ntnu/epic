@@ -15,50 +15,41 @@ from epic.windows.count.merge_chromosome_dfs import merge_chromosome_dfs
 from epic.windows.count.remove_out_of_bounds_bins import remove_out_of_bounds_bins
 
 
-def count_reads_in_windows(bed_file,
-                           genome,
-                           fragment_size,
-                           window_size,
-                           keep_duplicates,
-                           paired_end,
-                           nb_cpus=1):
+def count_reads_in_windows(bed_file, args):
 
-    chromosome_size_dict = create_genome_size_dict(genome)
+    chromosome_size_dict = create_genome_size_dict(args.genome)
     chromosomes = natsorted(list(chromosome_size_dict.keys()))
 
-    if not paired_end:
-        parallel_count_reads = partial(_count_reads_in_windows, bed_file,
-                                       fragment_size, window_size,
-                                       keep_duplicates)
+    if not args.paired_end:
+        parallel_count_reads = partial(_count_reads_in_windows, bed_file, args)
     else:
-        parallel_count_reads = partial(_count_reads_in_windows, bed_file,
-                                       fragment_size, window_size,
-                                       keep_duplicates)
+        parallel_count_reads = partial(_count_reads_in_windows_paired_end,
+                                       bed_file, args)
 
     info("Binning chromosomes {}".format(", ".join([c.replace("chr", "")
                                                     for c in chromosomes])))
-    chromosome_dfs = Parallel(n_jobs=nb_cpus)(delayed(parallel_count_reads)(
-        chromosome_size_dict[chromosome], chromosome,
-        strand) for chromosome, strand in product(chromosomes, ["+", "-"]))
+    chromosome_dfs = Parallel(n_jobs=args.number_cores)(
+        delayed(parallel_count_reads)(chromosome_size_dict[chromosome],
+                                      chromosome, strand)
+        for chromosome, strand in product(chromosomes, ["+", "-"]))
 
     info("Merging the bins on both strands per chromosome.")
     both_chromosome_strand_dfs = [df_pair
                                   for df_pair in _pairwise(chromosome_dfs)]
     merged_chromosome_dfs = Parallel(
-        n_jobs=nb_cpus)(delayed(merge_chromosome_dfs)(df_pair)
-                        for df_pair in both_chromosome_strand_dfs)
+        n_jobs=args.number_cores)(delayed(merge_chromosome_dfs)(df_pair)
+                                  for df_pair in both_chromosome_strand_dfs)
 
     return merged_chromosome_dfs
 
 
-def _count_reads_in_windows(bed_file, fragment_size, window_size,
-                            keep_duplicates, chromosome_size, chromosome,
+def _count_reads_in_windows(bed_file, args, chromosome_size, chromosome,
                             strand):
 
-    halved_fragment_size = fragment_size // 2
+    halved_fragment_size = args.fragment_size // 2
     idx = 1 if strand == "+" else 2  # fragment start indices
 
-    if not keep_duplicates:
+    if not args.keep_duplicates:
         duplicate_handling = " uniq | "
     else:
         duplicate_handling = ""
@@ -87,7 +78,7 @@ def _count_reads_in_windows(bed_file, fragment_size, window_size,
                                      duplicate_handling=duplicate_handling,
                                      idx=idx,
                                      halved_fragment_size=halved_fragment_size,
-                                     window_size=window_size)
+                                     window_size=args.window_size)
 
     output = check_output(command, shell=True)
 
@@ -104,11 +95,9 @@ def _count_reads_in_windows(bed_file, fragment_size, window_size,
     return out_table
 
 
-def _count_reads_in_windows_paired_end(bed_file, fragment_size, window_size,
-                                       keep_duplicates, chromosome_size,
-                                       chromosome):
+def _count_reads_in_windows_paired_end(bed_file, args, chromosome_size):
 
-    if not keep_duplicates:
+    if not args.keep_duplicates:
         duplicate_handling = " uniq | "
     else:
         duplicate_handling = ""

@@ -132,7 +132,4 @@ if __name__ == '__main__':
 
     print(args)
 
-    run_epic(args.treatment, args.control, args.false_discovery_rate_cutoff,
-             args.genome, args.fragment_size, args.window_size,
-             args.gaps_allowed, args.keep_duplicates, args.paired_end,
-             args.number_cores)
+    run_epic(args)

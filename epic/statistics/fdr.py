@@ -2,7 +2,7 @@ from epic.config.genomes import get_effective_genome_length
 from scipy.stats import poisson, rankdata
 
 
-def compute_fdr(df, total_chip_reads, total_input_reads, genome, fdr_cutoff):
+def compute_fdr(df, total_chip_reads, total_input_reads, args):
 
     total_island_input_reads = df["Input"].sum()
 
@@ -12,7 +12,7 @@ def compute_fdr(df, total_chip_reads, total_input_reads, genome, fdr_cutoff):
 
     scaling_factor = (total_chip_reads * 1.0) / total_input_reads
 
-    effective_genome_size = get_effective_genome_length(genome)
+    effective_genome_size = get_effective_genome_length(args.genome)
     zero_controls_multiplier = total_input_reads * 1.0 / effective_genome_size
 
     avg_0_denom = (df["End"] - df["Start"] + 1) * zero_controls_multiplier
@@ -33,6 +33,6 @@ def compute_fdr(df, total_chip_reads, total_input_reads, genome, fdr_cutoff):
     fdr_too_high = df["FDR_value"] > 1
     df.loc[fdr_too_high, "FDR_value"] = 1
 
-    df = df[df["FDR_value"] < fdr_cutoff]
+    df = df[df["FDR_value"] < args.false_discovery_rate_cutoff]
 
     return df
