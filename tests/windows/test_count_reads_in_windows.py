@@ -8,7 +8,7 @@ from addict import Dict
 
 import argparse
 parser = argparse.ArgumentParser(
-    description="""Diffuse domain ChIP-Seq caller based on SICER."""
+    description="""Diffuse domain ChIP-Seq caller based on SICER.""")
 
 parser.add_argument(
     '--number-cores',
@@ -55,7 +55,6 @@ parser.add_argument(
     help=
     '''Size of the sequenced fragment. The center of the the fragment will be taken as half the fragment size. Default 150.
                    ''')
-
 
 from epic.windows.count.count_reads_in_windows import count_reads_in_windows, _count_reads_in_windows_paired_end
 
