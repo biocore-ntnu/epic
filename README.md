@@ -202,7 +202,7 @@ Endre Bakken Stovner
 
 * Pål Sætrom (algorithmic/theoretical discussions, endless patience)
 * Dario Beraldi (argparsing, bam support)
-* Ryan Dale (bioconda, ideas)
+* Ryan Dale (bioconda, ideas, genome info script)
 
 ## NAQ/Various
 
@@ -211,15 +211,6 @@ Answers to some questions no-one has ever asked me.
 #### Why is the SICER algorithm so great?
 
 The wonderful thing about the SICER algorithm is that is very careful about dropping windows with few reads in them. All ChIP-seq callers I know have some preprocessing step where this is done liberally. SICER pools these windows together and gives them a composite score, allowing very long stretches of very diffuse signal to be detected.
-
-#### Difference from the original SICER
-
-Note that the island enriched threshold computation produces results that are < ~10% more conservative than in the original SICER.
-This is due to numerics (summing many very small numbers is done in both implementations, albeit slightly differently).
-
-This gives a different cutoff than the original, but produces virtually identical results (since epic and SICER produces the same candidate island list, with the same order, but epic selects slightly fewer islands from this list).
-
-All in all, a rounding error with no significance.
 
 #### Why another ChIP-Seq domain caller?
 

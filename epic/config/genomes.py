@@ -49,11 +49,15 @@ chrY	59373566""",
  chrY     57772954
  chrM     16571"""}
 
+import pkg_resources
 
 def create_genome_size_dict(genome):
     """Creates genome size dict from string containing data."""
 
-    size_lines = CHROMOSOME_SIZE_DICT[genome].splitlines()
+    size_string = pkg_resources.resource_string("epic", "scripts/chromsizes/{}.chromsizes".format(genome))
+    size_lines = size_string.decode().splitlines()
+
+    # size_lines = CHROMOSOME_SIZE_DICT[genome].splitlines()
 
     size_dict = {}
     for line in size_lines:

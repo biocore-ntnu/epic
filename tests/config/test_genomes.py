@@ -3,10 +3,11 @@ import pytest
 import pandas as pd
 import numpy as np
 
+import pkg_resources, os
+
 from io import StringIO
 
 from epic.config.genomes import create_genome_size_dict
-
 
 @pytest.fixture
 def input_data():

@@ -11,11 +11,11 @@ if sys.version_info[0] == 2:
 setup(
     name="bioepic",
     packages=find_packages(),
-    package_dir={'epic': 'epic/scripts'},
-    package_data={'epic': ['chromsizes/*', 'effective_sizes/*']},
+
     # ext_modules=cythonize(
     #      "epic/statistics/add_to_island_expectations_cython.pyx"),
     scripts=["bin/epic", "bin/epic-effective"],
+    package_data={'epic': ['scripts/effective_sizes/*.txt', 'scripts/chromsizes/*chromsizes']},
     version=__version__,
     description="Chip-Seq broad peak/domain finder.",
     author="Endre Bakken Stovner",
