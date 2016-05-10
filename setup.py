@@ -3,9 +3,7 @@ from setuptools import setup, find_packages
 # from Cython.Build import cythonize
 
 from epic.version import __version__
-
-install_requires = ["scipy", "pandas", "numpy", "natsort", "joblib", "docopt",
-                    "pyfaidx", "coveralls", "addict"]
+install_requires = ["scipy", "pandas", "numpy", "natsort", "joblib", "pyfaidx"]
 
 if sys.version_info[0] == 2:
     install_requires.append("functools32")
@@ -13,6 +11,8 @@ if sys.version_info[0] == 2:
 setup(
     name="bioepic",
     packages=find_packages(),
+    package_dir={'epic': 'epic/scripts'},
+    package_data={'epic': ['chromsizes/*', 'effective_sizes/*']},
     # ext_modules=cythonize(
     #      "epic/statistics/add_to_island_expectations_cython.pyx"),
     scripts=["bin/epic", "bin/epic-effective"],

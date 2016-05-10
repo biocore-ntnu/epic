@@ -76,7 +76,7 @@ rule effective_genome_size:
     input: 'trimmed_fasta/{genome}.trimmed.fa'
     output: 'effective_sizes/{genome}_{readlength}.txt'
     threads: 4
-    params: 
+    params:
     shell:
         'epic-effective --read-length={wildcards.readlength} --nb-cpu={threads} --tmpdir {tmpdir} {input} > {output}.tmp && mv {output}.tmp {output}'
 
