@@ -45,6 +45,7 @@ def run_epic(args):
 
     logging.info("Computing FDR.")
     df = compute_fdr(df, nb_chip_reads, nb_input_reads, args)
+    logging.info("Is FDR compute finished?")
 
     df[["Start", "End"]] = df[["Start", "End"]].astype(int)
     df.to_csv(stdout, index=False, sep=" ")
