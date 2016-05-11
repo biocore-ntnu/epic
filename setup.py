@@ -7,7 +7,7 @@ from epic.version import __version__
 install_requires = ["scipy", "pandas", "numpy", "natsort", "joblib", "pyfaidx"]
                    
 try:
-    os.getenv("TRAVIS"):
+    os.getenv("TRAVIS")
     install_requires.append("coveralls")
 else:
     pass
