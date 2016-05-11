@@ -6,7 +6,7 @@ Compute the effective genome size from a fasta file.
 (Visit github.com/endrebak/epic for examples and help.)
 
 Usage:
-    epic-effective --read-length=LEN [--nb-cpu=CPU] FILE
+    epic-effective --read-length=LEN [--nb-cpu=CPU] [--tmpdir=TMP] FILE
     epic-effective --help
 
 Arguments:
@@ -16,6 +16,7 @@ Arguments:
 Options:
     -h --help                 show this help message
     -n CPU --nb-cpu CPU       number of cores to use [default: 1]
+    -t --tmpdir TMP           temporary directory. Default is to use $TMPDIR if set, otherwise /tmp.
 """
 import logging
 
@@ -30,5 +31,5 @@ if __name__ == '__main__':
 
     fasta, read_length = args["FILE"], int(args["--read-length"])
     nb_cpu = int(args["--nb-cpu"])
-
-    effective_genome_size(fasta, read_length, nb_cpu)
+    tmpdir = args["--tmpdir"]
+    effective_genome_size(fasta, read_length, nb_cpu, tmpdir)

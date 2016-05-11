@@ -3,12 +3,13 @@ from __future__ import print_function, division
 import sys
 import atexit
 from subprocess import call, check_output
+import os
 from os.path import basename
 
 from pyfaidx import Fasta
 
 
-def effective_genome_size(fasta, read_length):
+def effective_genome_size(fasta, read_length, nb_cores, tmpdir=None):
     """Compute effective genome size for genome."""
 
     idx = Fasta(fasta)
@@ -28,7 +29,12 @@ def effective_genome_size(fasta, read_length):
             "You probably want to remove all chromosomes in your fasta containing '_' for the effective genome size computation to be accurate.",
             file=sys.stderr)
 
-    output_file = "/tmp/" + basename(fasta) + ".jf"
+    if tmpdir is None:
+        try:
+            tmpdir = os.environ['TMPDIR']
+        except KeyError:
+            tmpdir = '/tmp'
+    output_file = os.path.join(tmpdir, '{1}.jf'.format(read_length, basename(fasta)))
     atexit.register(
         lambda: call("rm {output_file}".format(output_file=output_file), shell=True))
 
