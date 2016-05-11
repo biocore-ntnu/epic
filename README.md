@@ -41,10 +41,14 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
+# 0.0.8 (unreleased)
+- add snakemake-workflow to get all genome data (thanks Ryan Dale)
+- internal: add chromsizes to package and use pkg_utils to get them
+
 # 0.0.7 (06.05.16)
 - fix default value of keep duplicates (was True, now is False)
 - fix max-gap bug (max gap used was actually max-gap - 1)
-- (internal: no more functions with > 5 arguments)
+- internal: no more functions with > 5 arguments
 - (the difference between SICER and epic I thought was a due to a bug, was caused
   by them having different genome versions as default)
 
