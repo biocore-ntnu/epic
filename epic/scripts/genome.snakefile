@@ -11,6 +11,10 @@ For each genome:
 
 If running on a cluster, you may want to set $TMPDIR.
 """
+__author__ = "Ryan Dale"
+__license__ = "MIT"
+
+shell.executable("bash")
 
 from Bio import SeqIO
 import os
