@@ -10,7 +10,7 @@ from numpy import int32
 
 from natsort import natsorted
 
-from epic.config.genomes import create_genome_size_dict
+from epic.config.genomes import create_genome_size_dict, get_genome_size_file
 from epic.windows.count.merge_chromosome_dfs import merge_chromosome_dfs
 from epic.windows.count.remove_out_of_bounds_bins import remove_out_of_bounds_bins
 
@@ -59,7 +59,7 @@ def _count_reads_in_windows(bed_file, args, chromosome_size, chromosome,
     elif bed_file.endswith(".bz2"):
         grep = "bzgrep "
     elif bed_file.endswith(".bam"):
-        grep = "bedToBam -i {} | grep".format(bed_file)
+        grep = "bamToBed -i {} | grep".format(bed_file)
         bed_file = ""
     else:
         grep = "grep "

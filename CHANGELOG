@@ -1,3 +1,8 @@
+# 0.0.8 (unreleased)
+- add snakemake-workflow to get all genome data (thanks Ryan Dale)
+- internal: add chromsizes to package and use pkg_utils to get them
+- fix bug: used bedToBam when meant to call bamToBed
+
 # 0.0.7 (06.05.16)
 - fix default value of keep duplicates (was True, now is False)
 - fix max-gap bug (max gap used was actually max-gap - 1)
