@@ -135,6 +135,8 @@ See [this page](helper_scripts.md) for the various helper scripts that are a par
 
 ## TODO
 
+[![Stories in In Progress](https://badge.waffle.io/endrebak/epic.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/endrebak/epic)
+
 * Clean up tests
 * Add paired end support
 * Add more examples of usage
