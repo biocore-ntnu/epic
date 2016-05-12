@@ -13,7 +13,7 @@ epic is an improvement over the original SICER by being faster, more memory
 efficient, multicore, and significantly much easier to install and use.
 
 The MIT-licensed code is available at https://github.com/endrebak/epic
-Please post issues, questions, docrequests or whatever is on your mind on the [issue tracker](https://github.com/endrebak/epic/issues).
+Please post issues, questions, docrequests or whatever is on your mind on the [issue tracker](https://github.com/endrebak/epic/issues). To see what issues are currently being worked on, please use the [waffle board](https://waffle.io/endrebak/epic).
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
