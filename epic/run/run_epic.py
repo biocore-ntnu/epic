@@ -1,3 +1,8 @@
+"""Run whole epic pipeline."""
+
+__author__ = "Endre Bakken Stovner https://github.com/endrebak/"
+__license__ = "MIT"
+
 from sys import stdout
 from itertools import chain
 from collections import OrderedDict
@@ -45,10 +50,14 @@ def run_epic(args):
 
     logging.info("Computing FDR.")
     df = compute_fdr(df, nb_chip_reads, nb_input_reads, args)
-    logging.info("Is FDR compute finished?")
 
-    df[["Start", "End"]] = df[["Start", "End"]].astype(int)
-    df.to_csv(stdout, index=False, sep=" ")
+    # Just in case some ints got promoted to float somewhere
+    df[["Start", "End", "ChIP", "Input"]] = df[["Start", "End", "ChIP", "Input"
+                                                ]].astype(int)
+    df.to_csv(stdout, index=False, sep=" ", na_rep="NA")
+
+    return df.reset_index(
+    )  # only returns a value to simplify integration tests
 
 
 def get_island_bins(df, window_size, genome):

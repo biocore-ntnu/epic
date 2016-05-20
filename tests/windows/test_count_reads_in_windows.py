@@ -4,7 +4,8 @@ from io import StringIO
 import pandas as pd
 from numpy import allclose, array_equal, int32
 
-from epic.windows.count.count_reads_in_windows import count_reads_in_windows, _count_reads_in_windows_paired_end
+from epic.windows.count.count_reads_in_windows import (
+    count_reads_in_windows, _count_reads_in_windows_paired_end)
 
 
 @pytest.mark.integration

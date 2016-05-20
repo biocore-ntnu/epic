@@ -130,6 +130,4 @@ if __name__ == '__main__':
     from epic.run.run_epic import run_epic
     from epic.config import logging_settings
 
-    print(args)
-
     run_epic(args)

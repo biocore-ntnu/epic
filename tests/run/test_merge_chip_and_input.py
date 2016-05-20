@@ -40,22 +40,21 @@ def merge_chip_and_input(windows, nb_cpu):
 
     return merged
 
+# @pytest.mark.unit
+# def test_merge_two_bin_files(sample1_dfs, sample2_dfs):
+#     """TODO: Need to test that the lists might not have the same/all chromosomes.
 
-@pytest.mark.unit
-def test_merge_two_bin_files(sample1_dfs, sample2_dfs):
-    """TODO: Need to test that the lists might not have the same/all chromosomes.
+#     It might be possible that there are no sig islands on one chromosome in one
+#     file, while there are in the others. Solve by taking in dict with chromos
+#     instead of list with files?
 
-    It might be possible that there are no sig islands on one chromosome in one
-    file, while there are in the others. Solve by taking in dict with chromos
-    instead of list with files?
+#     You will probably be asked about a bug due to this some time.
+#     """
 
-    You will probably be asked about a bug due to this some time.
-    """
-
-    print("Read run epic code. Begin there!\n" * 5)
-    result = merge_chip_and_input([sample2_dfs, sample2_dfs], 1)
-    print(result)
-    assert 1
+#     print("Read run epic code. Begin there!\n" * 5)
+#     result = merge_chip_and_input([sample2_dfs, sample2_dfs], 1)
+#     print(result)
+#     assert 1
 
 
 def merge_two_bin_dfs(sample1_dfs, sample2_dfs, nb_cpu):

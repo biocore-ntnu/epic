@@ -1,12 +1,10 @@
-from epic.config.genomes import get_effective_genome_length
 from scipy.stats import poisson, rankdata
+import pandas as pd
+
+from epic.config.genomes import get_effective_genome_length
 
 
 def compute_fdr(df, total_chip_reads, total_input_reads, args):
-
-    df.to_csv("for_fdr_test.csv", sep=" ")
-    print("total_chip_reads", total_chip_reads)
-    print("total_input_reads", total_input_reads)
 
     total_island_input_reads = df.Input.sum()
 
@@ -14,7 +12,7 @@ def compute_fdr(df, total_chip_reads, total_input_reads, args):
     # TODO: why does SICER not need this? Different genome versions?
     # run with FDR=1 on original SICER and get this island:
     # chr7    61606400        61606799        3       2       0.167427550906  1.40719467956   0.1674275 50906
-    # does it not show up with epic.
+    # does it not show up with epic?
     if total_island_input_reads == 0:
         total_island_input_reads = 2
 
@@ -30,17 +28,19 @@ def compute_fdr(df, total_chip_reads, total_input_reads, args):
     avg = df.Input * scaling_factor
     avg[df.Input == 0] = avg_0_denom[df.Input == 0]
 
-    df.P_value = poisson.sf(df.ChIP, avg)
-    no_differential_expression = df.ChIP <= avg
-    df.loc[no_differential_expression, "P_value"] = 1
+    fold_change = df.ChIP / avg
+    df.insert(len(df.columns), "Fold_change", fold_change)
 
-    df.Fold_change = df.ChIP / avg
+    p_vals = pd.Series(poisson.sf(df.ChIP, avg), index=df.index)
 
-    ranked_p_values = rankdata(df.P_value)
-    df.FDR_value = df.P_value * len(df) / ranked_p_values
-    fdr_too_high = df.FDR_value > 1
-    df.loc[fdr_too_high, "FDR_value"] = 1
+    p_vals[df.ChIP <= avg] = 1
+    df.insert(len(df.columns), "P", p_vals)
 
-    df = df[df.FDR_value < args.false_discovery_rate_cutoff]
+    ranked_p_values = rankdata(p_vals)
+    fdr = p_vals * len(df) / ranked_p_values
+    fdr[fdr > 1] = 1
+    df.insert(len(df.columns), "FDR", fdr)
+
+    df = df[df.FDR < args.false_discovery_rate_cutoff]
 
     return df
