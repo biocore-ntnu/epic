@@ -41,8 +41,11 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
-# 0.0.8 (unreleased)
+# 0.0.8 (24.05.16)
 - add snakemake-workflow to get all genome data (thanks Ryan Dale)
+- new flag: effective genome length
+- epic now automatically finds the correct effective genome size
+- effective genome sizes updated, will lead to slightly different results
 - internal: add chromsizes to package and use pkg_utils to get them
 - fix bug: used bedToBam when meant to call bamToBed
 

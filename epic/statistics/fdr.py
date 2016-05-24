@@ -1,8 +1,6 @@
 from scipy.stats import poisson, rankdata
 import pandas as pd
 
-from epic.config.genomes import get_effective_genome_length
-
 
 def compute_fdr(df, total_chip_reads, total_input_reads, args):
 
@@ -18,8 +16,7 @@ def compute_fdr(df, total_chip_reads, total_input_reads, args):
 
     scaling_factor = (total_chip_reads * 1.0) / total_input_reads
 
-    effective_genome_size = get_effective_genome_length(args.genome)
-    zero_controls_multiplier = total_input_reads * 1.0 / effective_genome_size
+    zero_controls_multiplier = total_input_reads * 1.0 / args.effective_genome_length
 
     avg_0_denom = (df.End - df.Start + 1) * zero_controls_multiplier
     avg_0_denom[avg_0_denom > 0.25] = 0.25

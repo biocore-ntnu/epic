@@ -97,6 +97,14 @@ parser.add_argument(
     '''Remove all islands with an FDR below cutoff. Default 1.0 (i.e. all found islands included no matter how bad the adjusted p-value.).
                    ''')
 
+parser.add_argument(
+    '--effective_genome_length',
+    '-egs',
+    required=False,
+    type=float,
+    help=
+    '''Use a different effective genome size than the one included in epic. The default value depends on the genome and readlength.''')
+
 parser.add_argument('--paired-end',
                     '-pe',
                     required=False,
@@ -120,6 +128,10 @@ Note:
 import logging
 from sys import argv
 
+from epic.utils.find_readlength import (find_readlength,
+                                        get_closest_readlength)
+from epic.config.genomes import get_effective_genome_length
+
 if __name__ == '__main__':
 
     args = parser.parse_args()
@@ -129,5 +141,12 @@ if __name__ == '__main__':
 
     from epic.run.run_epic import run_epic
     from epic.config import logging_settings
+
+    # in case the user entered no effective genome size
+    if not args.effective_genome_length:
+        estimated_readlength = find_readlength(args)
+        closest_readlength = get_closest_readlength(estimated_readlength)
+        args.effective_genome_length = get_effective_genome_length(
+            args.genome, closest_readlength)
 
     run_epic(args)

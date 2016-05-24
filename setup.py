@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 
 from epic.version import __version__
 install_requires = ["scipy", "pandas", "numpy", "natsort", "joblib", "pyfaidx"]
-                   
-try: 
+
+try:
     os.getenv("TRAVIS")
     install_requires.append("coveralls")
 except:
@@ -22,7 +22,9 @@ setup(
     # ext_modules=cythonize(
     #      "epic/statistics/add_to_island_expectations_cython.pyx"),
     scripts=["bin/epic", "bin/epic-effective"],
-    package_data={'epic': ['scripts/effective_sizes/*.txt', 'scripts/chromsizes/*chromsizes']},
+    package_data={'epic': ['scripts/effective_sizes/*.txt',
+                           'scripts/chromsizes/*chromsizes',
+                           'scripts/genome.snakefile']},
     version=__version__,
     description="Chip-Seq broad peak/domain finder.",
     author="Endre Bakken Stovner",

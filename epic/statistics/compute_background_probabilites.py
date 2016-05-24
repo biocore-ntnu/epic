@@ -11,7 +11,6 @@ from __future__ import print_function
 
 import logging
 
-from epic.config.genomes import get_effective_genome_length
 from epic.statistics.compute_values_needed_for_recurrence import (
     compute_enriched_threshold, compute_gap_factor, compute_boundary)
 from epic.statistics.compute_score_threshold import compute_score_threshold
@@ -20,7 +19,7 @@ from epic.statistics.compute_score_threshold import compute_score_threshold
 # @MEMORY.cache(verbose=0)
 def compute_background_probabilities(total_chip_count, args):
 
-    effective_genome_length = get_effective_genome_length(args.genome)
+    effective_genome_length = args.effective_genome_length
     logging.debug(str(effective_genome_length) + "effective_genome_length")
     # move outside of function call
 
