@@ -42,9 +42,6 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
-# 0.0.10 (10.06.16)
-- hotfix: new code in 0.0.9 did not work for large files (but tests passed nonetheless)
-
 # 0.0.9 (10.06.16)
 - print matrixes of counts per bin for chip and input with flag --print-matrix <outfile_prefix> (these files can be massive, might be slow)
 - use median readlength to find effective genome size, not mean

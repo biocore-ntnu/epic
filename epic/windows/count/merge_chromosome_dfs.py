@@ -6,20 +6,18 @@ def merge_chromosome_dfs(df_tuple):
     """Merges data from the two strands into strand-agnostic counts."""
 
     plus_df, minus_df = df_tuple
+    index_cols = "Chromosome Bin".split()
+    count_column = plus_df.columns[0]
 
     if plus_df.empty:
-        return minus_df.groupby("Bin").sum()
+        return return_other(minus_df, count_column, index_cols)
     if minus_df.empty:
-        return plus_df.groupby("Bin").sum()
-
-    index_cols = "Chromosome Bin".split()
+        return return_other(plus_df, count_column, index_cols)
 
     # sum duplicate bins
     # TODO: why are there duplicate bins here in the first place?
     plus_df = plus_df.groupby(index_cols).sum()
     minus_df = minus_df.groupby(index_cols).sum()
-
-    count_column = plus_df.columns[0]
 
     # first sum the two bins from each strand
     df = pd.concat([plus_df, minus_df], axis=1).fillna(0).sum(axis=1)
@@ -31,6 +29,13 @@ def merge_chromosome_dfs(df_tuple):
     df[["Bin", count_column]] = df[["Bin", count_column]].astype(int32)
     df = df[[count_column, "Chromosome", "Bin"]]
     return df.reset_index(drop=True)
+
+
+def return_other(df, count_column, index_cols):
+
+    df[[count_column, "Bin"]] = df[[count_column, "Bin"]].astype(int32)
+    df = df.groupby(index_cols).sum().reset_index()
+    return df[[count_column, "Chromosome", "Bin"]]
 
 # multiprocessing.pool.RemoteTraceback:
 # """
