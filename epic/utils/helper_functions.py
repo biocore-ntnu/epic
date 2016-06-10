@@ -40,7 +40,7 @@ def get_total_number_of_reads(dfs):
 
 def merge_same_files(sample1_dfs, sample2_dfs, nb_cpu):
 
-    logging.info("Merging ChIP and Input data.")
+    logging.info("Merging same class data.")
     merged_chromosome_dfs = Parallel(n_jobs=nb_cpu)(
         delayed(_merge_same_files)(sample1_df, sample2_df)
         for sample1_df, sample2_df in zip(sample1_dfs, sample2_dfs))
@@ -54,4 +54,4 @@ def _merge_same_files(sample1_df, sample2_df):
                                  how="outer",
                                  on=["Chromosome", "Bin"])
 
-    return merged_df
+    return merged_df.fillna(0)

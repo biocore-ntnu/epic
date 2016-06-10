@@ -84,28 +84,29 @@ def sum_columns(dfs):
 
 def print_matrixes(chip, input, outpath):
 
-    logging.info("Printing matrix of counts.")
+    logging.info("Concating chip matrix before printing.")
 
-    dfc = pd.concat(chip,
-                    axis=0).reset_index(drop=True).set_index(
-                        "Chromosome Bin".split(),
-                        append=True)
+    dfc = pd.concat(chip, axis=0).reset_index(drop=True)
+    dfc["Chromosome"] = dfc["Chromosome"].astype("category")
+    dfc = dfc.set_index("Chromosome Bin".split(), append=True)
 
-    dfi = pd.concat(input,
-                    axis=0).reset_index(drop=True).set_index(
-                        "Chromosome Bin".split(),
-                        append=True)
+    logging.info("Concating input matrix before printing.")
+    dfi = pd.concat(input, axis=0).reset_index(drop=True)
+    dfi["Chromosome"] = dfi["Chromosome"].astype("category")
+    dfi = dfi.set_index("Chromosome Bin".split(), append=True)
 
     dir = dirname(outpath)
     if dir:
         call("mkdir -p {}".format(dir), shell=True)
 
-    dfc.reset_index(level=0,
-                    drop=True).to_csv(outpath + "_chip.csv",
-                                      sep=" ",
-                                      na_rep="NA")
+    chip_file = outpath + "_chip.csv"
+    input_file = outpath + "_input.csv"
+
+    logging.info("Writing chip matrix to file: " + chip_file)
+    dfc.reset_index(level=0, drop=True).to_csv(chip_file, sep=" ", na_rep="NA")
+    logging.info("Writing input matrix to file: " + input_file)
     dfi.reset_index(level=0,
-                    drop=True).to_csv(outpath + "_input.csv",
+                    drop=True).to_csv(input_file,
                                       sep=" ",
                                       na_rep="NA")
 

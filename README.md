@@ -42,39 +42,13 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
+# 0.0.10 (10.06.16)
+- hotfix: new code in 0.0.9 did not work for large files (but tests passed nonetheless)
+
 # 0.0.9 (10.06.16)
-- print matrixes of counts per bin for chip and input with flag --print-matrix <outfile_prefix>
+- print matrixes of counts per bin for chip and input with flag --print-matrix <outfile_prefix> (these files can be massive, might be slow)
 - use median readlength to find effective genome size, not mean
-
-# 0.0.8 (24.05.16)
-- add snakemake-workflow to get all genome data (thanks Ryan Dale)
-- new flag: effective genome length
-- epic now automatically finds the correct effective genome size
-- effective genome sizes updated, will lead to slightly different results
-- internal: add chromsizes to package and use pkg_utils to get them
-- fix bug: used bedToBam when meant to call bamToBed
-
-# 0.0.7 (06.05.16)
-- fix default value of keep duplicates (was True, now is False)
-- fix max-gap bug (max gap used was actually max-gap - 1)
-- internal: no more functions with > 5 arguments
-- (the difference between SICER and epic I thought was a due to a bug, was caused
-  by them having different genome versions as default)
-
-# 0.0.6 (10.04.16)
-- add script to compute the effective genome size (thanks to Heng Li for alerting me to the existence of jellyfish2)
-
-# 0.0.5 (07.04.16)
-- remove Pandas only option. Now unix is required.
-- change to argparse instead of docopt (thanks Dario Beraldi)
-- separate args for control and input files (thanks Dario Beraldi)
-- print cl-args exactly as recieved (thanks to Istvan Albert for pointing out glitch)
-- add version info
-- add support for bam files (requires bedtools)
-- fix "bug" that prints chromosome start and end in output as floats.
-- change output format to use tab as delimiter and underscore as within name delimiter ("P_value", not "P value")
 ```
-
 
 ## Quickstart
 
