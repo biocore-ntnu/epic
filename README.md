@@ -38,9 +38,14 @@ epic is available for python2.7 and above. It can be installed from the Python
 Package Index with `pip install bioepic`, with bioconda using `conda install bioepic` ([bioconda setup instructions](http://bioconda.github.io/index.html#setup)) or by cloning the repo at
 https://github.com/endrebak/epic
 
+
 ## Changelog
 
 ```
+# 0.0.9 (10.06.16)
+- print matrixes of counts per bin for chip and input with flag --print-matrix <outfile_prefix>
+- use median readlength to find effective genome size, not mean
+
 # 0.0.8 (24.05.16)
 - add snakemake-workflow to get all genome data (thanks Ryan Dale)
 - new flag: effective genome length
@@ -69,6 +74,7 @@ https://github.com/endrebak/epic
 - fix "bug" that prints chromosome start and end in output as floats.
 - change output format to use tab as delimiter and underscore as within name delimiter ("P_value", not "P value")
 ```
+
 
 ## Quickstart
 

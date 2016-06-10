@@ -2,7 +2,7 @@ import pytest
 
 from io import StringIO
 import pandas as pd
-from numpy import allclose
+from numpy import allclose, int32
 
 from epic.windows.count.merge_chromosome_dfs import merge_chromosome_dfs
 
@@ -11,10 +11,12 @@ from epic.windows.count.merge_chromosome_dfs import merge_chromosome_dfs
 def test_merge_chromosome_dfs(plus_df, minus_df, expected_df):
 
     actual_df = merge_chromosome_dfs((plus_df, minus_df))
-    print(actual_df.to_csv(sep=" "))
-    print(expected_df.to_csv(sep=" "))
-    print(actual_df)
-    print(expected_df)
+    print(actual_df.to_csv(sep=" "), "actual")
+    print(expected_df.to_csv(sep=" "), "expected")
+    print(actual_df, "actual")
+    print(expected_df, "expected")
+    print(actual_df.dtypes, "actual")
+    print(expected_df.dtypes, "expected")
     assert actual_df.equals(expected_df)
 
 
@@ -50,4 +52,6 @@ Count   Chromosome Bin
 7      chr1       39036800
 1      chr1           73781000
 1     chr1        90059600"""),
-        sep="\s+")
+        sep="\s+",
+        dtype={"Count": int32,
+               "Bin": int32})

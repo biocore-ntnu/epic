@@ -53,10 +53,5 @@ def _merge_same_files(sample1_df, sample2_df):
     merged_df = sample1_df.merge(sample2_df,
                                  how="outer",
                                  on=["Chromosome", "Bin"])
-    merged_df = merged_df.fillna(0)
-
-    merged_df["Count"] = merged_df["Count_x"] + merged_df["Count_y"]
-
-    merged_df = merged_df.drop(["Count_x", "Count_y"], axis=1)
 
     return merged_df

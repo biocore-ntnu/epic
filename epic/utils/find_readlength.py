@@ -13,7 +13,7 @@ __license__ = "MIT"
 
 
 def find_readlength(args):
-    """Estimate length of reads based on 1000 first."""
+    """Estimate length of reads based on 10000 first."""
 
     bed_file = args.treatment[0]
 
@@ -27,7 +27,7 @@ def find_readlength(args):
     elif bed_file.endswith(".bam"):
         filereader = "bamToBed -i "
 
-    command = filereader + "{} | head -1000".format(bed_file)
+    command = filereader + "{} | head -10000".format(bed_file)
     output = check_output(command, shell=True)
 
     df = pd.read_table(
@@ -37,12 +37,19 @@ def find_readlength(args):
         sep="\s+",
         names=["Start", "End"])
 
-    avg_readlength = (df.End - df.Start).mean()
+    readlengths = df.End - df.Start
+    mean_readlength = readlengths.mean()
+    median_readlength = readlengths.median()
+    max_readlength = readlengths.max()
+    min_readlength = readlengths.min()
 
-    logging.info("Used {} to estimate an average read length of {}".format(
-        bed_file, avg_readlength))
+    logging.info((
+        "Used first 10000 reads of {} to estimate a median read length of {}\n"
+        "Mean readlength: {}, max readlength: {}, min readlength: {}.").format(
+            bed_file, median_readlength, mean_readlength, max_readlength,
+            min_readlength))
 
-    return avg_readlength
+    return median_readlength
 
 
 def get_closest_readlength(estimated_readlength):

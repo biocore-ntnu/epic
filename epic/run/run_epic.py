@@ -3,16 +3,19 @@
 __author__ = "Endre Bakken Stovner https://github.com/endrebak/"
 __license__ = "MIT"
 
+from os.path import dirname
 from sys import stdout
 from itertools import chain
 from collections import OrderedDict
+from subprocess import call
 import logging
 
 import pandas as pd
 
 from natsort import natsorted
 
-from epic.windows.count.count_reads_in_windows import count_reads_in_windows
+from epic.windows.count.count_reads_in_windows import (
+    count_reads_in_windows, count_reads_in_windows_paired_end)
 from epic.config.genomes import create_genome_size_dict
 from epic.statistics.compute_background_probabilites import compute_background_probabilities
 from epic.statistics.count_to_pvalue import count_to_pvalue
@@ -28,6 +31,12 @@ def run_epic(args):
 
     chip_merged = _merge_files(chip_windows.values(), args.number_cores)
     input_merged = _merge_files(input_windows.values(), args.number_cores)
+
+    if args.print_matrix:
+        print_matrixes(chip_merged, input_merged, args.print_matrix)
+
+    chip_merged = sum_columns(chip_merged)
+    input_merged = sum_columns(input_merged)
 
     nb_chip_reads = get_total_number_of_reads(chip_merged)
     nb_input_reads = get_total_number_of_reads(input_merged)
@@ -58,6 +67,47 @@ def run_epic(args):
 
     return df.reset_index(
     )  # only returns a value to simplify integration tests
+
+
+def sum_columns(dfs):
+
+    new_dfs = []
+    for df in dfs:
+        s = df.set_index("Chromosome Bin".split())
+        s = s.sum(axis=1)
+        s.name = "Count"
+        df = s.reset_index()
+        new_dfs.append(df)
+
+    return new_dfs
+
+
+def print_matrixes(chip, input, outpath):
+
+    logging.info("Printing matrix of counts.")
+
+    dfc = pd.concat(chip,
+                    axis=0).reset_index(drop=True).set_index(
+                        "Chromosome Bin".split(),
+                        append=True)
+
+    dfi = pd.concat(input,
+                    axis=0).reset_index(drop=True).set_index(
+                        "Chromosome Bin".split(),
+                        append=True)
+
+    dir = dirname(outpath)
+    if dir:
+        call("mkdir -p {}".format(dir), shell=True)
+
+    dfc.reset_index(level=0,
+                    drop=True).to_csv(outpath + "_chip.csv",
+                                      sep=" ",
+                                      na_rep="NA")
+    dfi.reset_index(level=0,
+                    drop=True).to_csv(outpath + "_input.csv",
+                                      sep=" ",
+                                      na_rep="NA")
 
 
 def get_island_bins(df, window_size, genome):
@@ -91,7 +141,10 @@ def multiple_files_count_reads_in_windows(bed_files, args):
     bed_windows = OrderedDict()
     for bed_file in bed_files:
         logging.info("Binning " + bed_file)
-        chromosome_dfs = count_reads_in_windows(bed_file, args)
+        if args.paired_end:
+            chromosome_dfs = count_reads_in_windows_paired_end(bed_file, args)
+        else:
+            chromosome_dfs = count_reads_in_windows(bed_file, args)
         bed_windows[bed_file] = chromosome_dfs
 
     return bed_windows
@@ -104,11 +157,15 @@ def _merge_files(windows, nb_cpu):
     dfs, one per chromosome.
 
     Returns a list of dataframes, one per chromosome, with the collective count
-    per bin for all files."""
+    per bin for all files.
 
-    windows = iter(windows)
+    TODO: is it faster to merge all in one command?
+    """
+
+    windows = iter(windows)  # can iterate over because it is an ordereddict
     merged = next(windows)
 
+    # if there is only one file, the merging is skipped since the windows is used up
     for chromosome_dfs in windows:
         merged = merge_same_files(merged, chromosome_dfs, nb_cpu)
 

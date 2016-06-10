@@ -2,7 +2,7 @@ from functools import partial
 from io import BytesIO
 from itertools import product
 from logging import info
-from subprocess import check_output
+from subprocess import check_output, Popen, PIPE
 
 import pandas as pd
 from joblib import Parallel, delayed
@@ -86,34 +86,70 @@ def _count_reads_in_windows(bed_file, args, chromosome_size, chromosome,
         BytesIO(output),
         header=None,
         sep=" ",
-        names=["Count", "Chromosome", "Bin"])
+        names=[bed_file, "Chromosome", "Bin"])
 
     out_table = remove_out_of_bounds_bins(out_table, chromosome_size)
 
-    out_table[["Bin", "Count"]] = out_table[["Bin", "Count"]].astype(int32)
+    out_table[["Bin", bed_file]] = out_table[["Bin", bed_file]].astype(int32)
 
     return out_table
 
 
-def _count_reads_in_windows_paired_end(bed_file, args, chromosome_size):
+def count_reads_in_windows_paired_end(bed_file, args):
+
+    chromosome_size_dict = create_genome_size_dict(args.genome)
+    chromosomes = natsorted(list(chromosome_size_dict.keys()))
+
+    parallel_count_reads = partial(_count_reads_in_windows_paired_end,
+                                   bed_file, args)
+
+    info("Binning chromosomes {}".format(", ".join([c.replace("chr", "")
+                                                    for c in chromosomes])))
+    chromosome_dfs = Parallel(n_jobs=args.number_cores)(
+        delayed(parallel_count_reads)(chromosome_size_dict[chromosome],
+                                      chromosome)
+        for chromosome in chromosomes)
+    print(chromosome_dfs[0])
+
+    # info("Merging the bins on both strands per chromosome.")
+    # both_chromosome_strand_dfs = [df_pair
+    #                               for df_pair in _pairwise(chromosome_dfs)]
+    # merged_chromosome_dfs = Parallel(
+    #     n_jobs=args.number_cores)(delayed(merge_chromosome_dfs)(df_pair)
+    #                               for df_pair in both_chromosome_strand_dfs)
+
+    return chromosome_dfs
+
+
+def _count_reads_in_windows_paired_end(bed_file, args, chromosome_size,
+                                       chromosome):
+    # takes too long time?
 
     if not args.keep_duplicates:
         duplicate_handling = " uniq | "
     else:
         duplicate_handling = ""
 
-    command = """bamToBed -pe -i {bed_file} |
+    command = """bamToBed -bedpe -i {bed_file} |
     grep -E "^{chromosome}\\b.*{chromosome}\\b.*" | # Both chromos must be equal; no chimeras (?)
     cut -f 1-6  | sort -k2,3n -k4,5n | {duplicate_handling} # get chr start end chr start end for PE; sort on location
-    LC_ALL=C perl -a -ne 'use List::Util qw[min max]; $start = min($F[1], $F[2]); $end = max($F[4], $F[5]); $middle = $start + int(($end - $start)/2); $bin = $middle - $middle % 200; print "$F[0] $bin \n"' | # Find bin of midpoint between start and ends
+    LC_ALL=C perl -a -ne 'use List::Util qw[min max]; $start = min($F[1], $F[2]); $end = max($F[4], $F[5]); $middle = $start + int(($end - $start)/2); $bin = $middle - $middle % 200; print "$F[0] $bin\\n"' | # Find bin of midpoint between start and ends
     uniq -c |
     sed -e 's/^[ ]*//'
     """.format(**locals())
 
-    output = check_output(command, shell=True)
+    print(command)
+
+    stdout, stderr = Popen(command,
+                           stdout=PIPE,
+                           stderr=PIPE,
+                           shell=True).communicate()
+
+    print(stderr.split()[:100], "stderr")
+    print(stdout.decode().split()[:100], "stdout")
 
     out_table = pd.read_table(
-        BytesIO(output),
+        BytesIO(stdout),
         header=None,
         sep=" ",
         names=["Count", "Chromosome", "Bin"])

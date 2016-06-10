@@ -67,10 +67,10 @@ def merge_two_bin_dfs(sample1_dfs, sample2_dfs, nb_cpu):
 
 def _merge_two_bin_dfs(df1, df2):
 
-    merged_df = df1.merge(df2,
-                          how="outer",
-                          on=["Chromosome", "Bin"],
-                          suffixes=("_x", "_y"))
+    merged_df = df1.merge(df2, how="outer", on=["Chromosome", "Bin"])  #,
+    # suffixes=("_x", "_y"))
+    print(merged_df)
+    raise
     merged_df = merged_df.fillna(0)
 
     merged_df["Count"] = merged_df["Count_x"] + merged_df["Count_y"]

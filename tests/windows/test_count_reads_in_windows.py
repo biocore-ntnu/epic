@@ -15,30 +15,10 @@ def test_count_reads_in_windows(expected_result, input_bed_file, args_200):
 
     actual_result = pd.concat(actual_result)
 
-    print(actual_result)
-    print(expected_result)
+    print(actual_result.values, "actual")
+    print(expected_result.values, "expected")
 
     assert array_equal(actual_result, expected_result)
-
-
-@pytest.fixture
-def expected_result():
-
-    df = pd.read_table(
-        StringIO(u"""Count Chromosome Bin
-    2 chr1 39036800
-    1 chr1 73781000
-    1 chr1 90059800
-    1 chr3 55648200
-    1 chr7 20246600
-    1 chr7 91135000
-    1 chr13 100938400
-    1 chr19 43528800
-    1 chr19 47108800"""),
-        sep=r"\s+",
-        dtype={"Count": int32,
-               "Bin": int32})
-    return df
 
 
 @pytest.fixture
@@ -56,6 +36,27 @@ chr13	115816130	115816155	U0	0	+
 chr19	43528773	43528798	U0	0	+
 chr19	47109000	47109025	U0	0	-""")
     return str(bed_file)
+
+
+@pytest.fixture
+def expected_result(input_bed_file):
+
+    df = pd.read_table(
+        StringIO(u"""Count Chromosome Bin
+    2 chr1 39036800
+    1 chr1 73781000
+    1 chr1 90059800
+    1 chr3 55648200
+    1 chr7 20246600
+    1 chr7 91135000
+    1 chr13 100938400
+    1 chr19 43528800
+    1 chr19 47108800"""),
+        sep=r"\s+",
+        dtype={"Count": int32,
+               "Bin": int32})
+    df.columns = [input_bed_file, "Chromosome", "Bin"]
+    return df
 
 
 @pytest.fixture

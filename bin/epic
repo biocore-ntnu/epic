@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import argparse
 import os
+
 from epic.version import __version__
 
 parser = argparse.ArgumentParser(
@@ -105,11 +106,17 @@ parser.add_argument(
     help=
     '''Use a different effective genome size than the one included in epic. The default value depends on the genome and readlength.''')
 
+parser.add_argument(
+    '--print-matrix',
+    '-pm',
+    required=False,
+    type=str,
+    help=
+    '''Print the matrix of counts per bin for ChIP and input to files <PRINT_MATRIX>_chip.csv and <PRINT_MATRIX>_input.csv.''')
+
 parser.add_argument('--paired-end',
                     '-pe',
-                    required=False,
-                    default=False,
-                    type=bool,
+                    action="store_true",
                     help='''(Bam-only) Use paired-end reads.''')
 
 parser.add_argument('--version',
@@ -143,10 +150,14 @@ if __name__ == '__main__':
     from epic.config import logging_settings
 
     # in case the user entered no effective genome size
-    if not args.effective_genome_length:
+    if not args.effective_genome_length and not args.paired_end:
         estimated_readlength = find_readlength(args)
         closest_readlength = get_closest_readlength(estimated_readlength)
         args.effective_genome_length = get_effective_genome_length(
             args.genome, closest_readlength)
+    # for paired end the effective genome size is max
+    elif not args.effective_genome_length and args.paired_end:
+        args.effective_genome_length = get_effective_genome_length(args.genome,
+                                                                   100)
 
     run_epic(args)
