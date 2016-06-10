@@ -38,12 +38,11 @@ def _find_islands(window_size, gaps_allowed, score_threshold, df):
     ) > distance_allowed).cumsum()).apply(lambda island: island.Input.sum())
     island_scores = df.groupby(((df.Bin - df.Bin.shift()).abs(
     ) > distance_allowed).cumsum()).apply(lambda island: island.Score.sum())
-    logging.debug("Concatenating for " + chromosome)
+
     df = pd.concat(
         [island_starts, island_ends, island_chip_counts, island_input_counts,
          island_scores],
         axis=1).reset_index(drop=True)
-    logging.debug("Concatenation done for " + chromosome)
 
     df.columns = ["Start", "End", "ChIP", "Input", "Score"]
     df.insert(0, "Chromosome", chromosome)
