@@ -157,6 +157,7 @@ if __name__ == '__main__':
             args.genome, closest_readlength)
     # for paired end the effective genome size is max
     elif not args.effective_genome_length and args.paired_end:
+        logging.info("Using paired end so setting readlength to 100.")
         args.effective_genome_length = get_effective_genome_length(args.genome,
                                                                    100)
 
