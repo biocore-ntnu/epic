@@ -6,7 +6,7 @@
 epic is a software package for finding medium to diffusely enriched domains in
 chip-seq data. It is a fast, parallel and memory-efficient implementation of the
 incredibly popular SICER algorithm. By running epic on a set of data ("ChIP")
-files and control ("Input") files, epic is able to quickly identify
+files and control ("Input") files, epic is able to quickly
 differentially enriched regions.
 
 epic is an improvement over the original SICER by being faster, more memory
@@ -71,7 +71,7 @@ We hope to make further refinements to the actual algorithm and make it even bet
 #### Functionality
 
 epic accepts several input and ChIP files at the same time and accepts bed files
-(both block-zipped and gzipped) and bam files.
+- both block-zipped and gzipped.
 
 Works on files of any size.
 
@@ -111,7 +111,6 @@ Python 2.7 or 3+.
 Various unix tools found on all major distributions.
 
 For the effective genome size script [jellyfish2](https://github.com/gmarcais/Jellyfish) is required.
-To read bam files [bedtools](https://github.com/arq5x/bedtools2) is required.
 
 ## Helper scripts
 
@@ -136,7 +135,6 @@ bamToBed -bedpe -i paired_end_file.bam > file.bedpe
 [![Stories in In Progress](https://badge.waffle.io/endrebak/epic.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/endrebak/epic)
 
 * Clean up tests
-* Add paired end support
 * Add more examples of usage
 * Add bigwig output for islands
 * Improve logging messages
