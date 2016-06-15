@@ -32,8 +32,8 @@ def run_epic(args):
     chip_merged = _merge_files(chip_windows.values(), args.number_cores)
     input_merged = _merge_files(input_windows.values(), args.number_cores)
 
-    if args.print_matrix:
-        print_matrixes(chip_merged, input_merged, args.print_matrix)
+    if args.store_matrix:
+        print_matrixes(chip_merged, input_merged, args.store_matrix)
 
     chip_merged = sum_columns(chip_merged)
     input_merged = sum_columns(input_merged)

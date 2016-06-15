@@ -1,5 +1,8 @@
+# 0.0.10 (11.06.16)
+- remove support for .bam files, use bed/bedpe instead
+
 # 0.0.9 (10.06.16)
-- print matrixes of counts per bin for chip and input with flag --print-matrix <outfile_prefix> (these files can be massive, might be slow)
+- store matrixes of counts per bin for chip and input with flag --store-matrix <outfile_prefix> (these files can be massive, might be slow)
 - use median readlength to find effective genome size, not mean
 
 # 0.0.8 (24.05.16)

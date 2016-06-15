@@ -24,8 +24,6 @@ def find_readlength(args):
         filereader = "gzcat "
     elif bed_file.endswith(".bz2"):
         filereader = "bzgrep "
-    elif bed_file.endswith(".bam"):
-        filereader = "bamToBed -i "
 
     command = filereader + "{} | head -10000".format(bed_file)
     output = check_output(command, shell=True)

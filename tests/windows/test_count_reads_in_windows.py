@@ -1,4 +1,5 @@
 import pytest
+# from collections import namedtuple
 
 from io import StringIO
 import pandas as pd
@@ -74,17 +75,28 @@ chr1	42223	42324	chr1	42285	42386	2PJ3LS1:183:C5RR7ACXX:3:1215:18097:73129	0	+	-
     return str(bed_file)
 
 
-# @pytest.mark.integration
-def test_count_reads_in_windows_paired_end(paired_end):
+@pytest.fixture
+def expected_result_pe():
+    df = pd.read_table(
+        StringIO(u"""Count Chromosome    Bin
+1       chr1  33000
+1       chr1  33600
+1       chr1  38400
+1       chr1  42000
+1       chr1  42200"""),
+        sep="\s+",
+        dtype={"Count": int32,
+               "Bin": int32})
+    return df
 
-    genome, fragment_size, window_size = "hg19", 150, 200
-    keep_duplicates = False
 
-    # result = _count_reads_in_windows_paired_end(paired_end, genome,
-    #                                            fragment_size, window_size,
-    #                                            keep_duplicates, "chr1")
+@pytest.mark.integration
+def test_count_reads_in_windows_paired_end(paired_end, expected_result_pe):
 
-    # print(result)
-    "Paired end support not implemented yet."
-    # assert 0
-    # assert result == expected_result
+    result = _count_reads_in_windows_paired_end(paired_end, False, 249250621,
+                                                "chr1")
+
+    print(result.dtypes)
+    print(expected_result_pe)
+    print(expected_result_pe.dtypes)
+    assert result.equals(expected_result_pe)

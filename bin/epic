@@ -21,7 +21,7 @@ parser.add_argument(
     required=True,
     type=str,
     nargs='+',
-    help='''Treatment (pull-down) file(s) in bam/bed/bed.gz/bed.bz2 format.
+    help='''Treatment (pull-down) file(s) in (b/gzipped) bed/bedpe format.
                    ''')
 
 parser.add_argument(
@@ -30,7 +30,7 @@ parser.add_argument(
     required=True,
     type=str,
     nargs='+',
-    help='''Control (input) file(s) in bam/bed/bed.gz/bed.bz2 format.''')
+    help='''Control (input) file(s) in (b/gzipped) bed/bedpe format.''')
 
 parser.add_argument(
     '--number-cores',
@@ -107,17 +107,17 @@ parser.add_argument(
     '''Use a different effective genome size than the one included in epic. The default value depends on the genome and readlength.''')
 
 parser.add_argument(
-    '--print-matrix',
-    '-pm',
+    '--store-matrix',
+    '-sm',
     required=False,
     type=str,
     help=
-    '''Print the matrix of counts per bin for ChIP and input to files <PRINT_MATRIX>_chip.csv and <PRINT_MATRIX>_input.csv.''')
+    '''Store the matrix of counts per bin for ChIP and input to files <STORE_MATRIX>_chip.csv and <STORE_MATRIX>_input.csv.''')
 
 parser.add_argument('--paired-end',
                     '-pe',
                     action="store_true",
-                    help='''(Bam-only) Use paired-end reads.''')
+                    help='''Use paired end data (bedpe).''')
 
 parser.add_argument('--version',
                     '-v',

@@ -11,7 +11,7 @@ MockNamespace = namedtuple(
     "MockNamespace",
     ["number_cores", "genome", "keep_duplicates", "window_size",
      "fragment_size", "paired_end", "gaps_allowed",
-     "false_discovery_rate_cutoff", "effective_genome_length", "print_matrix",
+     "false_discovery_rate_cutoff", "effective_genome_length", "store_matrix",
      "treatment", "control"])
 
 egs = 2290813547.4  # this is the effective genome size used by the original sicer for hg19

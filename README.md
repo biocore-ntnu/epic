@@ -42,8 +42,11 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
+# 0.0.10 (11.06.16)
+- remove support for .bam files, use bed/bedpe instead
+
 # 0.0.9 (10.06.16)
-- print matrixes of counts per bin for chip and input with flag --print-matrix <outfile_prefix> (these files can be massive, might be slow)
+- store matrixes of counts per bin for chip and input with flag --store-matrix <outfile_prefix> (these files can be massive, might be slow)
 - use median readlength to find effective genome size, not mean
 ```
 
@@ -114,6 +117,20 @@ To read bam files [bedtools](https://github.com/arq5x/bedtools2) is required.
 
 See [this page](helper_scripts.md) for the various helper scripts that are a part of epic.
 
+## Converting bam files to bed
+
+If you have bam files, these can be converted to bed with the command
+
+```
+bamToBed -i file.bam > file.bed
+```
+
+If you have paired-end data, you can use
+
+```
+bamToBed -bedpe -i paired_end_file.bam > file.bedpe
+```
+
 ## TODO
 
 [![Stories in In Progress](https://badge.waffle.io/endrebak/epic.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/endrebak/epic)
@@ -137,7 +154,8 @@ usage: epic [-h] --treatment TREATMENT [TREATMENT ...] --control CONTROL
             [--keep-duplicates KEEP_DUPLICATES] [--window-size WINDOW_SIZE]
             [--gaps-allowed GAPS_ALLOWED] [--fragment-size FRAGMENT_SIZE]
             [--false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF]
-            [--version]
+            [--effective_genome_length EFFECTIVE_GENOME_LENGTH]
+            [--store-matrix STORE_MATRIX] [--paired-end] [--version]
 
 Diffuse domain ChIP-Seq caller based on SICER. (Visit github.com/endrebak/epic
 for examples and help.)
@@ -145,10 +163,10 @@ for examples and help.)
 optional arguments:
   -h, --help            show this help message and exit
   --treatment TREATMENT [TREATMENT ...], -t TREATMENT [TREATMENT ...]
-                        Treatment (pull-down) file(s) in
-                        bam/bed/bed.gz/bed.bz2 format.
+                        Treatment (pull-down) file(s) in (b/gzipped) bed/bedpe
+                        format.
   --control CONTROL [CONTROL ...], -c CONTROL [CONTROL ...]
-                        Control (input) file(s) in bam/bed/bed.gz/bed.bz2
+                        Control (input) file(s) in (b/gzipped) bed/bedpe
                         format.
   --number-cores NUMBER_CORES, -cpu NUMBER_CORES
                         Number of cpus to use. Can use at most one per
@@ -171,7 +189,17 @@ optional arguments:
                         Default 150.
   --false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF, -fdr FALSE_DISCOVERY_RATE_CUTOFF
                         Remove all islands with an FDR below cutoff. Default
-                        1.0, that is, all islands included.
+                        1.0 (i.e. all found islands included no matter how bad
+                        the adjusted p-value.).
+  --effective_genome_length EFFECTIVE_GENOME_LENGTH, -egs EFFECTIVE_GENOME_LENGTH
+                        Use a different effective genome size than the one
+                        included in epic. The default value depends on the
+                        genome and readlength.
+  --store-matrix STORE_MATRIX, -pm STORE_MATRIX
+                        Store the matrix of counts per bin for ChIP and input
+                        to files <STORE_MATRIX>_chip.csv and
+                        <STORE_MATRIX>_input.csv.
+  --paired-end, -pe     Use paired end data (bedpe).
   --version, -v         show program's version number and exit
 ```
 
@@ -188,7 +216,7 @@ Endre Bakken Stovner
 #### Contributors
 
 * Pål Sætrom (algorithmic/theoretical discussions, endless patience)
-* Dario Beraldi (argparsing, bam support)
+* Dario Beraldi (argparsing)
 * Ryan Dale (bioconda, ideas, genome info script)
 
 ## NAQ/Various

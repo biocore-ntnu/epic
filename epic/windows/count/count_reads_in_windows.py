@@ -58,9 +58,6 @@ def _count_reads_in_windows(bed_file, args, chromosome_size, chromosome,
         grep = "zgrep "
     elif bed_file.endswith(".bz2"):
         grep = "bzgrep "
-    elif bed_file.endswith(".bam"):
-        grep = "bamToBed -i {} | grep".format(bed_file)
-        bed_file = ""
     else:
         grep = "grep "
 
@@ -101,7 +98,7 @@ def count_reads_in_windows_paired_end(bed_file, args):
     chromosomes = natsorted(list(chromosome_size_dict.keys()))
 
     parallel_count_reads = partial(_count_reads_in_windows_paired_end,
-                                   bed_file, args)
+                                   bed_file, args.keep_duplicates)
 
     info("Binning chromosomes {}".format(", ".join([c.replace("chr", "")
                                                     for c in chromosomes])))
@@ -109,44 +106,30 @@ def count_reads_in_windows_paired_end(bed_file, args):
         delayed(parallel_count_reads)(chromosome_size_dict[chromosome],
                                       chromosome)
         for chromosome in chromosomes)
-    print(chromosome_dfs[0])
-
-    # info("Merging the bins on both strands per chromosome.")
-    # both_chromosome_strand_dfs = [df_pair
-    #                               for df_pair in _pairwise(chromosome_dfs)]
-    # merged_chromosome_dfs = Parallel(
-    #     n_jobs=args.number_cores)(delayed(merge_chromosome_dfs)(df_pair)
-    #                               for df_pair in both_chromosome_strand_dfs)
 
     return chromosome_dfs
 
 
-def _count_reads_in_windows_paired_end(bed_file, args, chromosome_size,
-                                       chromosome):
-    # takes too long time?
+def _count_reads_in_windows_paired_end(bed_file, keep_duplicates,
+                                       chromosome_size, chromosome):
 
-    if not args.keep_duplicates:
+    if not keep_duplicates:
         duplicate_handling = " uniq | "
     else:
         duplicate_handling = ""
 
-    command = """bamToBed -bedpe -i {bed_file} |
-    grep -E "^{chromosome}\\b.*{chromosome}\\b.*" | # Both chromos must be equal; no chimeras (?)
+    command = """
+    grep -E "^{chromosome}\\b.*{chromosome}\\b.*" {bed_file} | # Both chromos must be equal; no chimeras (?)
     cut -f 1-6  | sort -k2,3n -k4,5n | {duplicate_handling} # get chr start end chr start end for PE; sort on location
     LC_ALL=C perl -a -ne 'use List::Util qw[min max]; $start = min($F[1], $F[2]); $end = max($F[4], $F[5]); $middle = $start + int(($end - $start)/2); $bin = $middle - $middle % 200; print "$F[0] $bin\\n"' | # Find bin of midpoint between start and ends
     uniq -c |
     sed -e 's/^[ ]*//'
     """.format(**locals())
 
-    print(command)
-
     stdout, stderr = Popen(command,
                            stdout=PIPE,
                            stderr=PIPE,
                            shell=True).communicate()
-
-    print(stderr.split()[:100], "stderr")
-    print(stdout.decode().split()[:100], "stdout")
 
     out_table = pd.read_table(
         BytesIO(stdout),
