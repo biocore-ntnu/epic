@@ -110,6 +110,7 @@ def print_matrixes(chip, input, df, args):
     if dir:
         call("mkdir -p {}".format(dir), shell=True)
 
+    logging.info("Writing data matrix to file: " + outpath)
     for i, (chip_df, input_df) in enumerate(zip(chip, input)):
 
         chip_df["Chromosome"] = chip_df["Chromosome"].astype("category")
@@ -124,14 +125,12 @@ def print_matrixes(chip, input, df, args):
 
         dfm = chip_df.join(dfi, how="outer", sort=False).fillna(0)
 
-        logging.info("Writing data matrix to file: " + chip_file)
-
         if i == 0:
             header, mode = True, "w+"
         else:
             header, mode = False, "a"
 
-        dfm.astype(int).to_csv(outfile,
+        dfm.astype(int).to_csv(outpath,
                                sep=" ",
                                na_rep="NA",
                                header=header,
