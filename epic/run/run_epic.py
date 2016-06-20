@@ -118,12 +118,11 @@ def print_matrixes(chip, input, df, args):
         chip_df = chip_df.set_index("Chromosome Bin".split())
         chip_df = islands.join(chip_df, how="right")
 
-        dfi = pd.concat(input, axis=0).reset_index(drop=True)
-        dfi["Chromosome"] = dfi["Chromosome"].astype("category")
-        dfi["Bin"] = dfi["Bin"].astype(int)
-        dfi = dfi.set_index("Chromosome Bin".split())
+        input_df["Chromosome"] = input_df["Chromosome"].astype("category")
+        input_df["Bin"] = input_df["Bin"].astype(int)
+        input_df = input_df.set_index("Chromosome Bin".split())
 
-        dfm = chip_df.join(dfi, how="outer", sort=False).fillna(0)
+        dfm = chip_df.join(input_df, how="outer", sort=False).fillna(0)
 
         if i == 0:
             header, mode = True, "w+"
