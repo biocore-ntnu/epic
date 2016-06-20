@@ -112,7 +112,7 @@ parser.add_argument(
     required=False,
     type=str,
     help=
-    '''Store the matrix of counts per bin for ChIP and input to files <STORE_MATRIX>_chip.csv and <STORE_MATRIX>_input.csv.''')
+    '''Store the matrix of counts per bin for ChIP and input to gzipped file <STORE_MATRIX>.''')
 
 parser.add_argument('--paired-end',
                     '-pe',

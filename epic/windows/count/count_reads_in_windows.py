@@ -20,14 +20,11 @@ def count_reads_in_windows(bed_file, args):
     chromosome_size_dict = create_genome_size_dict(args.genome)
     chromosomes = natsorted(list(chromosome_size_dict.keys()))
 
-    if not args.paired_end:
-        parallel_count_reads = partial(_count_reads_in_windows, bed_file, args)
-    else:
-        parallel_count_reads = partial(_count_reads_in_windows_paired_end,
-                                       bed_file, args)
+    parallel_count_reads = partial(_count_reads_in_windows, bed_file, args)
 
     info("Binning chromosomes {}".format(", ".join([c.replace("chr", "")
                                                     for c in chromosomes])))
+
     chromosome_dfs = Parallel(n_jobs=args.number_cores)(
         delayed(parallel_count_reads)(chromosome_size_dict[chromosome],
                                       chromosome, strand)

@@ -32,16 +32,13 @@ def run_epic(args):
     chip_merged = _merge_files(chip_windows.values(), args.number_cores)
     input_merged = _merge_files(input_windows.values(), args.number_cores)
 
-    if args.store_matrix:
-        print_matrixes(chip_merged, input_merged, args.store_matrix)
+    chip_merged_sum = sum_columns(chip_merged)
+    input_merged_sum = sum_columns(input_merged)
 
-    chip_merged = sum_columns(chip_merged)
-    input_merged = sum_columns(input_merged)
+    nb_chip_reads = get_total_number_of_reads(chip_merged_sum)
+    nb_input_reads = get_total_number_of_reads(input_merged_sum)
 
-    nb_chip_reads = get_total_number_of_reads(chip_merged)
-    nb_input_reads = get_total_number_of_reads(input_merged)
-
-    merged_dfs = merge_chip_and_input(chip_merged, input_merged,
+    merged_dfs = merge_chip_and_input(chip_merged_sum, input_merged_sum,
                                       args.number_cores)
 
     score_threshold, island_enriched_threshold, average_window_readcount = \
@@ -59,6 +56,9 @@ def run_epic(args):
 
     logging.info("Computing FDR.")
     df = compute_fdr(df, nb_chip_reads, nb_input_reads, args)
+
+    if args.store_matrix:
+        print_matrixes(chip_merged, input_merged, df, args)
 
     # Just in case some ints got promoted to float somewhere
     df[["Start", "End", "ChIP", "Input"]] = df[["Start", "End", "ChIP", "Input"
@@ -82,33 +82,62 @@ def sum_columns(dfs):
     return new_dfs
 
 
-def print_matrixes(chip, input, outpath):
+def enriched_bins(df, args):
 
-    logging.info("Concating chip matrix before printing.")
+    df = df.loc[df.FDR < args.false_discovery_rate_cutoff]
 
-    dfc = pd.concat(chip, axis=0).reset_index(drop=True)
-    dfc["Chromosome"] = dfc["Chromosome"].astype("category")
-    dfc = dfc.set_index("Chromosome Bin".split(), append=True)
+    idx_rowdicts = []
+    for _, row in df.iterrows():
+        for bin in range(
+                int(row.Start), int(row.End) + 2, int(args.window_size)):
+            idx_rowdicts.append({"Chromosome": row.Chromosome,
+                                 "Bin": bin,
+                                 "Island": 1})
+    islands = pd.DataFrame.from_dict(idx_rowdicts)
+    islands.loc[:, "Chromosome"].astype("category")
+    islands.loc[:, "Bin"].astype(int)
+    return islands.set_index("Chromosome Bin".split())
 
-    logging.info("Concating input matrix before printing.")
-    dfi = pd.concat(input, axis=0).reset_index(drop=True)
-    dfi["Chromosome"] = dfi["Chromosome"].astype("category")
-    dfi = dfi.set_index("Chromosome Bin".split(), append=True)
+
+def print_matrixes(chip, input, df, args):
+
+    outpath = args.store_matrix
+    assert len(chip) == len(input)
+
+    islands = enriched_bins(df, args)
 
     dir = dirname(outpath)
     if dir:
         call("mkdir -p {}".format(dir), shell=True)
 
-    chip_file = outpath + "_chip.csv"
-    input_file = outpath + "_input.csv"
+    for i, (chip_df, input_df) in enumerate(zip(chip, input)):
 
-    logging.info("Writing chip matrix to file: " + chip_file)
-    dfc.reset_index(level=0, drop=True).to_csv(chip_file, sep=" ", na_rep="NA")
-    logging.info("Writing input matrix to file: " + input_file)
-    dfi.reset_index(level=0,
-                    drop=True).to_csv(input_file,
-                                      sep=" ",
-                                      na_rep="NA")
+        chip_df["Chromosome"] = chip_df["Chromosome"].astype("category")
+        chip_df["Bin"] = chip_df["Bin"].astype(int)
+        chip_df = chip_df.set_index("Chromosome Bin".split())
+        chip_df = islands.join(chip_df, how="right")
+
+        dfi = pd.concat(input, axis=0).reset_index(drop=True)
+        dfi["Chromosome"] = dfi["Chromosome"].astype("category")
+        dfi["Bin"] = dfi["Bin"].astype(int)
+        dfi = dfi.set_index("Chromosome Bin".split())
+
+        dfm = chip_df.join(dfi, how="outer", sort=False).fillna(0)
+
+        logging.info("Writing data matrix to file: " + chip_file)
+
+        if i == 0:
+            header, mode = True, "w+"
+        else:
+            header, mode = False, "a"
+
+        dfm.astype(int).to_csv(outfile,
+                               sep=" ",
+                               na_rep="NA",
+                               header=header,
+                               mode=mode,
+                               compression="gzip",
+                               chunksize=1e6)
 
 
 def get_island_bins(df, window_size, genome):
@@ -163,11 +192,13 @@ def _merge_files(windows, nb_cpu):
     TODO: is it faster to merge all in one command?
     """
 
-    windows = iter(windows)  # can iterate over because it is an ordereddict
+    # windows is a list of chromosome dfs per file
+    windows = iter(windows)  # can iterate over because it is odict_values
     merged = next(windows)
 
     # if there is only one file, the merging is skipped since the windows is used up
     for chromosome_dfs in windows:
+        # merge_same_files merges the chromosome files in parallel
         merged = merge_same_files(merged, chromosome_dfs, nb_cpu)
 
     return merged

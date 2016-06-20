@@ -42,6 +42,9 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
+# 0.1.0 (20.06.16)
+- speed up writing matrix to file
+
 # 0.0.10 (11.06.16)
 - remove support for .bam files, use bed/bedpe instead
 
@@ -193,10 +196,9 @@ optional arguments:
                         Use a different effective genome size than the one
                         included in epic. The default value depends on the
                         genome and readlength.
-  --store-matrix STORE_MATRIX, -pm STORE_MATRIX
+  --store-matrix STORE_MATRIX, -sm STORE_MATRIX
                         Store the matrix of counts per bin for ChIP and input
-                        to files <STORE_MATRIX>_chip.csv and
-                        <STORE_MATRIX>_input.csv.
+                        to gzipped file <STORE_MATRIX>.
   --paired-end, -pe     Use paired end data (bedpe).
   --version, -v         show program's version number and exit
 ```
