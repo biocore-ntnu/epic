@@ -38,4 +38,9 @@ def get_effective_genome_length(genome, read_length):
 
     logging.info("Using an effective genome fraction of {}.".format(egf))
 
-    return float(egf) * genome_length
+    assert float(egf) < 1, "Something wrong happened, effective genome fraction over 1!"
+
+    egs = float(egf) * genome_length
+
+
+    return egs

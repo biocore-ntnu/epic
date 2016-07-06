@@ -143,6 +143,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     print("# epic " + " ".join(argv[1:]))
+    logging.info("# epic " + " ".join(argv[1:]))
 
     from sys import argv
 

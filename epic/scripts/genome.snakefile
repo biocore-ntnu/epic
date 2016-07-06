@@ -26,13 +26,13 @@ import os
 TWOBIT_PATTERN = 'http://hgdownload.soe.ucsc.edu/goldenPath/{genome}/bigZips/{genome}.2bit'
 CHROMSIZES_PATTERN = 'http://hgdownload.soe.ucsc.edu/goldenPath/{genome}/bigZips/{genome}.chrom.sizes'
 
-genomes = ['dm3', 'dm6', 'mm9', 'mm10', 'hg19', 'hg38']
+genomes = ["danRer10"] # ['dm3', 'dm6', 'mm9', 'mm10', 'hg19', 'hg38']
 readlengths = [36, 50, 75, 100]
 
 try:
     tmpdir = os.environ['TMPDIR']
 except KeyError:
-    tmpdir = None
+    tmpdir = "/tmp"
 
 
 effective_sizes = expand('effective_sizes/{genome}_{readlength}.txt', genome=genomes, readlength=readlengths)
@@ -79,7 +79,8 @@ rule trim_underscore_chroms:
 rule effective_genome_size:
     input: 'trimmed_fasta/{genome}.trimmed.fa'
     output: 'effective_sizes/{genome}_{readlength}.txt'
-    threads: 4
+    threads: 25
+    resources: instances = 1
     params:
     shell:
         'epic-effective --read-length={wildcards.readlength} --nb-cpu={threads} --tmpdir {tmpdir} {input} > {output}.tmp && mv {output}.tmp {output}'

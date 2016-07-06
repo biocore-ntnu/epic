@@ -1,5 +1,8 @@
 test-W200-G600-islands-summary-FDR.01
+*gz
+*bed
 epic_output.csv
+*csv
 .cache/
 .coverage
 *fai

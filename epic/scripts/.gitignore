@@ -1,2 +1,3 @@
 fasta
+.snakemake/
 trimmed_fasta

@@ -42,6 +42,10 @@ https://github.com/endrebak/epic
 ## Changelog
 
 ```
+# 0.1.1 (06.07.16)
+- bugfix: effective genome size was way off for hg38
+- add danRer7 and danRer10 genomes
+
 # 0.1.0 (20.06.16)
 - speed up writing matrix to file
 
