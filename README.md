@@ -1,7 +1,8 @@
 
 # epic: diffuse domain ChIP-Seq caller based on SICER
 
-[![Build Status](https://travis-ci.org/endrebak/epic.svg?branch=master)](https://travis-ci.org/endrebak/epic) [![Coverage Status](https://coveralls.io/repos/github/endrebak/epic/badge.svg?branch=master)](https://coveralls.io/github/endrebak/epic?branch=master) [![Code Health](https://landscape.io/github/endrebak/epic/master/landscape.svg?style=flat)](https://landscape.io/github/endrebak/epic/master)  [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/bioepic/README.html)
+[![Build Status](https://travis-ci.org/endrebak/epic.svg?branch=master)](https://travis-ci.org/endrebak/epic) [![Coverage Status](https://coveralls.io/repos/github/endrebak/epic/badge.svg?branch=master)](https://coveralls.io/github/endrebak/epic?branch=master) [![Code Health](https://landscape.io/github/endrebak/epic/master/landscape.svg?style=flat)](https://landscape.io/github/endrebak/epic/master)
+<!-- [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/bioepic/README.html) -->
 
 epic is a software package for finding medium to diffusely enriched domains in
 chip-seq data. It is a fast, parallel and memory-efficient implementation of the
@@ -35,8 +36,9 @@ Please post issues, questions, docrequests or whatever is on your mind on the [i
 ## Install
 
 epic is available for python2.7 and above. It can be installed from the Python
-Package Index with `pip install bioepic`, with bioconda using `conda install bioepic` ([bioconda setup instructions](http://bioconda.github.io/index.html#setup)) or by cloning the repo at
-https://github.com/endrebak/epic
+Package Index with `pip install bioepic` or by cloning the repo at
+https://github.com/endrebak/epic and running `python setup.py install`
+<!-- , with bioconda using `conda install bioepic` ([bioconda setup instructions](http://bioconda.github.io/index.html#setup)) -->
 
 
 ## Changelog
