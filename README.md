@@ -44,6 +44,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.3 (08.08.16)
+- added new setup file for bioconda install
+
 # 0.1.2 (08.08.16)
 - bugfix: fixed lacking zip handling for paired end files (thanks to Piotr Balwierz for reporting)
 
