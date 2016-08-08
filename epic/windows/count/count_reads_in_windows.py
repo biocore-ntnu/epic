@@ -15,6 +15,23 @@ from epic.windows.count.merge_chromosome_dfs import merge_chromosome_dfs
 from epic.windows.count.remove_out_of_bounds_bins import remove_out_of_bounds_bins
 
 
+def _options(bed_file, keep_duplicates):
+
+    if not keep_duplicates:
+        duplicate_handling = " uniq | "
+    else:
+        duplicate_handling = ""
+
+    if bed_file.endswith(".gz"):
+        grep = "zgrep "
+    elif bed_file.endswith(".bz2"):
+        grep = "bzgrep "
+    else:
+        grep = "grep "
+
+    return grep, duplicate_handling
+
+
 def count_reads_in_windows(bed_file, args):
 
     chromosome_size_dict = create_genome_size_dict(args.genome)
@@ -46,17 +63,7 @@ def _count_reads_in_windows(bed_file, args, chromosome_size, chromosome,
     halved_fragment_size = args.fragment_size // 2
     idx = 1 if strand == "+" else 2  # fragment start indices
 
-    if not args.keep_duplicates:
-        duplicate_handling = " uniq | "
-    else:
-        duplicate_handling = ""
-
-    if bed_file.endswith(".gz"):
-        grep = "zgrep "
-    elif bed_file.endswith(".bz2"):
-        grep = "bzgrep "
-    else:
-        grep = "grep "
+    grep, duplicate_handling = _options(bed_file, args.keep_duplicates)
 
     command = (
         "{grep} -E '^{chromosome}\\b.*\\{strand}$' {bed_file} | "
@@ -110,10 +117,7 @@ def count_reads_in_windows_paired_end(bed_file, args):
 def _count_reads_in_windows_paired_end(bed_file, keep_duplicates,
                                        chromosome_size, chromosome):
 
-    if not keep_duplicates:
-        duplicate_handling = " uniq | "
-    else:
-        duplicate_handling = ""
+    grep, duplicate_handling = _options(bed_file, keep_duplicates)
 
     command = """
     grep -E "^{chromosome}\\b.*{chromosome}\\b.*" {bed_file} | # Both chromos must be equal; no chimeras (?)

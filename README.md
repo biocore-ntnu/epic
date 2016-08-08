@@ -44,19 +44,12 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.2 (08.08.16)
+- bugfix: fixed lacking zip handling for paired end files (thanks to Piotr Balwierz for reporting)
+
 # 0.1.1 (06.07.16)
 - bugfix: effective genome size was way off for hg38
 - add danRer7 and danRer10 genomes
-
-# 0.1.0 (20.06.16)
-- speed up writing matrix to file
-
-# 0.0.10 (11.06.16)
-- remove support for .bam files, use bed/bedpe instead
-
-# 0.0.9 (10.06.16)
-- store matrixes of counts per bin for chip and input with flag --store-matrix <outfile_prefix> (these files can be massive, might be slow)
-- use median readlength to find effective genome size, not mean
 ```
 
 ## Quickstart
