@@ -44,6 +44,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.5 (09.08.16)
+- add better error message in the function to merge chip and input
+
 # 0.1.4 (09.08.16)
 - fix bugfix: now zipped pe files properly handled (thanks to Piotr Balwierz for re-reporting)
 

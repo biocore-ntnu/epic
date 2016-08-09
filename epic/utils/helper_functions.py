@@ -4,9 +4,9 @@ from natsort import natsorted
 from joblib import Parallel, delayed
 
 try:
-    from functools import lru_cache  # noqa
+    from functools import lru_cache
 except ImportError:
-    from functools32 import lru_cache  # noqa
+    from functools32 import lru_cache
 
 
 def _merge_chip_and_input(chip_df, input_df):
@@ -21,7 +21,21 @@ def _merge_chip_and_input(chip_df, input_df):
 
     merged_df = merged_df.fillna(0)
 
-    assert len(merged_df) == chip_df_nb_bins
+    if not len(merged_df) == chip_df_nb_bins:
+        assertion_message = [
+            "Wrong number of rows after merging ChIP/Input.",
+            "ChIP bins: " + str(chip_df_nb_bins),
+            "Input bins: " + str(len(input_df)), "Head of ChIP df: ",
+            chip_df.head().to_csv(sep=" "), "Head of Input df: ",
+            input_df.head().to_csv(sep=" "), "Tail of ChIP df: ",
+            chip_df.tail().to_csv(sep=" "), "Tail of Input df: ",
+            input_df.tail().to_csv(sep=" "), "Number of bins in merged df: ",
+            str(len(merged_df)), "Head of merged df: ", input_df.head().to_csv(
+                sep=" "), "Tail of merged df: ",
+            input_df.tail().to_csv(sep=" ")
+        ]
+        assertion_message = "\n".join(assertion_message)
+        assert len(merged_df) == chip_df_nb_bins, assertion_message
 
     return merged_df
 
