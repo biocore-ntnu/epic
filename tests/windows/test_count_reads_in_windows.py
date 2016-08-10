@@ -71,6 +71,7 @@ chr1	33660	33744	chr1	33660	33744	2PJ3LS1:183:C5RR7ACXX:2:2201:20777:74838	0	+	-
 chr1	33660	33744	chr1	33660	33744	2PJ3LS1:183:C5RR7ACXX:3:1213:9620:83082	0	+	-
 chr1	38474	38571	chr1	38474	38571	2PJ3LS1:183:C5RR7ACXX:4:1216:1576:83235	0	+	-
 chr1	41985	42043	chr1	42040	42131	2PJ3LS1:183:C5RR7ACXX:3:1214:11778:16074	1	+	-
+chr1	23025	23045	chr1	43025	43045	2PJ3LS1:183:C5RR7ACXX:8:1115:18054:85095	0	+	-
 chr1	42223	42324	chr1	42285	42386	2PJ3LS1:183:C5RR7ACXX:3:1215:18097:73129	0	+	-""")
     return str(bed_file)
 
@@ -79,7 +80,7 @@ chr1	42223	42324	chr1	42285	42386	2PJ3LS1:183:C5RR7ACXX:3:1215:18097:73129	0	+	-
 def expected_result_pe():
     df = pd.read_table(
         StringIO(u"""Count Chromosome    Bin
-1       chr1  33000
+2       chr1  33000
 1       chr1  33600
 1       chr1  38400
 1       chr1  42000
@@ -96,6 +97,7 @@ def test_count_reads_in_windows_paired_end(paired_end, expected_result_pe):
     result = _count_reads_in_windows_paired_end(paired_end, False, 249250621,
                                                 "chr1")
 
+    print(result)
     print(result.dtypes)
     print(expected_result_pe)
     print(expected_result_pe.dtypes)

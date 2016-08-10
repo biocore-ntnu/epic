@@ -1,3 +1,7 @@
+# 0.1.6 (10.08.16)
+- fix error in merging chip and input for paired end data
+- fix error message in merge chip and input
+
 # 0.1.5 (09.08.16)
 - add better error message in the function to merge chip and input
 

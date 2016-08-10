@@ -44,6 +44,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.6 (10.08.16)
+- fix error in merging chip and input paired end
+- fix error message in merge chip and input
+
 # 0.1.5 (09.08.16)
 - add better error message in the function to merge chip and input
 
@@ -226,6 +230,7 @@ Endre Bakken Stovner
 * Pål Sætrom (algorithmic/theoretical discussions, endless patience)
 * Dario Beraldi (argparsing)
 * Ryan Dale (bioconda, ideas, genome info script)
+* Piotr Balwierz (helping me debug the paired-end mode)
 
 ## NAQ/Various
 

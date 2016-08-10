@@ -30,9 +30,9 @@ def _merge_chip_and_input(chip_df, input_df):
             input_df.head().to_csv(sep=" "), "Tail of ChIP df: ",
             chip_df.tail().to_csv(sep=" "), "Tail of Input df: ",
             input_df.tail().to_csv(sep=" "), "Number of bins in merged df: ",
-            str(len(merged_df)), "Head of merged df: ", input_df.head().to_csv(
-                sep=" "), "Tail of merged df: ",
-            input_df.tail().to_csv(sep=" ")
+            str(len(merged_df)), "Head of merged df: ",
+            merged_df.head().to_csv(sep=" "), "Tail of merged df: ",
+            merged_df.tail().to_csv(sep=" ")
         ]
         assertion_message = "\n".join(assertion_message)
         assert len(merged_df) == chip_df_nb_bins, assertion_message
