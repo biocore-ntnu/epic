@@ -136,11 +136,11 @@ def _count_reads_in_windows_paired_end(bed_file, keep_duplicates,
         BytesIO(stdout),
         header=None,
         sep=" ",
-        names=["Count", "Chromosome", "Bin"])
+        names=[bed_file, "Chromosome", "Bin"])
 
     out_table = remove_out_of_bounds_bins(out_table, chromosome_size)
 
-    out_table[["Bin", "Count"]] = out_table[["Bin", "Count"]].astype(int32)
+    out_table[["Bin", bed_file]] = out_table[["Bin", bed_file]].astype(int32)
 
     return out_table
 

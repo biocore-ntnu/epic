@@ -77,7 +77,7 @@ chr1	42223	42324	chr1	42285	42386	2PJ3LS1:183:C5RR7ACXX:3:1215:18097:73129	0	+	-
 
 
 @pytest.fixture
-def expected_result_pe():
+def expected_result_pe(paired_end):
     df = pd.read_table(
         StringIO(u"""Count Chromosome    Bin
 2       chr1  33000
@@ -88,6 +88,8 @@ def expected_result_pe():
         sep="\s+",
         dtype={"Count": int32,
                "Bin": int32})
+
+    df.columns = [paired_end, "Chromosome", "Bin"]
     return df
 
 
@@ -101,4 +103,4 @@ def test_count_reads_in_windows_paired_end(paired_end, expected_result_pe):
     print(result.dtypes)
     print(expected_result_pe)
     print(expected_result_pe.dtypes)
-    assert result.equals(expected_result_pe)
+    assert array_equal(result, expected_result_pe)

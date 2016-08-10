@@ -45,8 +45,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ```
 # 0.1.6 (10.08.16)
+- enable --store-matrix option for paired end data
 - fix error in merging chip and input paired end
-- fix error message in merge chip and input
+- fix error message when merging chip and input
 
 # 0.1.5 (09.08.16)
 - add better error message in the function to merge chip and input

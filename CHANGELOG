@@ -1,4 +1,5 @@
 # 0.1.6 (10.08.16)
+- enable --store-matrix option for paired end data
 - fix error in merging chip and input for paired end data
 - fix error message in merge chip and input
 
