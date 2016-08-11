@@ -121,8 +121,9 @@ def _count_reads_in_windows_paired_end(bed_file, keep_duplicates,
 
     command = """
     {grep} -E "^{chromosome}\\b.*{chromosome}\\b.*" {bed_file} | # Both chromos must be equal; no chimeras (?)
-    cut -f 1-6  | sort -k2,3n -k5,6n | {duplicate_handling} # get chr start end chr start end for PE; sort on location
+    cut -f 1-6  | sort -k2,5n -k3,6n | {duplicate_handling} # get chr start end chr start end for PE; sort on location
     LC_ALL=C perl -a -ne 'use List::Util qw[min max]; $start = min($F[1], $F[2]); $end = max($F[4], $F[5]); $middle = $start + int(($end - $start)/2); $bin = $middle - $middle % 200; print "$F[0] $bin\\n"' | # Find bin of midpoint between start and ends
+    sort -k2,3n |
     uniq -c |
     sed -e 's/^[ ]*//'
     """.format(**locals())
@@ -137,6 +138,12 @@ def _count_reads_in_windows_paired_end(bed_file, keep_duplicates,
         header=None,
         sep=" ",
         names=[bed_file, "Chromosome", "Bin"])
+
+    if len(out_table) != len(out_table.drop_duplicates("Chromosome Bin".split(
+    ))):
+        logging.info("Making duplicated bins unique by summing them.")
+        out_table = out_table.groupby("Chromosome Bin".split()).sum()
+        out_table = out_table.reset_index()[[bed_file, "Chromosome", "Bin"]]
 
     out_table = remove_out_of_bounds_bins(out_table, chromosome_size)
 

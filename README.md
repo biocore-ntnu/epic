@@ -44,6 +44,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.7 (11.08.16)
+- remove bug when finding window counts for paired end
+
 # 0.1.6 (10.08.16)
 - enable --store-matrix option for paired end data
 - fix error in merging chip and input paired end
