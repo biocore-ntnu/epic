@@ -99,10 +99,51 @@ def enriched_bins(df, args):
     return islands.set_index("Chromosome Bin".split())
 
 
+def put_dfs_in_dict(dfs):
+
+    sample_dict = {}
+    for df in dfs:
+
+        if df.empty:
+            continue
+
+        chromosome = df.head(1).Chromosome.values[0]
+        sample_dict[chromosome] = df
+
+    return sample_dict
+
+
+def put_dfs_in_chromosome_dict(dfs):
+
+    chromosome_dict = {}
+    for df in dfs:
+
+        if df.empty:
+            continue
+
+        chromosome = df.head(1).Chromosome.values[0]
+        chromosome_dict[chromosome] = df
+
+    return chromosome_dict
+
+
+def get_chromosome_df(chromosome, df_dict):
+
+    if chromosome in df_dict:
+        df = df_dict[chromosome]
+    else:
+        df = pd.DataFrame(columns="Chromosome Bin".split())
+
+    return df
+
+
 def print_matrixes(chip, input, df, args):
 
     outpath = args.store_matrix
-    assert len(chip) == len(input)
+
+    chip = put_dfs_in_chromosome_dict(chip)
+    input = put_dfs_in_chromosome_dict(input)
+    all_chromosomes = natsorted(set(list(chip.keys()) + list(input.keys())))
 
     islands = enriched_bins(df, args)
 
@@ -111,7 +152,10 @@ def print_matrixes(chip, input, df, args):
         call("mkdir -p {}".format(dir), shell=True)
 
     logging.info("Writing data matrix to file: " + outpath)
-    for i, (chip_df, input_df) in enumerate(zip(chip, input)):
+    for i, chromosome in enumerate(all_chromosomes):
+
+        chip_df = get_chromosome_df(chromosome, chip)
+        input_df = get_chromosome_df(chromosome, input)
 
         chip_df["Chromosome"] = chip_df["Chromosome"].astype("category")
         chip_df["Bin"] = chip_df["Bin"].astype(int)

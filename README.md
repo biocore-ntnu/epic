@@ -44,6 +44,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.8 (11.08.16)
+- fix importerror in edge case
+- allow bed files to have different number of chromosomes
+
 # 0.1.7 (11.08.16)
 - remove bug when finding window counts for paired end
 
@@ -51,22 +55,6 @@ https://github.com/endrebak/epic and running `python setup.py install`
 - enable --store-matrix option for paired end data
 - fix error in merging chip and input paired end
 - fix error message when merging chip and input
-
-# 0.1.5 (09.08.16)
-- add better error message in the function to merge chip and input
-
-# 0.1.4 (09.08.16)
-- fix bugfix: now zipped pe files properly handled (thanks to Piotr Balwierz for re-reporting)
-
-# 0.1.3 (08.08.16)
-- added new setup file for bioconda install
-
-# 0.1.2 (08.08.16)
-- bugfix: fixed lacking zip handling for paired end files (thanks to Piotr Balwierz for reporting)
-
-# 0.1.1 (06.07.16)
-- bugfix: effective genome size was way off for hg38
-- add danRer7 and danRer10 genomes
 ```
 
 ## Quickstart

@@ -43,7 +43,10 @@ def _merge_chip_and_input(chip_df, input_df):
 def merge_chip_and_input(chip_dfs, input_dfs, nb_cpu):
 
     # should be same length, since missing chromos get empty df
-    assert len(chip_dfs) == len(input_dfs)
+    # assert len(chip_dfs) == len(input_dfs)
+    # if len(chip_dfs) != len(input_dfs):
+    #     logging.info("Different number of chromosomes in ChIP and Input.")
+    #     logging.info("Chromosomes in ChIP:" chip)
 
     logging.info("Merging ChIP and Input data.")
     merged_chromosome_dfs = Parallel(n_jobs=nb_cpu)(
@@ -63,16 +66,19 @@ def ensure_same_chromosomes_in_list(sample1_dfs, sample2_dfs):
 
     d1, d2 = fill_missing_chromosomes(d1, d2)
 
-    sample1_dfs = [v for (k, v) in natsorted(d1.items())]
-    sample2_dfs = [v for (k, v) in natsorted(d2.items())]
+    assert set(d1.keys()) == set(d2.keys())
 
-    return sample1_dfs, sample2_dfs
+    return d1, d2
 
 
 def create_chromsome_df_map(dfs):
 
     sample_dict = {}
     for df in dfs:
+
+        if df.empty:
+            continue
+
         chromosome = df.head(1).Chromosome.values[0]
         sample_dict[chromosome] = df
 
@@ -102,10 +108,12 @@ def merge_same_files(sample1_dfs, sample2_dfs, nb_cpu):
     sample1_dfs, sample2_dfs = ensure_same_chromosomes_in_list(sample1_dfs,
                                                                sample2_dfs)
 
+    assert len(sample1_dfs) == len(sample2_dfs)
+
     logging.info("Merging same class data.")
-    merged_chromosome_dfs = Parallel(n_jobs=nb_cpu)(
-        delayed(_merge_same_files)(sample1_df, sample2_df)
-        for sample1_df, sample2_df in zip(sample1_dfs, sample2_dfs))
+    merged_chromosome_dfs = Parallel(n_jobs=nb_cpu)(delayed(_merge_same_files)(
+        sample1_dfs[chromosome],
+        sample2_dfs[chromosome]) for chromosome in sample1_dfs.keys())
 
     return merged_chromosome_dfs
 
