@@ -44,6 +44,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.9 (11.08.16)
+- fix another importerror
+
 # 0.1.8 (11.08.16)
 - fix importerror in edge case
 - allow bed files to have different number of chromosomes

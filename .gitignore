@@ -1,4 +1,6 @@
 test-W200-G600-islands-summary-FDR.01
+examples/chr19_input.bedpe
+examples/chr19_sample.bedpe
 .coverage*
 *bz2
 *gz

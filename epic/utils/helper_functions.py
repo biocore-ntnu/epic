@@ -2,6 +2,7 @@ import logging
 from natsort import natsorted
 
 from joblib import Parallel, delayed
+import pandas as pd
 
 try:
     from functools import lru_cache
