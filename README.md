@@ -226,6 +226,7 @@ Endre Bakken Stovner
 * Dario Beraldi (argparsing)
 * Ryan Dale (bioconda, ideas, genome info script)
 * Piotr Balwierz (helping me debug the paired-end mode)
+* Keith Siklenka (lending me a subset of some paired-end ChIP-Seq files)
 
 ## NAQ/Various
 
