@@ -44,6 +44,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.10 (12.08.16)
+- add rn4, rn5, rn6
+
 # 0.1.9 (11.08.16)
 - fix another importerror
 
