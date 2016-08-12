@@ -26,7 +26,7 @@ import os
 TWOBIT_PATTERN = 'http://hgdownload.soe.ucsc.edu/goldenPath/{genome}/bigZips/{genome}.2bit'
 CHROMSIZES_PATTERN = 'http://hgdownload.soe.ucsc.edu/goldenPath/{genome}/bigZips/{genome}.chrom.sizes'
 
-genomes = ["danRer10"] # ['dm3', 'dm6', 'mm9', 'mm10', 'hg19', 'hg38']
+genomes = "rn4 rn5 rn6 susScr3 susScr2".split() # ["danRer10"] # ['dm3', 'dm6', 'mm9', 'mm10', 'hg19', 'hg38']
 readlengths = [36, 50, 75, 100]
 
 try:
@@ -44,6 +44,7 @@ rule all:
 # Download .2bit file from UCSC
 rule download:
     output: 'fasta/{genome}.2bit'
+    resources: instances = 1
     run:
         url = TWOBIT_PATTERN.format(genome=wildcards.genome)
         shell('wget -O {output}.tmp {url} && mv {output}.tmp {output}')
