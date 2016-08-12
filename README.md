@@ -44,6 +44,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.11 (12.08.16)
+- add susScr3
+
 # 0.1.10 (12.08.16)
 - add rn4, rn5, rn6
 
@@ -108,6 +111,8 @@ Instead of needing eleven command line arguments to run, epic contains sensible
 defaults and only needs the files it is to analyze as parameters.
 
 epic can be run from whichever location with files found anywhere on the disk.
+
+Contains many [genomes](https://github.com/endrebak/epic/tree/master/epic/scripts/chromsizes), with updated effective genome sizes. If your genome isn't listed, please request it!
 
 ## Version
 
