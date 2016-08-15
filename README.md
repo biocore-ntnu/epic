@@ -45,8 +45,8 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ```
 # 0.1.12 (15.08.16)
-- work around Pandas "source array is read only bug"
-- now accepts genome names in any case
+- work around Pandas "source array is read only" bug
+- accept genome names in any case
 - if genome not found, list available genomes
 
 # 0.1.11 (12.08.16)
