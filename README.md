@@ -44,6 +44,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.13 (15.08.16)
+- add susScr2 genome
+
 # 0.1.12 (15.08.16)
 - work around Pandas "source array is read only" bug
 - accept genome names in any case
