@@ -10,8 +10,16 @@ __license__ = "MIT"
 
 
 def get_genome_size_file(genome):
+
+    genome_names = pkg_resources.resource_listdir("epic", "scripts/chromsizes")
+    name_dict = {n.lower().replace(".chromsizes", ""): n for n in genome_names}
+
+    # No try/except here, because get_egs would already have failed if genome
+    # did not exist
+    genome_exact = name_dict[genome.lower()]
+
     return pkg_resources.resource_filename(
-        "epic", "scripts/chromsizes/{}.chromsizes".format(genome))
+        "epic", "scripts/chromsizes/{}".format(genome_exact))
 
 
 def create_genome_size_dict(genome):
@@ -30,17 +38,30 @@ def create_genome_size_dict(genome):
 
 def get_effective_genome_length(genome, read_length):
 
-    egf = pkg_resources.resource_string(
-        "epic", "scripts/effective_sizes/{}_{}.txt".format(
-            genome, read_length)).split()[-1].decode()
+    genome_names = pkg_resources.resource_listdir("epic",
+                                                  "scripts/effective_sizes")
+    name_dict = {n.split("_")[0]: "".join(n.split("_")[:-1])
+                 for n in genome_names}
+
+    try:
+        genome_exact = name_dict[genome.lower()]
+        egf = pkg_resources.resource_string(
+            "epic", "scripts/effective_sizes/{}_{}.txt".format(
+                genome_exact, read_length)).split()[-1].decode()
+    except KeyError:
+        genome_list = "\n".join(list(name_dict.keys()))
+        logging.error(
+            "Genome " + genome +
+            " not found.\n These are the available genomes: " + genome_list +
+            "\nIf yours is not there, please request it at github.com/endrebak/epic .")
 
     genome_length = sum(create_genome_size_dict(genome).values())
 
     logging.info("Using an effective genome fraction of {}.".format(egf))
 
-    assert float(egf) < 1, "Something wrong happened, effective genome fraction over 1!"
+    assert float(
+        egf) < 1, "Something wrong happened, effective genome fraction over 1!"
 
     egs = float(egf) * genome_length
-
 
     return egs

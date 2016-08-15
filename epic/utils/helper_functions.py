@@ -12,11 +12,18 @@ except ImportError:
 
 def _merge_chip_and_input(chip_df, input_df):
 
+    chip_df = chip_df.set_index("Chromosome Bin".split())
+    input_df = input_df.set_index("Chromosome Bin".split())
+
     chip_df_nb_bins = len(chip_df)
-    merged_df = chip_df.merge(input_df,
-                              how="left",
-                              on=["Chromosome", "Bin"],
-                              suffixes=[" ChIP", " Input"])
+    # merged_df = chip_df.merge(input_df,
+    #                           how="left",
+    #                           on=["Chromosome", "Bin"],
+    #                           suffixes=[" ChIP", " Input"])
+    merged_df = chip_df.join(input_df,
+                             how="left",
+                             lsuffix=" ChIP",
+                             rsuffix=" Input").reset_index()
     merged_df = merged_df[["Chromosome", "Bin", "Count ChIP", "Count Input"]]
     merged_df.columns = ["Chromosome", "Bin", "ChIP", "Input"]
 
