@@ -114,6 +114,22 @@ parser.add_argument(
     help=
     '''Store the matrix of counts per bin for ChIP and input to gzipped file <STORE_MATRIX>.''')
 
+parser.add_argument(
+    '--individual-bedgraph',
+    '-ib',
+    required=False,
+    type=str,
+    help=
+    '''For each file, store a bedgraph of both enriched and non-enriched regions to folder <INDIVIDUAL_BEDGRAPH>. Requires different basenames for each file.''')
+
+parser.add_argument(
+    '--bedgraph',
+    '-b',
+    required=False,
+    type=str,
+    help=
+    '''Store two bedgraphs - one of ChIP, one of input - to folder <BEDGRAPH>.''')
+
 parser.add_argument('--paired-end',
                     '-pe',
                     action="store_true",

@@ -44,6 +44,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.14 (24.08.16)
+- add options --bedgraph/-b and --individual_bedgraph/-ib to store bedgraph files
+
 # 0.1.13 (15.08.16)
 - add susScr2 genome
 
@@ -51,27 +54,6 @@ https://github.com/endrebak/epic and running `python setup.py install`
 - work around Pandas "source array is read only" bug
 - accept genome names in any case
 - if genome not found, list available genomes
-
-# 0.1.11 (12.08.16)
-- add susScr3
-
-# 0.1.10 (12.08.16)
-- add rn4, rn5, rn6
-
-# 0.1.9 (11.08.16)
-- fix another importerror
-
-# 0.1.8 (11.08.16)
-- fix importerror in edge case
-- allow bed files to have different number of chromosomes
-
-# 0.1.7 (11.08.16)
-- remove bug when finding window counts for paired end
-
-# 0.1.6 (10.08.16)
-- enable --store-matrix option for paired end data
-- fix error in merging chip and input paired end
-- fix error message when merging chip and input
 ```
 
 ## Quickstart
@@ -162,7 +144,6 @@ bamToBed -bedpe -i paired_end_file.bam > file.bedpe
 
 * Clean up tests
 * Add more examples of usage
-* Add bigwig output for islands
 * Improve logging messages
 * Write proper docs
 * Explain the effective genome size and test how much it matters
@@ -179,7 +160,9 @@ usage: epic [-h] --treatment TREATMENT [TREATMENT ...] --control CONTROL
             [--gaps-allowed GAPS_ALLOWED] [--fragment-size FRAGMENT_SIZE]
             [--false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF]
             [--effective_genome_length EFFECTIVE_GENOME_LENGTH]
-            [--store-matrix STORE_MATRIX] [--paired-end] [--version]
+            [--store-matrix STORE_MATRIX]
+            [--individual-bedgraph INDIVIDUAL_BEDGRAPH] [--bedgraph BEDGRAPH]
+            [--paired-end] [--version]
 
 Diffuse domain ChIP-Seq caller based on SICER. (Visit github.com/endrebak/epic
 for examples and help.)
@@ -222,6 +205,13 @@ optional arguments:
   --store-matrix STORE_MATRIX, -sm STORE_MATRIX
                         Store the matrix of counts per bin for ChIP and input
                         to gzipped file <STORE_MATRIX>.
+  --individual-bedgraph INDIVIDUAL_BEDGRAPH, -ib INDIVIDUAL_BEDGRAPH
+                        For each file, store a bedgraph of both enriched and
+                        non-enriched regions to folder <INDIVIDUAL_BEDGRAPH>.
+                        Requires different basenames for each file.
+  --bedgraph BEDGRAPH, -b BEDGRAPH
+                        Store two bedgraphs - one of ChIP, one of input - to
+                        folder <BEDGRAPH>.
   --paired-end, -pe     Use paired end data (bedpe).
   --version, -v         show program's version number and exit
 ```
