@@ -225,7 +225,8 @@ optional arguments:
                         Store two bigwigs - one of ChIP, one of input - to
                         folder <BIGWIG>.
   --paired-end, -pe     Use paired end data (bedpe).
-  --version, -v         show program's version number and exit```
+  --version, -v         show program's version number and exit
+```
 
 ## Credit
 
