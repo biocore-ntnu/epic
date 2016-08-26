@@ -37,12 +37,12 @@ def bedgraph(matrix, args):
     c_sum = matrix[args.treatment].sum(1)
     c = c_sum[c_sum > 0]
     logging.info("Writing ChIP bedgraph to {}.".format(chip_file))
-    c.astype(int).to_csv(chip_file, sep="\t", compression="gzip")
+    c.astype(int).to_frame().to_csv(chip_file, sep="\t", compression="gzip")
 
     i_sum = matrix[args.control].sum(1)
     i = i_sum[i_sum > 0]
     logging.info("Writing Input bedgraph to {}.".format(input_file))
-    i.astype(int).to_csv(input_file, sep="\t", compression="gzip")
+    i.astype(int).to_frame().to_csv(input_file, sep="\t", compression="gzip")
 
 
 def _individual_bedgraphs(matrix, name, outfolder):
