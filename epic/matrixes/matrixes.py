@@ -8,6 +8,8 @@ from joblib import Parallel, delayed
 
 from natsort import natsorted
 
+from epic.config.genomes import get_genome_size_file
+
 
 def write_matrix_files(chip_merged, input_merged, df, args):
 
@@ -18,31 +20,76 @@ def write_matrix_files(chip_merged, input_merged, df, args):
 
     matrix = pd.concat(matrixes, axis=0)
     matrix = matrix.drop("Island", axis=1)
-    if args.individual_bedgraph:
-        individual_bedgraphs(matrix, args)
-    if args.bedgraph:
-        bedgraph(matrix, args)
+    ends = matrix.index.get_level_values("Bin") + int(args.window_size) - 1
+    matrix.insert(0, "End", ends)
+    matrix = matrix.set_index("End", append=True)
+    matrix = matrix.sort_index(level="Chromosome")
+
+    if args.individual_bedgraph or args.individual_bigwig:
+        filenames = individual_bedgraphs(matrix, args)
+        if args.individual_bigwig:
+            individual_bigwigs(filenames, args)
+
+    if args.bedgraph or args.bigwig:
+        filenames = bedgraph(matrix, args)
+        if args.bigwig:
+            bigwig(filenames, args)
+
+
+def bigwig(filenames, args):
+
+    chromsizes = get_genome_size_file(args.genome)
+
+    outfiles = [
+        f.replace(args.bedgraph, args.bigwig + "/", 1).replace(
+            ".bedgraph", ".bw") for f in filenames
+    ]
+
+    call("mkdir -p {}".format(args.bigwig), shell=True)
+    for infile, outfile in zip(filenames, outfiles):
+        logging.info("Creating bigiwg {}".format(outfile))
+        command = "bedGraphToBigWig {} {} {}".format(infile, chromsizes,
+                                                     outfile)
+        call(command, shell=True)
+
+
+def individual_bigwigs(filenames, args):
+
+    chromsizes = get_genome_size_file(args.genome)
+
+    outfiles = [f.replace(args.individual_bedgraph,
+                          args.individual_bigwig + "/",
+                          1).replace(".bedgraph", ".bw") for f in filenames]
+
+    call("mkdir -p {}".format(args.individual_bigwig), shell=True)
+    for infile, outfile in zip(filenames, outfiles):
+        command = "bedGraphToBigWig {} {} {}".format(infile, chromsizes,
+                                                     outfile)
+        logging.info("Creating bigiwg {}".format(outfile))
+        call(command, shell=True)
 
 
 def bedgraph(matrix, args):
     "Create a bedgraph file for ChIP and Input."
 
-    outfolder = args.bedgraph
+    outfolder = args.bedgraph or "temp_bedgraph/"
 
     call("mkdir -p {}".format(outfolder), shell=True)
 
-    chip_file = join(outfolder, "treatment.bedgraph.gz")
-    input_file = join(outfolder, "input.bedgraph.gz")
+    chip_file = join(outfolder, "sum_treatment.bedgraph")
+    input_file = join(outfolder, "sum_input.bedgraph")
 
     c_sum = matrix[args.treatment].sum(1)
     c = c_sum[c_sum > 0]
     logging.info("Writing ChIP bedgraph to {}.".format(chip_file))
-    c.astype(int).to_frame().to_csv(chip_file, sep="\t", compression="gzip")
+    c.astype(int).to_frame().to_csv(chip_file, sep="\t", header=False)
 
     i_sum = matrix[args.control].sum(1)
     i = i_sum[i_sum > 0]
     logging.info("Writing Input bedgraph to {}.".format(input_file))
-    i.astype(int).to_frame().to_csv(input_file, sep="\t", compression="gzip")
+    i.astype(int).to_frame().to_csv(input_file, sep="\t", header=False)
+
+    return [chip_file, input_file]
 
 
 def _individual_bedgraphs(matrix, name, outfolder):
@@ -54,7 +101,7 @@ def _individual_bedgraphs(matrix, name, outfolder):
     else:
         base = "".join(base[:-1])
 
-    outfile = join(outfolder, base + ".bedgraph.gz")
+    outfile = join(outfolder, base + ".bedgraph")
     s = matrix[name]
 
     # na only in those where input or chip lacks chromo
@@ -63,21 +110,27 @@ def _individual_bedgraphs(matrix, name, outfolder):
     nonzeroes_only.astype(int).to_frame().to_csv(outfile,
                                                  sep="\t",
                                                  na_rep="NA",
-                                                 compression="gzip")
+                                                 header=False)
+
+    return outfile
 
 
 def individual_bedgraphs(matrix, args):
     "Create a bedgraph file for each file used."
 
-    outfolder = args.individual_bedgraph
+    outfolder = args.individual_bedgraph or "temp_individual_bedgraph/"
 
     call("mkdir -p {}".format(outfolder), shell=True)
 
+    outfiles = []
     for treatment_file in args.treatment:
-        _individual_bedgraphs(matrix, treatment_file, outfolder)
+        outfiles.append(_individual_bedgraphs(matrix, treatment_file,
+                                              outfolder))
 
     for control_file in args.control:
-        _individual_bedgraphs(matrix, control_file, outfolder)
+        outfiles.append(_individual_bedgraphs(matrix, control_file, outfolder))
+
+    return outfiles
 
 
 def _create_matrixes(chromosome, chip, input, islands):

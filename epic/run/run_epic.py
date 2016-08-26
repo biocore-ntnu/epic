@@ -59,7 +59,8 @@ def run_epic(args):
     logging.info("Computing FDR.")
     df = compute_fdr(df, nb_chip_reads, nb_input_reads, args)
 
-    if args.store_matrix or args.individual_bedgraph or args.bedgraph:
+    if (args.store_matrix or args.individual_bedgraph or args.bedgraph or
+            args.individual_bigwig or args.bigwig):
         write_matrix_files(chip_merged, input_merged, df, args)
 
     # Just in case some ints got promoted to float somewhere
@@ -82,116 +83,6 @@ def sum_columns(dfs):
         new_dfs.append(df)
 
     return new_dfs
-
-
-def bedgraph(matrix, args):
-    "Create a bedgraph file for ChIP and Input."
-
-    outfolder = args.bedgraph
-
-    call("mkdir -p {}".format(outfolder), shell=True)
-
-    chip_file = join(outfolder, "treatment.bedgraph")
-    input_file = join(outfolder, "input.bedgraph")
-
-    c_sum = matrix[args.treatment].sum(1)
-    c = c_sum[c_sum > 0]
-    c.to_csv(chip_file, sep="\t")
-
-    i_sum = matrix[args.control].sum(1)
-    i = i_sum[i_sum > 0]
-    i.to_csv(input_file, sep="\t")
-
-
-def _individual_bedgraphs(matrix, name, outfolder):
-
-    base = basename(name).split(".")
-
-    if len(base) > 2:
-        base = "".join(base[:-2])
-    else:
-        base = "".join(base[:-1])
-
-    outfile = join(outfolder, base + ".bedgraph")
-    s = matrix[name]
-    nonzeroes_only = s[s != 0]
-    nonzeroes_only.to_csv(outfile, sep="\t")
-
-
-def individual_bedgraphs(matrix, args):
-    "Create a bedgraph file for each file used."
-
-    outfolder = args.individual_bedgraph
-
-    call("mkdir -p {}".format(outfolder), shell=True)
-
-    for treatment_file in args.treatment:
-        _individual_bedgraphs(matrix, treatment_file, outfolder)
-
-    for control_file in args.control:
-        _individual_bedgraphs(matrix, control_file, outfolder)
-
-
-def _create_matrixes(chromosome, chip, input, islands):
-
-    chip_df = get_chromosome_df(chromosome, chip)
-    input_df = get_chromosome_df(chromosome, input)
-
-    chip_df["Chromosome"] = chip_df["Chromosome"].astype("category")
-    chip_df["Bin"] = chip_df["Bin"].astype(int)
-    chip_df = chip_df.set_index("Chromosome Bin".split())
-    chip_df = islands.join(chip_df, how="right")
-
-    input_df["Chromosome"] = input_df["Chromosome"].astype("category")
-    input_df["Bin"] = input_df["Bin"].astype(int)
-    input_df = input_df.set_index("Chromosome Bin".split())
-
-    dfm = chip_df.join(input_df, how="outer", sort=False).fillna(0)
-
-    return dfm
-
-
-def create_matrixes(chip, input, df, args):
-
-    "Creates matrixes which can be written to file as is (matrix) or as bedGraph."
-
-    chip = put_dfs_in_chromosome_dict(chip)
-    input = put_dfs_in_chromosome_dict(input)
-    all_chromosomes = natsorted(set(list(chip.keys()) + list(input.keys())))
-
-    islands = enriched_bins(df, args)
-
-    logging.info("Creating matrixes from count data.")
-    dfms = Parallel(n_jobs=args.number_cores)(
-        delayed(_create_matrixes)(chromosome, chip, input, islands)
-        for chromosome in all_chromosomes)
-
-    return dfms
-
-
-def print_matrixes(matrixes, args):
-
-    outpath = args.store_matrix
-
-    dir = dirname(outpath)
-    if dir:
-        call("mkdir -p {}".format(dir), shell=True)
-
-    logging.info("Writing data matrix to file: " + outpath)
-    for i, df in enumerate(matrixes):
-
-        if i == 0:
-            header, mode = True, "w+"
-        else:
-            header, mode = False, "a"
-
-        df.astype(int).to_csv(outpath,
-                              sep=" ",
-                              na_rep="NA",
-                              header=header,
-                              mode=mode,
-                              compression="gzip",
-                              chunksize=1e6)
 
 
 def multiple_files_count_reads_in_windows(bed_files, args):

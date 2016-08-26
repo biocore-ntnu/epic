@@ -4,6 +4,8 @@ from __future__ import print_function
 
 import argparse
 import os
+import atexit
+from subprocess import call
 
 from epic.version import __version__
 
@@ -120,7 +122,7 @@ parser.add_argument(
     required=False,
     type=str,
     help=
-    '''For each file, store an gzipped bedgraph of both enriched and non-enriched regions to folder <INDIVIDUAL_BEDGRAPH>. Requires different basenames for each file.''')
+    '''For each file, store a bedgraph of both enriched and non-enriched regions to folder <INDIVIDUAL_BEDGRAPH>. Requires different basenames for each file.''')
 
 parser.add_argument(
     '--bedgraph',
@@ -128,7 +130,23 @@ parser.add_argument(
     required=False,
     type=str,
     help=
-    '''Store two gzipped bedgraphs - one of ChIP, one of input - to folder <BEDGRAPH>.''')
+    '''Store two bedgraphs - one of ChIP, one of input - to folder <BEDGRAPH>.''')
+
+parser.add_argument(
+    '--individual-bigwig',
+    '-ibw',
+    required=False,
+    type=str,
+    help=
+    '''For each file, store a bigwig of both enriched and non-enriched regions to folder <INDIVIDUAL_BIGWIG>. Requires different basenames for each file.''')
+
+parser.add_argument(
+    '--bigwig',
+    '-bw',
+    required=False,
+    type=str,
+    help=
+    '''Store two bigwigs - one of ChIP, one of input - to folder <BIGWIG>.''')
 
 parser.add_argument('--paired-end',
                     '-pe',
@@ -177,5 +195,14 @@ if __name__ == '__main__':
         logging.info("Using paired end so setting readlength to 100.")
         args.effective_genome_length = get_effective_genome_length(args.genome,
                                                                    100)
+
+    # if only bigwig, need folders to store bedgraph in first
+    if args.bigwig and not args.bedgraph:
+        args.bedgraph = "temp_bedgraph/"
+        atexit.register(lambda: call("rm -rf temp_bedgraph/", shell=True))
+
+    if args.individual_bigwig and not args.individual_bedgraph:
+        args.individual_bedgraph = "temp_individual_bedgraph/"
+        atexit.register(lambda: call("rm -rf temp_individual_bedgraph/", shell=True))
 
     run_epic(args)

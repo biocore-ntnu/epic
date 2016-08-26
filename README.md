@@ -46,7 +46,7 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ```
 # 0.1.15 (26.08.16)
-- options --bedgraph/-b and --individual-bedgraph/-ib now store gzipped files
+- add options --bigwig/-bw and --individual-bigwig/-ibw to store bigwig files
 
 # 0.1.14 (24.08.16)
 - add options --bedgraph/-b and --individual-bedgraph/-ib to store bedgraph files
@@ -166,6 +166,7 @@ usage: epic [-h] --treatment TREATMENT [TREATMENT ...] --control CONTROL
             [--effective_genome_length EFFECTIVE_GENOME_LENGTH]
             [--store-matrix STORE_MATRIX]
             [--individual-bedgraph INDIVIDUAL_BEDGRAPH] [--bedgraph BEDGRAPH]
+            [--individual-bigwig INDIVIDUAL_BIGWIG] [--bigwig BIGWIG]
             [--paired-end] [--version]
 
 Diffuse domain ChIP-Seq caller based on SICER. (Visit github.com/endrebak/epic
@@ -210,15 +211,21 @@ optional arguments:
                         Store the matrix of counts per bin for ChIP and input
                         to gzipped file <STORE_MATRIX>.
   --individual-bedgraph INDIVIDUAL_BEDGRAPH, -ib INDIVIDUAL_BEDGRAPH
-                        For each file, store a gzipped bedgraph of both enriched and
+                        For each file, store a bedgraph of both enriched and
                         non-enriched regions to folder <INDIVIDUAL_BEDGRAPH>.
                         Requires different basenames for each file.
   --bedgraph BEDGRAPH, -b BEDGRAPH
-                        Store two gzipped bedgraphs - one of ChIP, one of input - to
+                        Store two bedgraphs - one of ChIP, one of input - to
                         folder <BEDGRAPH>.
+  --individual-bigwig INDIVIDUAL_BIGWIG, -ibw INDIVIDUAL_BIGWIG
+                        For each file, store a bigwig of both enriched and
+                        non-enriched regions to folder <INDIVIDUAL_BIGWIG>.
+                        Requires different basenames for each file.
+  --bigwig BIGWIG, -bw BIGWIG
+                        Store two bigwigs - one of ChIP, one of input - to
+                        folder <BIGWIG>.
   --paired-end, -pe     Use paired end data (bedpe).
-  --version, -v         show program's version number and exit
-```
+  --version, -v         show program's version number and exit```
 
 ## Credit
 

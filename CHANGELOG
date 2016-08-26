@@ -1,5 +1,5 @@
 # 0.1.15 (26.08.16)
-- options --bedgraph/-b and --individual-bedgraph/-ib now store gzipped files
+- add options --bigwig/-bw and --individual-bigwig/-ibw to store bigwig files
 
 # 0.1.14 (24.08.16)
 - add options --bedgraph/-b and --individual-bedgraph/-ib to store bedgraph files
