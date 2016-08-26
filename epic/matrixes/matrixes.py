@@ -31,16 +31,18 @@ def bedgraph(matrix, args):
 
     call("mkdir -p {}".format(outfolder), shell=True)
 
-    chip_file = join(outfolder, "treatment.bedgraph")
-    input_file = join(outfolder, "input.bedgraph")
+    chip_file = join(outfolder, "treatment.bedgraph.gz")
+    input_file = join(outfolder, "input.bedgraph.gz")
 
     c_sum = matrix[args.treatment].sum(1)
     c = c_sum[c_sum > 0]
-    c.astype(int).to_csv(chip_file, sep="\t")
+    logging.info("Writing ChIP bedgraph to {}.".format(chip_file))
+    c.astype(int).to_csv(chip_file, sep="\t", compression="gzip")
 
     i_sum = matrix[args.control].sum(1)
     i = i_sum[i_sum > 0]
-    i.astype(int).to_csv(input_file, sep="\t")
+    logging.info("Writing Input bedgraph to {}.".format(input_file))
+    i.astype(int).to_csv(input_file, sep="\t", compression="gzip")
 
 
 def _individual_bedgraphs(matrix, name, outfolder):
@@ -52,12 +54,16 @@ def _individual_bedgraphs(matrix, name, outfolder):
     else:
         base = "".join(base[:-1])
 
-    outfile = join(outfolder, base + ".bedgraph")
+    outfile = join(outfolder, base + ".bedgraph.gz")
     s = matrix[name]
 
     # na only in those where input or chip lacks chromo
     nonzeroes_only = s[s != 0].dropna()
-    nonzeroes_only.astype(int).to_csv(outfile, sep="\t", na_rep="NA")
+    logging.info("Writing bedgraph for file {} to {}.".format(name, outfile))
+    nonzeroes_only.astype(int).to_csv(outfile,
+                                      sep="\t",
+                                      na_rep="NA",
+                                      compression="gzip")
 
 
 def individual_bedgraphs(matrix, args):

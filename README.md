@@ -45,8 +45,11 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.15 (26.08.16)
+- options --bedgraph/-b and --individual-bedgraph/-ib now store gzipped files
+
 # 0.1.14 (24.08.16)
-- add options --bedgraph/-b and --individual_bedgraph/-ib to store bedgraph files
+- add options --bedgraph/-b and --individual-bedgraph/-ib to store bedgraph files
 
 # 0.1.13 (15.08.16)
 - add susScr2 genome
@@ -207,11 +210,11 @@ optional arguments:
                         Store the matrix of counts per bin for ChIP and input
                         to gzipped file <STORE_MATRIX>.
   --individual-bedgraph INDIVIDUAL_BEDGRAPH, -ib INDIVIDUAL_BEDGRAPH
-                        For each file, store a bedgraph of both enriched and
+                        For each file, store a gzipped bedgraph of both enriched and
                         non-enriched regions to folder <INDIVIDUAL_BEDGRAPH>.
                         Requires different basenames for each file.
   --bedgraph BEDGRAPH, -b BEDGRAPH
-                        Store two bedgraphs - one of ChIP, one of input - to
+                        Store two gzipped bedgraphs - one of ChIP, one of input - to
                         folder <BEDGRAPH>.
   --paired-end, -pe     Use paired end data (bedpe).
   --version, -v         show program's version number and exit
