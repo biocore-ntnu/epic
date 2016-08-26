@@ -7,7 +7,7 @@ from joblib import Parallel, delayed
 
 
 def find_islands(dfs, score_threshold, args):
-    logging.info("Merging bins into islands.")
+    logging.info("Clustering bins into islands.")
     parallel_find_islands = partial(_find_islands, args.window_size,
                                     args.gaps_allowed, score_threshold)
     clustered_islands = Parallel(n_jobs=args.number_cores)(

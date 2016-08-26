@@ -60,10 +60,10 @@ def _individual_bedgraphs(matrix, name, outfolder):
     # na only in those where input or chip lacks chromo
     nonzeroes_only = s[s != 0].dropna()
     logging.info("Writing bedgraph for file {} to {}.".format(name, outfile))
-    nonzeroes_only.astype(int).to_csv(outfile,
-                                      sep="\t",
-                                      na_rep="NA",
-                                      compression="gzip")
+    nonzeroes_only.astype(int).to_frame().to_csv(outfile,
+                                                 sep="\t",
+                                                 na_rep="NA",
+                                                 compression="gzip")
 
 
 def individual_bedgraphs(matrix, args):
