@@ -44,7 +44,7 @@ def bigwig(filenames, args):
 
     outfiles = [
         f.replace(args.bedgraph, args.bigwig + "/", 1).replace(
-            ".bedgraph", ".bw") for f in filenames
+            ".bedgraph", ".bw").replace("//", "/") for f in filenames
     ]
 
     call("mkdir -p {}".format(args.bigwig), shell=True)
@@ -146,10 +146,12 @@ def _create_matrixes(chromosome, chip, input, islands, chromosome_size,
     chip_df["Bin"] = chip_df["Bin"].astype(int)
     chip_df = chip_df.set_index("Chromosome Bin".split())
     chip_df = islands.join(chip_df, how="right")
+    chip_df = chip_df[~chip_df.index.duplicated(keep='first')]
 
     input_df["Chromosome"] = input_df["Chromosome"].astype("category")
     input_df["Bin"] = input_df["Bin"].astype(int)
     input_df = input_df.set_index("Chromosome Bin".split())
+    input_df = input_df[~input_df.index.duplicated(keep='first')]
 
     dfm = chip_df.join(input_df, how="outer", sort=False).fillna(0)
 

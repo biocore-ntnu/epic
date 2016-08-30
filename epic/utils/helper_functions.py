@@ -131,5 +131,6 @@ def _merge_same_files(sample1_df, sample2_df):
     merged_df = sample1_df.merge(sample2_df,
                                  how="outer",
                                  on=["Chromosome", "Bin"])
+    # merged_df = merged_df[~merged_df.index.duplicated(keep='first')]
 
     return merged_df.fillna(0)

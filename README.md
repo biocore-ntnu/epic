@@ -45,22 +45,14 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.17 (30.08.16)
+- fix rare bug in bigwig creation
+
 # 0.1.16 (30.08.16)
 - remove out of bounds bins before creating bedgraph
 
 # 0.1.15 (26.08.16)
 - add options --bigwig/-bw and --individual-bigwig/-ibw to store bigwig files
-
-# 0.1.14 (24.08.16)
-- add options --bedgraph/-b and --individual-bedgraph/-ib to store bedgraph files
-
-# 0.1.13 (15.08.16)
-- add susScr2 genome
-
-# 0.1.12 (15.08.16)
-- work around Pandas "source array is read only" bug
-- accept genome names in any case
-- if genome not found, list available genomes
 ```
 
 ## Quickstart
