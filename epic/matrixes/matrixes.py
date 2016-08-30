@@ -8,7 +8,8 @@ from joblib import Parallel, delayed
 
 from natsort import natsorted
 
-from epic.config.genomes import get_genome_size_file
+from epic.windows.count.remove_out_of_bounds_bins import remove_bins_with_ends_out_of_bounds
+from epic.config.genomes import get_genome_size_file, create_genome_size_dict
 
 
 def write_matrix_files(chip_merged, input_merged, df, args):
@@ -24,6 +25,7 @@ def write_matrix_files(chip_merged, input_merged, df, args):
     matrix.insert(0, "End", ends)
     matrix = matrix.set_index("End", append=True)
     matrix = matrix.sort_index(level="Chromosome")
+    # TODO: remove out of bounds bins
 
     if args.individual_bedgraph or args.individual_bigwig:
         filenames = individual_bedgraphs(matrix, args)
@@ -59,7 +61,8 @@ def individual_bigwigs(filenames, args):
 
     outfiles = [f.replace(args.individual_bedgraph,
                           args.individual_bigwig + "/",
-                          1).replace(".bedgraph", ".bw") for f in filenames]
+                          1).replace(".bedgraph", ".bw").replace("//", "/")
+                for f in filenames]
 
     call("mkdir -p {}".format(args.individual_bigwig), shell=True)
     for infile, outfile in zip(filenames, outfiles):
@@ -133,7 +136,8 @@ def individual_bedgraphs(matrix, args):
     return outfiles
 
 
-def _create_matrixes(chromosome, chip, input, islands):
+def _create_matrixes(chromosome, chip, input, islands, chromosome_size,
+                     window_size):
 
     chip_df = get_chromosome_df(chromosome, chip)
     input_df = get_chromosome_df(chromosome, input)
@@ -149,12 +153,17 @@ def _create_matrixes(chromosome, chip, input, islands):
 
     dfm = chip_df.join(input_df, how="outer", sort=False).fillna(0)
 
+    dfm = remove_bins_with_ends_out_of_bounds(dfm, chromosome_size,
+                                              window_size)
+
     return dfm
 
 
 def create_matrixes(chip, input, df, args):
 
     "Creates matrixes which can be written to file as is (matrix) or as bedGraph."
+
+    genome = create_genome_size_dict(args.genome)
 
     chip = put_dfs_in_chromosome_dict(chip)
     input = put_dfs_in_chromosome_dict(input)
@@ -163,9 +172,9 @@ def create_matrixes(chip, input, df, args):
     islands = enriched_bins(df, args)
 
     logging.info("Creating matrixes from count data.")
-    dfms = Parallel(n_jobs=args.number_cores)(
-        delayed(_create_matrixes)(chromosome, chip, input, islands)
-        for chromosome in all_chromosomes)
+    dfms = Parallel(n_jobs=args.number_cores)(delayed(_create_matrixes)(
+        chromosome, chip, input, islands, genome[chromosome],
+        args.window_size) for chromosome in all_chromosomes)
 
     return dfms
 

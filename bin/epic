@@ -199,10 +199,10 @@ if __name__ == '__main__':
     # if only bigwig, need folders to store bedgraph in first
     if args.bigwig and not args.bedgraph:
         args.bedgraph = "temp_bedgraph/"
-        atexit.register(lambda: call("rm -rf temp_bedgraph/", shell=True))
+        # atexit.register(lambda: call("rm -rf temp_bedgraph/", shell=True))
 
     if args.individual_bigwig and not args.individual_bedgraph:
         args.individual_bedgraph = "temp_individual_bedgraph/"
-        atexit.register(lambda: call("rm -rf temp_individual_bedgraph/", shell=True))
+        # atexit.register(lambda: call("rm -rf temp_individual_bedgraph/", shell=True))
 
     run_epic(args)

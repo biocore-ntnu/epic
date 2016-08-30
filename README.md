@@ -45,6 +45,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.16 (30.08.16)
+- remove out of bounds bins before creating bedgraph
+
 # 0.1.15 (26.08.16)
 - add options --bigwig/-bw and --individual-bigwig/-ibw to store bigwig files
 
@@ -147,6 +150,7 @@ bamToBed -bedpe -i paired_end_file.bam > file.bedpe
 [![Stories in In Progress](https://badge.waffle.io/endrebak/epic.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/endrebak/epic)
 
 * Implement paired end distance cutoff for files based on the answers to [this question](https://www.biostars.org/p/206403/)
+* Run bigwig creation in parallel? (Might be IO-bound)
 * Clean up tests
 * Add more examples of usage
 * Improve logging messages

@@ -1,3 +1,6 @@
+# 0.1.16 (30.08.16)
+- remove out of bounds bins before creating bedgraph
+
 # 0.1.15 (26.08.16)
 - add options --bigwig/-bw and --individual-bigwig/-ibw to store bigwig files
 
