@@ -45,6 +45,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.18 (06.09.16)
+- add hg18
+
 # 0.1.17 (30.08.16)
 - fix rare bug in bigwig creation
 
