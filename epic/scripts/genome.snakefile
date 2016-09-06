@@ -26,7 +26,7 @@ import os
 TWOBIT_PATTERN = 'http://hgdownload.soe.ucsc.edu/goldenPath/{genome}/bigZips/{genome}.2bit'
 CHROMSIZES_PATTERN = 'http://hgdownload.soe.ucsc.edu/goldenPath/{genome}/bigZips/{genome}.chrom.sizes'
 
-genomes = "susScr3 susScr2".split() # ["danRer10"] # ['dm3', 'dm6', 'mm9', 'mm10', 'hg19', 'hg38']
+genomes = ["hg18"] # "susScr3 susScr2".split() # ["danRer10"] # ['dm3', 'dm6', 'mm9', 'mm10', 'hg19', 'hg38']
 readlengths = [36, 50, 75, 100]
 
 try:
