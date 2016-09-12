@@ -32,7 +32,7 @@ def find_readlength(args):
         BytesIO(output),
         header=None,
         usecols=[1, 2],
-        sep="\s+",
+        sep="\t",
         names=["Start", "End"])
 
     readlengths = df.End - df.Start

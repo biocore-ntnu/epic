@@ -45,6 +45,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# unreleased
+- print pandas and epic version on startup
+
 # 0.1.18 (06.09.16)
 - add hg18
 
@@ -144,6 +147,7 @@ bamToBed -bedpe -i paired_end_file.bam > file.bedpe
 
 [![Stories in In Progress](https://badge.waffle.io/endrebak/epic.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/endrebak/epic)
 
+* Support gencode style chromosome names
 * Implement paired end distance cutoff for files based on the answers to [this question](https://www.biostars.org/p/206403/)
 * Run bigwig creation in parallel? (Might be IO-bound)
 * Clean up tests
