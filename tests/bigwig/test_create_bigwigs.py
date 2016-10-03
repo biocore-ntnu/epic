@@ -11,7 +11,7 @@ from epic.bigwig.create_bigwigs import _create_bigwig
 
 @pytest.fixture
 def input_data():
-    contents = """Chromosome Bin End examples/test.bed
+    contents = u"""Chromosome Bin End examples/test.bed
 chr1 887600 887799 0
 chr1 994600 994799 0
 chr1 1041000 1041199 0
