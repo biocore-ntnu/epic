@@ -256,9 +256,11 @@ Endre Bakken Stovner
 * Piotr Balwierz (helping me debug the paired-end mode)
 * Keith Siklenka (lending me a subset of some paired-end ChIP-Seq files)
 
-#### Relative performance
+#### Performance, differential ChIP-Seq
 
 ![alt tag](img/4C.png)
+
+Briefings in Bioinformatics, 2016, 1–14
 
 
 ## NAQ/Various
