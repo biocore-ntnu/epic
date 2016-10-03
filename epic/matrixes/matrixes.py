@@ -11,7 +11,6 @@ from natsort import natsorted
 from epic.windows.count.remove_out_of_bounds_bins import remove_bins_with_ends_out_of_bounds
 from epic.config.genomes import get_genome_size_file, create_genome_size_dict
 
-from epic.bigwig.create_bigwigs import create_bigwigs
 
 
 def write_matrix_files(chip_merged, input_merged, df, args):
@@ -31,6 +30,8 @@ def write_matrix_files(chip_merged, input_merged, df, args):
     # TODO: remove out of bounds bins
 
     if args.bigwig:
+        # defer initialization so not run during travis
+        from epic.bigwig.create_bigwigs import create_bigwigs
         create_bigwigs(matrix, args.bigwig, args)
 
 

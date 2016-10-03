@@ -151,7 +151,14 @@ from epic.utils.find_readlength import (find_readlength,
                                         get_closest_readlength)
 from epic.config.genomes import get_effective_genome_length
 
+
+import warnings
+warnings.filterwarnings("ignore",
+                        category=UserWarning,
+                        module="rpy2")  # rpy2 is noisy
+
 if __name__ == '__main__':
+
 
     args = parser.parse_args()
     print("# epic " + " ".join(argv[1:]))

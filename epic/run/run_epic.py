@@ -24,7 +24,6 @@ from epic.statistics.fdr import compute_fdr
 from epic.utils.helper_functions import merge_chip_and_input, get_total_number_of_reads, merge_same_files
 from epic.windows.cluster.find_islands import find_islands
 from epic.matrixes.matrixes import write_matrix_files
-from epic.bigwig.create_bigwigs import create_bigwigs
 
 
 def run_epic(args):
