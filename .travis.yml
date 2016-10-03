@@ -19,10 +19,10 @@ install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
-  # - conda config --add channels bioconda
+  - conda config --add channels bioconda r
   # Useful for debugging any issues with conda
   - conda info -a
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION joblib numpy scipy pandas pytest pytest-cov
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION joblib numpy scipy pandas pytest pytest-cov rpy2 bioconductor-rtracklayer bioconductor-genomicranges
   - source activate test-environment
   - python setup.py install
   - python --version
