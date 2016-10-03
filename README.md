@@ -45,8 +45,11 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
-# unreleased
+# 0.1.19 (03.10.2016)
 - print pandas and epic version on startup
+- remove all bedgraph options
+- remove summary bigwig options
+- now only creates individual bigwigs
 
 # 0.1.18 (06.09.16)
 - add hg18
@@ -252,6 +255,11 @@ Endre Bakken Stovner
 
 * Piotr Balwierz (helping me debug the paired-end mode)
 * Keith Siklenka (lending me a subset of some paired-end ChIP-Seq files)
+
+#### Relative performance
+
+![alt tag](img/4C.png)
+
 
 ## NAQ/Various
 

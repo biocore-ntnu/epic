@@ -1,3 +1,9 @@
+# 0.1.19 (03.10.2016)
+- print pandas and epic version on startup
+- remove all bedgraph options
+- remove summary bigwig options
+- now only creates individual bigwigs
+
 # 0.1.18 (06.09.16)
 - add hg18
 

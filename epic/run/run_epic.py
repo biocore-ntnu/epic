@@ -24,6 +24,7 @@ from epic.statistics.fdr import compute_fdr
 from epic.utils.helper_functions import merge_chip_and_input, get_total_number_of_reads, merge_same_files
 from epic.windows.cluster.find_islands import find_islands
 from epic.matrixes.matrixes import write_matrix_files
+from epic.bigwig.create_bigwigs import create_bigwigs
 
 
 def run_epic(args):
@@ -59,8 +60,7 @@ def run_epic(args):
     logging.info("Computing FDR.")
     df = compute_fdr(df, nb_chip_reads, nb_input_reads, args)
 
-    if (args.store_matrix or args.individual_bedgraph or args.bedgraph or
-            args.individual_bigwig or args.bigwig):
+    if (args.store_matrix or args.bigwig):
         write_matrix_files(chip_merged, input_merged, df, args)
 
     # Just in case some ints got promoted to float somewhere
