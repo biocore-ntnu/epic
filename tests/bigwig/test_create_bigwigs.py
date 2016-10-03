@@ -6,7 +6,7 @@ import numpy as np
 from os import stat
 from io import StringIO
 
-from epic.bigwig.create_bigwigs import _create_bigwig
+# from epic.bigwig.create_bigwigs import _create_bigwig
 
 
 @pytest.fixture
