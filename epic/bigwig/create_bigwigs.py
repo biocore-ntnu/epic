@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 from os.path import join, basename, splitext
+from subprocess import call
 
 from rpy2.robjects import r, pandas2ri, globalenv
 ri2py = pandas2ri.ri2py
@@ -15,6 +16,7 @@ importr("rtracklayer")
 
 def create_bigwigs(matrix, outdir, args):
     """Create bigwigs from matrix."""
+    call("mkdir -p {}".format(outdir), shell=True)
 
     for bed_file in matrix:
 
@@ -44,3 +46,16 @@ def _create_bigwig(bed_column, outpath, args):
     gr = r("function(gr, rpkm) {gr$scores = as.numeric(rpkm); gr}")(gr, rpkm)
 
     r["export.bw"](gr, outpath)
+
+
+def create_sum_bigwigs(matrix, outdir, args):
+    call("mkdir -p {}".format(outdir), shell=True)
+
+    chip = matrix[args.treatment].sum(axis=1)
+    input = matrix[args.control].sum(axis=1)
+
+    chip_outpath = join(outdir, "chip_sum" + ".bw")
+    input_outpath = join(outdir, "input_sum" + ".bw")
+
+    _create_bigwig(chip, chip_outpath, args)
+    _create_bigwig(input, input_outpath, args)

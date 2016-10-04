@@ -11,6 +11,7 @@ from subprocess import call
 import logging
 
 import pandas as pd
+from numpy import log2
 
 from natsort import natsorted
 from joblib import Parallel, delayed
@@ -59,7 +60,7 @@ def run_epic(args):
     logging.info("Computing FDR.")
     df = compute_fdr(df, nb_chip_reads, nb_input_reads, args)
 
-    if (args.store_matrix or args.bigwig):
+    if (args.store_matrix or args.bigwig or args.sum_bigwig):
         write_matrix_files(chip_merged, input_merged, df, args)
 
     # Just in case some ints got promoted to float somewhere
@@ -67,8 +68,27 @@ def run_epic(args):
                                                 ]].astype(int)
     df.to_csv(stdout, index=False, sep=" ", na_rep="NA")
 
+    if args.bed:
+        df_to_bed(df).to_csv(args.bed, header=False, index=False, sep="\t")
+
     return df.reset_index(
     )  # only returns a value to simplify integration tests
+
+
+def df_to_bed(df):
+
+    # '''Chromosome Start End ChIP Input Score Fold_change P FDR
+    # chr5 53000 55399 121 13 77.6075622841774 13.655736573980159 6.040968494897508e-92 1.9241805908359603e-91\''
+
+    regions = df["Chromosome Start End FDR".split()].copy()
+    regions.insert(4, "Score", log2(df.ChIP/df.Input) * 100)
+    regions.loc[regions.Score > 1000, "Score"] = 1000
+    regions.loc[regions.Score < 0, "Score"] = 0
+    regions.insert(5, "Strand", ".")
+
+    return regions
+
+
 
 
 def sum_columns(dfs):

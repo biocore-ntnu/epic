@@ -34,6 +34,11 @@ def write_matrix_files(chip_merged, input_merged, df, args):
         from epic.bigwig.create_bigwigs import create_bigwigs
         create_bigwigs(matrix, args.bigwig, args)
 
+    if args.sum_bigwig:
+        # defer initialization so not run during travis
+        from epic.bigwig.create_bigwigs import create_sum_bigwigs
+        create_sum_bigwigs(matrix, args.sum_bigwig, args)
+
 
 def _create_matrixes(chromosome, chip, input, islands, chromosome_size,
                      window_size):

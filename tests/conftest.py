@@ -12,7 +12,7 @@ MockNamespace = namedtuple(
     ["number_cores", "genome", "keep_duplicates", "window_size",
      "fragment_size", "paired_end", "gaps_allowed",
      "false_discovery_rate_cutoff", "effective_genome_length", "store_matrix",
-     "bigwig",
+     "bigwig", "bed",
      "treatment", "control"])
 
 egs = 2290813547.4  # this is the effective genome size used by the original sicer for hg19
@@ -20,7 +20,7 @@ egs = 2290813547.4  # this is the effective genome size used by the original sic
 
 @pytest.fixture(scope="session")
 def args_200_fast():
-    return MockNamespace(25, "hg19", False, 200, 150, False, 3, 1, egs, False,
+    return MockNamespace(25, "hg19", False, 200, 150, False, 3, 1, egs, False, False,
                          False, ["examples/test.bed"],
                          ["examples/control.bed"])
 
@@ -28,13 +28,13 @@ def args_200_fast():
 @pytest.fixture(scope="session")
 def args_200():
     return MockNamespace(1, "hg19", False, 200, 150, False, 3, 0.05, egs,
-                         False, False,
+                         False, False, False,
                          ["examples/test.bed"], ["examples/control.bed"])
 
 
 @pytest.fixture(scope="session")
 def args_50():
-    return MockNamespace(1, "hg19", False, 50, 150, False, 3, 0.05, egs, False,
+    return MockNamespace(1, "hg19", False, 50, 150, False, 3, 0.05, egs, False, False,
                          False, ["examples/test.bed"],
                          ["examples/control.bed"])
 

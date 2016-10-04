@@ -6,7 +6,7 @@ import numpy as np
 from os import stat
 from io import StringIO
 
-# from epic.bigwig.create_bigwigs import _create_bigwig
+from epic.bigwig.create_bigwigs import _create_bigwig
 
 
 @pytest.fixture
@@ -42,13 +42,13 @@ def output_bigwig(tmpdir):
 
 
 # not used due to travis/bioconda r problem
-# @pytest.mark.unit
-# def test_create_bigwigs(input_data, output_bigwig, args_200):
+@pytest.mark.unit
+def test_create_bigwigs(input_data, output_bigwig, args_200):
 
-#     _create_bigwig(input_data, output_bigwig, args_200)
+    _create_bigwig(input_data, output_bigwig, args_200)
 
-#     filesize = stat(output_bigwig).st_size
+    filesize = stat(output_bigwig).st_size
 
-#     print(filesize, "filesize")
+    print(filesize, "filesize")
 
-#     assert filesize > 0
+    assert filesize > 0
