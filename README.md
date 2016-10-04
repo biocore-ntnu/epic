@@ -56,7 +56,7 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ```
 # 0.1.20 (04.10.2016)
-- create bed file with -b option (for genome browsers or downstream analysis )
+- create bed file with -b option (for genome browsers or downstream analysis)
 - create sum bigwigs with -sbw option
 
 # 0.1.19 (03.10.2016)
