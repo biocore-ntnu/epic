@@ -46,27 +46,27 @@ def expected_result_example_input():
 
 @pytest.fixture(scope="session")
 def epic_overlap_files():
-    return ["/local/home/endrebak/code/epic/examples/epic-overlaps/0h_H3K4me3.regions",
-"/local/home/endrebak/code/epic/examples/epic-overlaps/3h_H3K4me3.regions",
-"/local/home/endrebak/code/epic/examples/epic-overlaps/6h_H3K4me3.regions",
-"/local/home/endrebak/code/epic/examples/epic-overlaps/9h_H3K4me3.regions",
-"/local/home/endrebak/code/epic/examples/epic-overlaps/12h_H3K4me3.regions",
-"/local/home/endrebak/code/epic/examples/epic-overlaps/15h_H3K4me3.regions",
-"/local/home/endrebak/code/epic/examples/epic-overlaps/18h_H3K4me3.regions",
-"/local/home/endrebak/code/epic/examples/epic-overlaps/21h_H3K4me3.regions",
-"/local/home/endrebak/code/epic/examples/epic-overlaps/24h_H3K4me3.regions"]
+    return ["examples/epic-overlaps/0h_H3K4me3.regions",
+"examples/epic-overlaps/3h_H3K4me3.regions",
+"examples/epic-overlaps/6h_H3K4me3.regions",
+"examples/epic-overlaps/9h_H3K4me3.regions",
+"examples/epic-overlaps/12h_H3K4me3.regions",
+"examples/epic-overlaps/15h_H3K4me3.regions",
+"examples/epic-overlaps/18h_H3K4me3.regions",
+"examples/epic-overlaps/21h_H3K4me3.regions",
+"examples/epic-overlaps/24h_H3K4me3.regions"]
 
 
 
 @pytest.fixture(scope="session")
 def epic_overlap_intermediate_nucleotide_matrixes():
-    return ["/local/home/endrebak/code/epic/examples/epic-overlaps/0h_H3K4me3.matrix",
-            "/local/home/endrebak/code/epic/examples/epic-overlaps/3h_H3K4me3.matrix",
-            "/local/home/endrebak/code/epic/examples/epic-overlaps/6h_H3K4me3.matrix"]
+    return ["examples/epic-overlaps/0h_H3K4me3.matrix",
+            "examples/epic-overlaps/3h_H3K4me3.matrix",
+            "examples/epic-overlaps/6h_H3K4me3.matrix"]
 
 
 @pytest.fixture(scope="session")
 def epic_overlap_intermediate_region_matrixes():
-    return ["/local/home/endrebak/code/epic/examples/epic-overlaps/0h_H3K4me3_region.matrix",
-            "/local/home/endrebak/code/epic/examples/epic-overlaps/3h_H3K4me3_region.matrix",
-            "/local/home/endrebak/code/epic/examples/epic-overlaps/6h_H3K4me3_region.matrix"]
+    return ["examples/epic-overlaps/0h_H3K4me3_region.matrix",
+            "examples/epic-overlaps/3h_H3K4me3_region.matrix",
+            "examples/epic-overlaps/6h_H3K4me3_region.matrix"]
