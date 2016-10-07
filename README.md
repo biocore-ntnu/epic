@@ -55,6 +55,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.21 (unreleased)
+- use pyBigWig to create bigwigs, drop R/bioconductor dependencies
+- epic-overlaps script to graph overlapping regions/nucleotides for differential ChIP-Seq
+
 # 0.1.20 (04.10.2016)
 - create bed file with -b option (for genome browsers or downstream analysis)
 - create sum bigwigs with -sbw option
