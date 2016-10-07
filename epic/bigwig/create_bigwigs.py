@@ -3,49 +3,53 @@ import numpy as np
 from os.path import join, basename, splitext
 from subprocess import call
 
-from rpy2.robjects import r, pandas2ri, globalenv
-ri2py = pandas2ri.ri2py
-import rpy2.robjects.numpy2ri
-rpy2.robjects.numpy2ri.activate()
-from rpy2.robjects.packages import importr
-pandas2ri.activate()
+import pyBigWig
 
-importr("GenomicRanges")
-importr("rtracklayer")
+from joblib import Parallel, delayed
+from epic.config.genomes import create_genome_size_dict
 
 
 def create_bigwigs(matrix, outdir, args):
     """Create bigwigs from matrix."""
     call("mkdir -p {}".format(outdir), shell=True)
+    genome_size_dict = create_genome_size_dict(args.genome)
 
+    outpaths, data = [], []
     for bed_file in matrix:
-
         outpath = join(outdir, splitext(basename(bed_file))[0] + ".bw")
+        outpaths.append(outpath)
+
         bed_column = matrix[bed_file]
+        data.append(bed_column)
 
-        _create_bigwig(bed_column, outpath, args)
+    Parallel(n_jobs=args.number_cores)(delayed(_create_bigwig)(bed_column, outpath, genome_size_dict) for outpath, bed_column in zip(outpaths, data))
 
 
-def _create_bigwig(bed_column, outpath, args):
+def _to_int(l):
+    return [int(i) for i in l]
+
+
+def _create_bigwig(bed_column, outpath, genome_size_dict):
 
     logging.info("Creating biwgwig " + outpath)
 
     rpkm = 1e6 * bed_column / bed_column.sum()
 
-    rpkm = np.array(rpkm.fillna(0))
+    rpkm = [float(f) for f in list(rpkm.fillna(0).values.flatten())]
 
     bed_column = bed_column.reset_index()
-    chromosomes = bed_column.Chromosome
-    starts = bed_column.Bin
-    ends = bed_column.End
+    unique_chromosomes = list(bed_column.Chromosome.drop_duplicates())
+    chromosomes = list(bed_column.Chromosome)
+    starts = _to_int(list(bed_column.Bin))
+    ends = _to_int(list(bed_column.End))
 
-    ir = r["IRanges"](starts, ends)
-    gr = r["GRanges"](r["as.character"](chromosomes),
-                      ir,
-                      seqinfo=r["Seqinfo"](genome=args.genome))
-    gr = r("function(gr, rpkm) {gr$scores = as.numeric(rpkm); gr}")(gr, rpkm)
+    header = [(c, int(genome_size_dict[c])) for c in unique_chromosomes]
 
-    r["export.bw"](gr, outpath)
+    bw = pyBigWig.open(outpath, "w")
+    bw.addHeader(header)
+
+    bw.addEntries(chromosomes, starts, ends=ends, values=rpkm)
+    bw.close()
 
 
 def create_sum_bigwigs(matrix, outdir, args):
@@ -59,3 +63,5 @@ def create_sum_bigwigs(matrix, outdir, args):
 
     _create_bigwig(chip, chip_outpath, args)
     _create_bigwig(input, input_outpath, args)
+
+    Parallel(n_jobs=2)(delayed(_create_bigwig)(bed_column, outpath, genome_size_dict) for outpath, bed_column in zip([chip_outpath, input_outpath], [chip, input]))

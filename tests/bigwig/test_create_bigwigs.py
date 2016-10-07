@@ -6,8 +6,8 @@ import numpy as np
 from os import stat
 from io import StringIO
 
-# from epic.bigwig.create_bigwigs import _create_bigwig
-
+from epic.bigwig.create_bigwigs import _create_bigwig
+from epic.config.genomes import create_genome_size_dict
 
 @pytest.fixture
 def input_data():
@@ -41,14 +41,20 @@ def output_bigwig(tmpdir):
     return str(p)
 
 
-# # not used due to travis/bioconda r problem
-# @pytest.mark.unit
-# def test_create_bigwigs(input_data, output_bigwig, args_200):
+# not used due to travis/bioconda r problem
+@pytest.mark.unit
+def test_create_bigwigs(input_data, output_bigwig, args_200):
 
-#     _create_bigwig(input_data, output_bigwig, args_200)
+    print(input_data)
+    print(output_bigwig)
+    d = create_genome_size_dict(args_200.genome)
 
-#     filesize = stat(output_bigwig).st_size
+    print(d)
+    _create_bigwig(input_data, output_bigwig, d)
 
-#     print(filesize, "filesize")
 
-#     assert filesize > 0
+    filesize = stat(output_bigwig).st_size
+
+    print(filesize, "filesize")
+
+    assert filesize > 0

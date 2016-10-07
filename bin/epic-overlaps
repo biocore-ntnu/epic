@@ -1,0 +1,133 @@
+#!/usr/bin/env python
+
+"""
+epic-overlap
+Plot nb. and nucleotides of overlaps between enriched regions in different conditions
+
+(Visit github.com/endrebak/epic for examples and help.)
+
+Usage:
+    epic-overlap [--bin-size=BIN] [--cpu=CPU] [--fdr=FDR] [--prefix=PRE] [--title=TIT] FILE...
+    epic-overlap --help
+
+Arguments:
+    FILE              files of regions
+
+Options:
+    -f FDR --FDR FDR       remove regions with FDR above FDR  [default: 0.05]
+    -p PRE --prefix PRE    prefix for output files
+    -t TTL --title TTL     title of graph  [default: "epic-overlaps"]
+    -b BIN --bin-size BIN  bin size  [default: 200]
+    -c CPU --cpu CPU       nb. cpus to use  [default: 1]
+    -h --help              show this help message
+"""
+
+import logging
+from os.path import basename, dirname
+from subprocess import check_output
+
+import pandas as pd
+from io import StringIO
+from docopt import docopt
+from natsort import natsorted, index_natsorted, order_by_index
+from joblib import Parallel, delayed
+
+
+import warnings
+warnings.filterwarnings("ignore",
+                        category=UserWarning,
+                        module="rpy2")  # rpy2 is noisy
+
+from rpy2.robjects import r
+from rpy2.robjects import pandas2ri
+from rpy2.robjects.packages import importr
+pandas2ri.activate()
+
+args = docopt(__doc__)
+
+from epic.scripts.overlaps.overlaps import overlap_matrix_nucleotides, overlap_matrix_regions
+from epic.config import logging_settings
+
+importr("ggplot2")
+
+def graph_overlaps(df, title, outfile):
+
+    df = df.reindex(index=order_by_index(df.index, index_natsorted(zip(df.Main, df.Other))))
+    factor_order = natsorted(list(df.Main.drop_duplicates()))
+    factors = '"' + '", "'.join(factor_order) + '"'
+
+    f = """function(df) {{
+
+    df$Main = factor(as.character(df$Main), levels=c({factors}), ordered=TRUE)
+    df$Other = factor(df$Other, ordered=TRUE)
+    p = ggplot(df, aes(x=Main, y=Overlaps, fill=Other)) + geom_bar(stat="identity") + ggtitle("{title}") + scale_fill_brewer(palette="Set3") + labs(x="Timepoints", y="Number of regions", fill="Overlaps")
+    p = p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+    print(p)
+    }}
+    """.format(factors=factors, title=title)
+    print(f)
+
+    plot_df_nb_regions = r(f)
+
+    r("pdf('{}')".format(outfile))
+    logging.info("Writing overlapping regions to file: " + outfile)
+
+    r_dataframe = pandas2ri.py2ri(df)
+    plot_df_nb_regions(r_dataframe)
+
+    r("dev.off()")
+
+
+# def _overlap_matrix_nucleotides(bed_file, all_files, window_size):
+
+#     all_files_str = " ".join(all_files)
+
+#     base_bed = basename(bed_file).split(".")[0]
+#     logging.info("Processing {} at nucleotide level".format(base_bed))
+#     command = "bedtools makewindows -w {} -b {} | bedtools intersect -wo -filenames -a - -b {}".format(window_size, bed_file, all_files_str)
+#     output = check_output(command, shell=True).decode()
+
+#     df = pd.read_table(StringIO(output), usecols=[0, 1, 2, 3], header=None, names="Chromosome Start End File".split())
+#     df.File = df.File.apply(basename).str.split(".", expand=True).ix[:, 0]
+#     nucleotide_overlap = df.drop_duplicates("Chromosome Start End File".split()).groupby("Chromosome Start End".split()).size().value_counts().to_frame().reset_index()
+
+#     nucleotide_overlap.columns = "Other Overlaps".split()
+#     nucleotide_overlap.Overlaps = nucleotide_overlap.Overlaps * window_size
+
+#     nucleotide_overlap.insert(0, "Main", base_bed)
+
+#     return nucleotide_overlap
+
+
+# def overlap_matrix_nucleotides(all_files, window_size, nb_cpu):
+
+#     nucleotide_overlaps = Parallel(n_jobs=nb_cpu)(
+#         delayed(_overlap_matrix_nucleotides)(bed_file, all_files, window_size)
+#         for bed_file in all_files)
+
+#     nucleotides_df = pd.concat(nucleotide_overlaps).reset_index(drop=True)
+
+#     return nucleotides_df
+
+
+
+
+
+if __name__ == '__main__':
+
+    all_files = args["FILE"]
+    prefix = args["--prefix"]
+    title = args["--title"]
+    nb_cpu = int(args["--cpu"])
+    bin_size = int(args["--bin-size"])
+    check_output("mkdir -p {}".format(dirname(prefix)), shell=True)
+
+    nb_df = overlap_matrix_regions(all_files, nb_cpu)
+    # nucleotide_df = overlap_matrix_nucleotides(all_files, bin_size, nb_cpu)
+    # graph_overlaps(nucleotide_df, title, prefix + "_nucleotides.pdf")
+    # print(nucleotide_df)
+
+    graph_overlaps(nb_df, title, prefix + "_regions.pdf")
+
+    # graph_overlaps(nucleotide_df, outpath + "/nucleotides.pdf")
