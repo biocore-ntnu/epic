@@ -17,12 +17,12 @@ The MIT-licensed code is available at https://github.com/endrebak/epic
 Please post issues, questions, docrequests or whatever is on your mind on the [epic google groups forum](https://groups.google.com/forum/#!forum/epic-chip-seq).
 To see what issues are currently being worked on, please use the [waffle board](https://waffle.io/endrebak/epic).
 
-If you use, or intend to use epic, please say hi in this google
-groups
-[thread](https://groups.google.com/forum/#!topic/epic-chip-seq/zWlsun_yfZQ).
-This would help me better understand how many people actually use it - it seems
-like the bugreports, stars and feature requests I get is only a teensy tip of the ice
-berg.
+<!-- If you use, or intend to use epic, please say hi in this google -->
+<!-- groups -->
+<!-- [thread](https://groups.google.com/forum/#!topic/epic-chip-seq/zWlsun_yfZQ). -->
+<!-- This would help me better understand how many people actually use it - it seems -->
+<!-- like the bugreports, stars and feature requests I get is only a teensy tip of the ice -->
+<!-- berg. -->
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
