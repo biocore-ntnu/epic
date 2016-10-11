@@ -57,6 +57,18 @@ def epic_overlap_files():
 "examples/epic-overlaps/24h_H3K4me3.regions"]
 
 
+@pytest.fixture(scope="session")
+def epic_overlap_files_more_chromos():
+    return ["examples/epic-overlaps/more_chromos0h_H3K4me3.regions",
+"examples/epic-overlaps/more_chromos3h_H3K4me3.regions",
+"examples/epic-overlaps/more_chromos6h_H3K4me3.regions",
+"examples/epic-overlaps/more_chromos9h_H3K4me3.regions",
+"examples/epic-overlaps/more_chromos12h_H3K4me3.regions",
+"examples/epic-overlaps/more_chromos15h_H3K4me3.regions",
+"examples/epic-overlaps/more_chromos18h_H3K4me3.regions",
+"examples/epic-overlaps/more_chromos21h_H3K4me3.regions",
+"examples/epic-overlaps/more_chromos24h_H3K4me3.regions"]
+
 
 @pytest.fixture(scope="session")
 def epic_overlap_intermediate_nucleotide_matrixes():
