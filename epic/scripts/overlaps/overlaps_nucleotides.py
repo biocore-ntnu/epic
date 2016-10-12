@@ -1,5 +1,6 @@
 import pytest
 
+from joblib import Parallel, delayed
 from collections import defaultdict
 import pandas as pd
 import numpy as np
@@ -28,9 +29,20 @@ __author__ = "Endre Bakken Stovner https://github.com/endrebak/"
 __license__ = "MIT"
 
 
-def _nucleotide_overlaps_per_file(bed_file, extended_rles, nb_cpu):
+def nucleotide_overlaps_per_file(all_files, nb_cpu):
+
+    rles = files_to_chromosome_coverage(all_files, nb_cpu)
+
+    nucleotide_overlaps = Parallel(n_jobs=nb_cpu)(delayed(_nucleotide_overlaps_per_file)(
+        f, rles) for f in rles)
+
+    return pd.concat(nucleotide_overlaps).sort_values(["Main", "Other"]).reset_index(drop=True)
+
+
+def _nucleotide_overlaps_per_file(bed_file, extended_rles):
 
     base_bed = bed_file.split("/")[-1].split(".")[0]
+    logging.info("Finding the number of nucleotides in " + base_bed + " overlapping other files.")
 
     _rle_to_iranges = r("""function(x, c){
     gr = GRanges(c, IRanges(start(x), width=runLength(x)), value=runValue(x))
@@ -43,10 +55,8 @@ def _nucleotide_overlaps_per_file(bed_file, extended_rles, nb_cpu):
     cvs = extended_rles[bed_file]
     irs = {c: _rle_to_iranges(d, c) for c, d in cvs.items()}
 
-    other_files = [f for f in extended_rles if f != bed_file]
-
     overlaps = defaultdict(list)
-    for f in other_files:
+    for f in extended_rles:
         base_bed_other = f.split("/")[-1].split(".")[0]
         cvos = extended_rles[f]
         iros = {c: _rle_to_iranges(d, c) for c, d in cvos.items()}
@@ -76,18 +86,29 @@ def _nucleotide_overlaps_per_file(bed_file, extended_rles, nb_cpu):
 
     return pd.DataFrame.from_dict(rowdicts)["Chromosome                    Main                    Other  Overlaps".split()]
 
-def _overlap_matrix_nucleotides(bed_file, extended_rles, nb_cpu):
 
-   # extended_rles = files_to_chromosome_coverage(all_files, nb_cpu)
+def overlap_matrix_nucleotides(all_files, nb_cpu):
+    rles = files_to_chromosome_coverage(all_files, nb_cpu)
+
+    nucleotide_overlaps = Parallel(n_jobs=nb_cpu)(delayed(_overlap_matrix_nucleotides)(
+        f, rles) for f in rles)
+
+    df = pd.concat(nucleotide_overlaps)
+
+    return df.reset_index(drop=True)
+
+
+def _overlap_matrix_nucleotides(bed_file, extended_rles):
+
     overlaps = _create_overlap_matrix_nucleotides(bed_file, extended_rles)
-    return _counts_runlengths(overlaps)
-    # have list of files, pair up one vs all
+    return _counts_runlengths(bed_file, overlaps)
 
 
 def files_to_chromosome_coverage(all_files, nb_cpu):
 
     df_to_coverage = r("function(x) coverage(GRanges(x$Chromosome, IRanges(x$Start, x$End)))")
 
+    logging.info("Finding nucleotide coverage of files.")
     coverages = defaultdict(dict)
     for f in all_files:
         df = pd.read_table(f, usecols=[0, 1, 2], header=None, names="Chromosome Start End".split())
@@ -125,7 +146,7 @@ def _create_overlap_matrix_nucleotides(bed_file, coverages):
 
     cvs = coverages[bed_file]
 
-    files = [bed_file] + [f for f in coverages if f != bed_file]
+    files = [f for f in coverages if f != bed_file]
     compute_overlap = r("function(x, o) x + (x & o)")
     for f in files:
         # print(f)
@@ -142,7 +163,9 @@ def _create_overlap_matrix_nucleotides(bed_file, coverages):
     return cvs
 
 
-def _counts_runlengths(cvs):
+def _counts_runlengths(bed_file, cvs):
+
+    base_bed = bed_file.split("/")[-1].split(".")[0]
 
     overlaps = defaultdict(int)
     get_runlength = r("function(x, v) runLength(x[x == v])")
@@ -153,7 +176,12 @@ def _counts_runlengths(cvs):
             runlength = get_runlength(overlap, run_value)[0]
             overlaps[run_value] += runlength
 
-    return overlaps
+    rowdicts = []
+    for run_value, run_length in overlaps.items():
+        rowdict = {"Main": base_bed, "Other": run_value, "Overlaps": run_length}
+        rowdicts.append(rowdict)
+
+    return pd.DataFrame.from_dict(rowdicts)
 
 
     # command = "bedtools makewindows -w {} -b {} | bedtools intersect -wo -filenames -a - -b {}".format(window_size, bed_file, all_files_str)

@@ -11,7 +11,8 @@
 # from epic.scripts.overlaps.overlaps_nucleotides import (_create_overlap_matrix_nucleotides,
 #                                                         _overlap_matrix_nucleotides,
 #                                                         files_to_chromosome_coverage,
-#                                                         _nucleotide_overlaps_per_file)
+#                                                         _nucleotide_overlaps_per_file,
+#                                                         nucleotide_overlaps_per_file)
 
 # from epic.config.genomes import (create_genome_size_dict,
 #                                  get_effective_genome_length)
@@ -19,14 +20,29 @@
 # __author__ = "Endre Bakken Stovner https://github.com/endrebak/"
 # __license__ = "MIT"
 
-# @pytest.mark.current
-# def test_nucleotide_overlaps_per_file(bed_file, extended_rles, expected_result_overlaps_per_file):
+# @pytest.fixture
+# def expected_result_nucleotide_overlaps_per_file():
+#     return pd.read_table("examples/epic-overlaps/nucelotide_overlaps_per_file_result.csv", sep=" ", index_col=0).reset_index(drop=True)
 
-#     overlaps = _nucleotide_overlaps_per_file(bed_file, extended_rles, 1)
-#     overlaps = overlaps.sort_values(["Main", "Other"])
-#     print(overlaps, "ove " * 5)
-#     print(expected_result_overlaps_per_file, "exp " * 5)
-#     assert np.allclose(expected_result_overlaps_per_file.Overlaps, overlaps.Overlaps)
+# @pytest.mark.current
+# def test_nucleotide_overlaps_per_file(epic_overlap_files_more_chromos, expected_result_nucleotide_overlaps_per_file):
+
+#     overlaps = nucleotide_overlaps_per_file(epic_overlap_files_more_chromos, 1)
+#     overlaps = overlaps.sort_values(["Main", "Other", "Chromosome"])
+#     print(overlaps.head(), "ove " * 5)
+#     overlaps.to_csv("examples/epic-overlaps/nucelotide_overlaps_per_file_result.csv", sep=" ")
+#     print(expected_result_nucleotide_overlaps_per_file.head(), "exp " * 5)
+#     assert expected_result_nucleotide_overlaps_per_file.equals(overlaps)
+
+
+# # @pytest.mark.current
+# # def test__nucleotide_overlaps_per_file(bed_file, extended_rles, expected_result_overlaps_per_file):
+
+# #     overlaps = _nucleotide_overlaps_per_file(bed_file, extended_rles, 1)
+# #     overlaps = overlaps.sort_values(["Main", "Other"])
+# #     print(overlaps, "ove " * 5)
+# #     print(expected_result_overlaps_per_file, "exp " * 5)
+# #     assert np.allclose(expected_result_overlaps_per_file.Overlaps, overlaps.Overlaps)
 
 
 # @pytest.fixture
