@@ -6,13 +6,12 @@ from subprocess import call
 import pyBigWig
 
 from joblib import Parallel, delayed
-from epic.config.genomes import create_genome_size_dict
 
 
 def create_bigwigs(matrix, outdir, args):
     """Create bigwigs from matrix."""
     call("mkdir -p {}".format(outdir), shell=True)
-    genome_size_dict = create_genome_size_dict(args.genome)
+    genome_size_dict = args.chromosome_sizes
 
     outpaths, data = [], []
     for bed_file in matrix:
@@ -61,7 +60,7 @@ def create_sum_bigwigs(matrix, outdir, args):
     chip_outpath = join(outdir, "chip_sum" + ".bw")
     input_outpath = join(outdir, "input_sum" + ".bw")
 
-    _create_bigwig(chip, chip_outpath, args)
-    _create_bigwig(input, input_outpath, args)
+    # _create_bigwig(chip, chip_outpath, args)
+    # _create_bigwig(input, input_outpath, args)
 
-    Parallel(n_jobs=2)(delayed(_create_bigwig)(bed_column, outpath, genome_size_dict) for outpath, bed_column in zip([chip_outpath, input_outpath], [chip, input]))
+    Parallel(n_jobs=args.number_cores)(delayed(_create_bigwig)(bed_column, outpath, args.chromosome_sizes) for outpath, bed_column in zip([chip_outpath, input_outpath], [chip, input]))

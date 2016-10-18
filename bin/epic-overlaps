@@ -147,7 +147,7 @@ if __name__ == '__main__':
 
         df = nucleotide_overlaps_per_file(all_files, nb_cpu)
 
-        df = pd.read_table("H3K27me3_nucleoitdes.matrix", sep=" ", index_col=0)
+        # df = pd.read_table("H3K27me3_nucleoitdes.matrix", sep=" ", index_col=0)
         df = df.set_index(["Chromosome"]).groupby("Main Other".split()).sum().reset_index()
         heatmap(df, title, outfile)
 

@@ -1,3 +1,5 @@
+from natsort import natsorted
+from collections import OrderedDict
 import pkg_resources
 import logging
 
@@ -34,6 +36,18 @@ def create_genome_size_dict(genome):
         size_dict[genome] = int(length)
 
     return size_dict
+
+
+def create_genome_size_dict_custom_genome(chromsizes):
+
+    chromosome_lengths = [l.split() for l in open(chromsizes).readlines()]
+
+    od = OrderedDict()
+
+    for c, l in natsorted(chromosome_lengths):
+        od[c] = int(l)
+
+    return od
 
 
 def get_effective_genome_length(genome, read_length):

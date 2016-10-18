@@ -10,7 +10,6 @@ from numpy import int32
 
 from natsort import natsorted
 
-from epic.config.genomes import create_genome_size_dict, get_genome_size_file
 from epic.windows.count.merge_chromosome_dfs import merge_chromosome_dfs
 from epic.windows.count.remove_out_of_bounds_bins import remove_out_of_bounds_bins
 
@@ -34,7 +33,7 @@ def _options(bed_file, keep_duplicates):
 
 def count_reads_in_windows(bed_file, args):
 
-    chromosome_size_dict = create_genome_size_dict(args.genome)
+    chromosome_size_dict = args.chromosome_sizes
     chromosomes = natsorted(list(chromosome_size_dict.keys()))
 
     parallel_count_reads = partial(_count_reads_in_windows, bed_file, args)
@@ -98,7 +97,7 @@ def _count_reads_in_windows(bed_file, args, chromosome_size, chromosome,
 
 def count_reads_in_windows_paired_end(bed_file, args):
 
-    chromosome_size_dict = create_genome_size_dict(args.genome)
+    chromosome_size_dict = args.chromosome_sizes
     chromosomes = natsorted(list(chromosome_size_dict.keys()))
 
     parallel_count_reads = partial(_count_reads_in_windows_paired_end,
@@ -120,7 +119,7 @@ def _count_reads_in_windows_paired_end(bed_file, keep_duplicates,
     grep, duplicate_handling = _options(bed_file, keep_duplicates)
 
     command = """
-    {grep} -E "^{chromosome}\\b.*{chromosome}\\b.*" {bed_file} | # Both chromos must be equal; no chimeras (?)
+    {grep} -E "^{chromosome}\\b.*\\s{chromosome}\\b.*" {bed_file} | # Both chromos must be equal; no chimeras (?)
     cut -f 1-6  | sort -k2,5n -k3,6n | {duplicate_handling} # get chr start end chr start end for PE; sort on location
     LC_ALL=C perl -a -ne 'use List::Util qw[min max]; $start = min($F[1], $F[2]); $end = max($F[4], $F[5]); $middle = $start + int(($end - $start)/2); $bin = $middle - $middle % 200; print "$F[0] $bin\\n"' | # Find bin of midpoint between start and ends
     uniq -c |

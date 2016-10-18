@@ -19,9 +19,7 @@ setup(
     name="bioepic",
     packages=find_packages(),
 
-    # ext_modules=cythonize(
-    #      "epic/statistics/add_to_island_expectations_cython.pyx"),
-    scripts=["bin/epic", "bin/epic-effective"],
+    scripts=["bin/epic", "bin/epic-effective", "bin/epic-overlaps"],
     package_data={'epic': ['scripts/effective_sizes/*.txt',
                            'scripts/chromsizes/*chromsizes',
                            'scripts/genome.snakefile']},

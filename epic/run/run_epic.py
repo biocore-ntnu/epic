@@ -18,7 +18,6 @@ from joblib import Parallel, delayed
 
 from epic.windows.count.count_reads_in_windows import (
     count_reads_in_windows, count_reads_in_windows_paired_end)
-from epic.config.genomes import create_genome_size_dict
 from epic.statistics.compute_background_probabilites import compute_background_probabilities
 from epic.statistics.count_to_pvalue import count_to_pvalue
 from epic.statistics.fdr import compute_fdr

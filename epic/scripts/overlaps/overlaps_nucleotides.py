@@ -22,8 +22,6 @@ bioc = importr("GenomicRanges")
 
 length_of_rle = r("function (x) sum(runLength(x))")
 
-from epic.config.genomes import (create_genome_size_dict,
-                                 get_effective_genome_length)
 
 __author__ = "Endre Bakken Stovner https://github.com/endrebak/"
 __license__ = "MIT"

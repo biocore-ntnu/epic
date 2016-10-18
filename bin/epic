@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+from collections import OrderedDict
 import argparse
 import os
 import atexit
@@ -103,12 +104,21 @@ parser.add_argument(
                    ''')
 
 parser.add_argument(
-    '--effective_genome_length',
+    '--effective_genome_size',
     '-egs',
     required=False,
     type=float,
     help=
     '''Use a different effective genome size than the one included in epic. The default value depends on the genome and readlength.''')
+
+
+parser.add_argument(
+    '--chromsizes',
+    '-cs',
+    required=False,
+    type=str,
+    help=
+    '''Set the chromosome lengths yourself in a file with two columns: chromosome names and sizes. Useful to analyze custom genomes, assemblies or simulated data. Only chromosomes included in the file will be analyzed.''')
 
 parser.add_argument(
     '--store-matrix',
@@ -165,7 +175,8 @@ from sys import argv
 
 from epic.utils.find_readlength import (find_readlength,
                                         get_closest_readlength)
-from epic.config.genomes import get_effective_genome_length
+from epic.config.genomes import (get_effective_genome_length,
+                                 create_genome_size_dict, create_genome_size_dict_custom_genome)
 
 
 import warnings
@@ -188,15 +199,20 @@ if __name__ == '__main__':
     from epic.config import logging_settings
 
     # in case the user entered no effective genome size
-    if not args.effective_genome_length and not args.paired_end:
+    if not args.effective_genome_size and not args.paired_end:
         estimated_readlength = find_readlength(args)
         closest_readlength = get_closest_readlength(estimated_readlength)
-        args.effective_genome_length = get_effective_genome_length(
+        args.effective_genome_size = get_effective_genome_length(
             args.genome, closest_readlength)
     # for paired end the effective genome size is max
-    elif not args.effective_genome_length and args.paired_end:
+    elif not args.effective_genome_size and args.paired_end:
         logging.info("Using paired end so setting readlength to 100.")
-        args.effective_genome_length = get_effective_genome_length(args.genome,
-                                                                   100)
+        args.effective_genome_size = get_effective_genome_length(args.genome,
+                                                                 100)
+
+    if not args.chromsizes:
+        args.chromosome_sizes = create_genome_size_dict(args.genome)
+    else:
+        args.chromosome_sizes = create_genome_size_dict_custom_genome(args.chromsizes)
 
     run_epic(args)

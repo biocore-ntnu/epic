@@ -9,7 +9,7 @@ from joblib import Parallel, delayed
 from natsort import natsorted
 
 from epic.windows.count.remove_out_of_bounds_bins import remove_bins_with_ends_out_of_bounds
-from epic.config.genomes import get_genome_size_file, create_genome_size_dict
+from epic.config.genomes import get_genome_size_file
 
 
 
@@ -69,7 +69,7 @@ def create_matrixes(chip, input, df, args):
 
     "Creates matrixes which can be written to file as is (matrix) or as bedGraph."
 
-    genome = create_genome_size_dict(args.genome)
+    genome = args.chromosome_sizes
 
     chip = put_dfs_in_chromosome_dict(chip)
     input = put_dfs_in_chromosome_dict(input)
@@ -114,7 +114,7 @@ def get_island_bins(df, window_size, genome):
     """Finds the enriched bins in a df."""
 
     # need these chromos because the df might not have islands in all chromos
-    chromosomes = natsorted(list(create_genome_size_dict(genome)))
+    chromosomes = natsorted(list(args.chromosome_sizes))
 
     chromosome_island_bins = {}
     df_copy = df.reset_index(drop=False)

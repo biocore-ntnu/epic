@@ -54,10 +54,13 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ## Changelog
 
+
 ```
-# 0.1.21 (unreleased)
+# 0.1.21 (18.10.2016)
+- add argument --chromsizes/-cs to allow for custom genomes, assemblies and simulated data
 - use pyBigWig to create bigwigs, drop R/bioconductor dependencies
-- epic-overlaps script to graph overlapping regions/nucleotides for differential ChIP-Seq
+- argument effective_genome_length renamed to effective_genome_size
+- epic-overlaps script to graph overlapping regions/nucleotides for differential ChIP-Seq (experimental)
 
 # 0.1.20 (04.10.2016)
 - create bed file with -b option (for genome browsers or downstream analysis)
@@ -188,10 +191,9 @@ usage: epic [-h] --treatment TREATMENT [TREATMENT ...] --control CONTROL
             [--keep-duplicates KEEP_DUPLICATES] [--window-size WINDOW_SIZE]
             [--gaps-allowed GAPS_ALLOWED] [--fragment-size FRAGMENT_SIZE]
             [--false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF]
-            [--effective_genome_length EFFECTIVE_GENOME_LENGTH]
-            [--store-matrix STORE_MATRIX]
-            [--individual-bedgraph INDIVIDUAL_BEDGRAPH] [--bedgraph BEDGRAPH]
-            [--individual-bigwig INDIVIDUAL_BIGWIG] [--bigwig BIGWIG]
+            [--effective_genome_size EFFECTIVE_GENOME_SIZE]
+            [--chromsizes CHROMSIZES] [--store-matrix STORE_MATRIX]
+            [--bigwig BIGWIG] [--sum-bigwig SUM_BIGWIG] [--bed BED]
             [--paired-end] [--version]
 
 Diffuse domain ChIP-Seq caller based on SICER. (Visit github.com/endrebak/epic
@@ -228,27 +230,30 @@ optional arguments:
                         Remove all islands with an FDR below cutoff. Default
                         1.0 (i.e. all found islands included no matter how bad
                         the adjusted p-value.).
-  --effective_genome_length EFFECTIVE_GENOME_LENGTH, -egs EFFECTIVE_GENOME_LENGTH
+  --effective_genome_size EFFECTIVE_GENOME_SIZE, -egs EFFECTIVE_GENOME_SIZE
                         Use a different effective genome size than the one
                         included in epic. The default value depends on the
                         genome and readlength.
+  --chromsizes CHROMSIZES, -cs CHROMSIZES
+                        Set the chromosome lengths yourself in a file with one
+                        column of chromosome names and one with sizes. Useful
+                        to analyze custom genomes, assemblies or simulated
+                        data. Only chromosomes included in the file will be
+                        analyzed.
   --store-matrix STORE_MATRIX, -sm STORE_MATRIX
                         Store the matrix of counts per bin for ChIP and input
                         to gzipped file <STORE_MATRIX>.
-  --individual-bedgraph INDIVIDUAL_BEDGRAPH, -ib INDIVIDUAL_BEDGRAPH
-                        For each file, store a bedgraph of both enriched and
-                        non-enriched regions to folder <INDIVIDUAL_BEDGRAPH>.
-                        Requires different basenames for each file.
-  --bedgraph BEDGRAPH, -b BEDGRAPH
-                        Store two bedgraphs - one of ChIP, one of input - to
-                        folder <BEDGRAPH>.
-  --individual-bigwig INDIVIDUAL_BIGWIG, -ibw INDIVIDUAL_BIGWIG
-                        For each file, store a bigwig of both enriched and
-                        non-enriched regions to folder <INDIVIDUAL_BIGWIG>.
-                        Requires different basenames for each file.
   --bigwig BIGWIG, -bw BIGWIG
+                        For each file, store a bigwig of both enriched and
+                        non-enriched regions to folder <BIGWIG>. Requires
+                        different basenames for each file.
+  --sum-bigwig SUM_BIGWIG, -sbw SUM_BIGWIG
                         Store two bigwigs - one of ChIP, one of input - to
-                        folder <BIGWIG>.
+                        folder <SUM-BIGWIG>.
+  --bed BED, -b BED     A summary bed file of all regions for display in the
+                        UCSC genome browser or downstream analyses with e.g.
+                        bedtools. The score field is log2(#ChIP/#Input) * 100
+                        capped at a 1000.
   --paired-end, -pe     Use paired end data (bedpe).
   --version, -v         show program's version number and exit
 ```
