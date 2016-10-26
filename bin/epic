@@ -109,7 +109,7 @@ parser.add_argument(
     required=False,
     type=float,
     help=
-    '''Use a different effective genome size than the one included in epic. The default value depends on the genome and readlength.''')
+    '''Use a different effective genome fraction than the one included in epic. The default value depends on the genome and readlength, but is a number between 0 and 1.''')
 
 
 parser.add_argument(
@@ -214,5 +214,6 @@ if __name__ == '__main__':
         args.chromosome_sizes = create_genome_size_dict(args.genome)
     else:
         args.chromosome_sizes = create_genome_size_dict_custom_genome(args.chromsizes)
+        args.effective_genome_size *= sum(args.chromosome_sizes.values())
 
     run_epic(args)

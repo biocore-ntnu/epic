@@ -7,7 +7,7 @@ Plot nb. and nucleotides of overlaps between enriched regions in different condi
 (Visit github.com/endrebak/epic for examples and help.)
 
 Usage:
-    epic-overlap [--cpu=CPU] [--outfile=OUT] [--matrix=MAT] [--title=TIT] [--nucleotides-heatmap|--regions-heatmap|--nucleotides-bargraph|--regions-bargraph] FILE...
+    epic-overlap [--cpu=CPU] [--outfile=OUT] [--matrix=MAT] [--title=TIT] [--ylabs=YLB] [--xlabs=XLB] [--fill-labs=FLB] [--nucleotides-heatmap|--regions-heatmap|--nucleotides-bargraph|--regions-bargraph] FILE...
     epic-overlap --help
 
 Arguments:
@@ -21,6 +21,9 @@ Options:
     -o OUT --outfile OUT    name of output pdf file
     -m MAT --matrix MAT     write the matrix (dataframe) used for graphing to MAT
     -t TTL --title TTL      title of graph  [default: epic-overlaps]
+    -y YLB --ylabs YLB      y-axis text
+    -y XLB --xlabs XLB      x-axis text
+    -f FLB --fill-labs FLB  color fill name
     -c CPU --cpu CPU        nb. cpus to use, can use at most one per input file  [default: 1]
     -h --help               show this help message
 """
@@ -52,31 +55,49 @@ from epic.config import logging_settings
 
 importr("ggplot2")
 
+def labs_str(args):
 
-def heatmap(df, title, outfile):
+    labs = []
+
+    if args["--ylabs"]:
+        labs.append("y='" + args["--ylabs"] + "'")
+    if args["--xlabs"]:
+        labs.append("x='" + args["--xlabs"] + "'")
+    if args["--fill-labs"]:
+        labs.append("fill='" + args["--fill-labs"] + "'")
+
+    if labs:
+        return "+ labs(" + ", ".join(labs) + ")"
+    else:
+        return ""
+
+def heatmap(df, outfile, args):
+    print(df.head())
 
     df = df.reindex(index=order_by_index(df.index, index_natsorted(zip(df.Main, df.Other))))
-    df.Overlaps = df.Overlaps.astype(int)
     factor_order = natsorted(list(df.Main.drop_duplicates()))
     factors = '"' + '", "'.join(factor_order) + '"'
+
+    labs = labs_str(args)
 
     f = """function(df) {{
 
     df$Main = factor(as.character(df$Main), levels=c({factors}), ordered=TRUE)
     df$Other = factor(df$Other,levels=c({factors}), ordered=TRUE)
-    df$Overlaps = as.integer(df$Overlaps)
-    p = ggplot(df, aes(x=Main, y=Other, fill=Overlaps)) + geom_tile() + ggtitle("{title}") + labs(x="Timepoints", y="Number of regions", fill="Overlaps")
+    df$Overlaps = as.numeric(df$Overlaps)
+    p = ggplot(df, aes(x=Other, y=Main, fill=Overlaps)) + geom_tile() +  scale_fill_gradient(low="white", high="#832424FF") + ggtitle("{title}") {labs}
+
     p = p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
     print(p)
     }}
-    """.format(factors=factors, title=title)
+    """.format(factors=factors, title=title, labs=labs)
     logging.debug(f)
 
     plot_df_nb_regions = r(f)
 
     r("pdf('{}')".format(outfile))
-    logging.info("Writing overlapping regions to file: " + outfile)
+    logging.info("Writing heatmaps to file: " + outfile)
 
     r_dataframe = pandas2ri.py2ri(df)
     plot_df_nb_regions(r_dataframe)
@@ -105,12 +126,18 @@ def bargraph(df, title, outfile):
     plot_df_nb_regions = r(f)
 
     r("pdf('{}')".format(outfile))
-    logging.info("Writing overlapping regions to file: " + outfile)
+    logging.info("Writing bargraphs to file: " + outfile)
 
     r_dataframe = pandas2ri.py2ri(df)
     plot_df_nb_regions(r_dataframe)
 
     r("dev.off()")
+
+
+def normalize_heatmaps(overlap_column):
+    o = overlap_column
+    return (o - o.min()) / (o.max() - o.min())
+
 
 if __name__ == '__main__':
 
@@ -126,42 +153,28 @@ if __name__ == '__main__':
 
 
     elif args["--nucleotides-bargraph"]:
-        from epic.scripts.overlaps.overlaps_nucleotides import overlap_matrix_nucleotides
+        from epic.scripts.overlaps.nucleotide_bargraph import overlap_matrix_nucleotides
         df = overlap_matrix_nucleotides(all_files, nb_cpu)
-        # df.to_csv("nb.csv", sep=" ")
-        # df = pd.read_table("nb.csv", sep=" ", index_col=0)
+
         bargraph(df, title, outfile)
 
 
     elif args["--regions-heatmap"]:
         from epic.scripts.overlaps.overlaps import overlap_matrix_regions
         df = overlap_matrix_regions(all_files, nb_cpu)
-        print(df.head())
-        df.to_csv("region.heatmap", sep=" ")
-        # df = pd.read_table("region.heatmap", sep=" ", index_col=0)
-        heatmap(df, title, outfile)
+
+        heatmap(df, outfile, args)
 
 
     elif args["--nucleotides-heatmap"]:
-        from epic.scripts.overlaps.overlaps_nucleotides import nucleotide_overlaps_per_file
+        from epic.scripts.overlaps.nucleotides_heatmap import nucleotide_overlaps_per_file
 
         df = nucleotide_overlaps_per_file(all_files, nb_cpu)
 
-        # df = pd.read_table("H3K27me3_nucleoitdes.matrix", sep=" ", index_col=0)
         df = df.set_index(["Chromosome"]).groupby("Main Other".split()).sum().reset_index()
-        heatmap(df, title, outfile)
+
+        heatmap(df, outfile, args)
 
 
     if args["--matrix"]:
         df.to_csv(args["--matrix"], sep=" ", index_col=False)
-    # elif args["--nucleotides-bargraph"]:
-
-
-
-    # nucleotide_overlaps_per_file(all_files, nb_cpu)
-    # nucleotide_df = overlap_matrix_nucleotides(all_files, bin_size, nb_cpu)
-    # bargraph(nucleotide_df, title, prefix + "_nucleotides.pdf")
-    # print(nucleotide_df)
-
-
-    # bargraph(nucleotide_df, outpath + "/nucleotides.pdf")

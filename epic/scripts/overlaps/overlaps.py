@@ -6,8 +6,10 @@ import logging
 import pandas as pd
 from joblib import Parallel, delayed
 
+
 def overlap_matrix_region_counts(all_files, nb_cpu):
 
+    # bargraph
     regions_matrixes = Parallel(n_jobs=nb_cpu)(
         delayed(_create_overlap_matrix_regions)(bed_file, all_files)
         for bed_file in all_files)
@@ -38,28 +40,34 @@ def _create_overlap_matrix_regions(bed_file, all_files):
     return df
 
 
-
 def _compute_region_overlap(df):
 
     main_file = df.Main.ix[0,0]
 
     nb_overlap = df.drop_duplicates("Chromosome Start End Other".split()).groupby("Chromosome Start End".split()).size().value_counts().to_frame().reset_index()
 
-    # nb_overlap = df.drop_duplicates("Chromosome Start End File".split()).File.value_counts().to_frame().reset_index()
     nb_overlap.columns = "Other Overlaps".split()
 
     nb_overlap.insert(0, "Main", main_file)
 
     return nb_overlap
 
+
 def overlap_matrix_regions(all_files, nb_cpu):
+
+    #heatmap
 
     regions_matrixes = Parallel(n_jobs=nb_cpu)(
         delayed(_create_overlap_matrix_regions)(bed_file, all_files)
         for bed_file in all_files)
 
-    regions_df = pd.concat(regions_matrixes).reset_index(drop=True).groupby("Main Other".split()).size()
-    regions_df = regions_df.reset_index()
-    regions_df.columns = "Main Other Overlaps".split()
+    df = pd.concat(regions_matrixes).reset_index(drop=True).drop_duplicates()
+    df.to_csv("useme.csv", sep=" ")
 
-    return regions_df
+    nb_main = df.groupby("Main Chromosome Start End".split()).size().to_frame().reset_index().groupby("Main").size()
+    nb_other = df.groupby("Main Other".split()).size()
+
+    result = (nb_other / nb_main).reset_index()
+    result.columns = "Main Other Overlaps".split()
+
+    return result

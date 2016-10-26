@@ -56,6 +56,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
+# 0.1.22 (19.10.2016)
+- argument effective_genome_size renamed to effective_genome_fraction
+
 # 0.1.21 (18.10.2016)
 - add argument --chromsizes/-cs to allow for custom genomes, assemblies and simulated data
 - use pyBigWig to create bigwigs, drop R/bioconductor dependencies
