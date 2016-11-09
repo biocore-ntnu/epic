@@ -1,3 +1,8 @@
+# 0.1.22 (09.11.2016)
+- add epic-merge script to merge matrixes from multiple experiments into one
+- fix bugs and bad logic in epic-overlaps script
+- allow renaming axes and legend in epic-overlaps
+
 # 0.1.21 (18.10.2016)
 - add argument --chromsizes/-cs to allow for custom genomes, assemblies and simulated data
 - use pyBigWig to create bigwigs, drop R/bioconductor dependencies

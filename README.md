@@ -56,7 +56,8 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
-# 0.1.22 (unreleased)
+# 0.1.22 (09.11.2016)
+- add epic-merge script to merge matrixes from multiple experiments into one
 - fix bugs and bad logic in epic-overlaps script
 - allow renaming axes and legend in epic-overlaps
 
