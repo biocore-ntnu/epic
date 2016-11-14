@@ -56,6 +56,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
+# 0.1.23 (unreleased)
+- (internal): add mypy/PEP484 typing to code. Thanks Ryan C. Thompson.
+- fix bug where shuffling of columns happen in epic-merge
+
 # 0.1.22 (09.11.2016)
 - add epic-merge script to merge matrixes from multiple experiments into one
 - fix bugs and bad logic in epic-overlaps script
@@ -278,6 +282,7 @@ Endre Bakken Stovner
 * Pål Sætrom (algorithmic/theoretical discussions, endless patience)
 * Dario Beraldi (argparsing)
 * Ryan Dale (bioconda, ideas, genome info script)
+* Ryan C. Thompson (bigwig improvements, mypy typing)
 
 #### Thanks
 

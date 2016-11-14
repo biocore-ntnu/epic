@@ -90,7 +90,7 @@ parser.add_argument(
     default=150,
     type=int,
     help=
-    '''Size of the sequenced fragment. The center of the the fragment will be taken as half the fragment size. Default 150.
+    '''(Single end reads only) Size of the sequenced fragment. The center of the the fragment will be taken as half the fragment size. Default 150.
                    ''')
 
 parser.add_argument(

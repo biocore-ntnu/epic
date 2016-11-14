@@ -80,12 +80,11 @@ def enriched_indexes(dfs):
 
 def remove_nonenriched(enriched, dfs):
 
-    new_dfs = dict()
+    new_dfs = OrderedDict()
     for f, df in dfs.items():
-        # print(df.head())
+
         df = df.ix[df.index.intersection(enriched)]
-        # print(df.head())
-        # print(df.head())
+
         new_dfs[f] = df
 
     return new_dfs
