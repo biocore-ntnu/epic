@@ -4,6 +4,7 @@ from epic.utils.helper_functions import lru_cache
 
 @lru_cache()
 def _factln(num):
+    # type: (int) -> float
     """
     Computes logfactorial regularly for tractable numbers, uses Ramanujans approximation otherwise.
     """
@@ -19,6 +20,7 @@ def _factln(num):
 
 @lru_cache()
 def _poisson(i, average):
+    # type: (int, float) -> float
     """
     """
     exponent = -average + i * log(average) - _factln(i)

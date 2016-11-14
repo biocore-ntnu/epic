@@ -2,6 +2,7 @@ from natsort import natsorted
 from collections import OrderedDict
 import pkg_resources
 import logging
+from typing import Dict
 
 from epic.config import logging_settings
 from epic.utils.find_readlength import (find_readlength,
@@ -12,6 +13,7 @@ __license__ = "MIT"
 
 
 def get_genome_size_file(genome):
+    # type: (str) -> str
 
     genome_names = pkg_resources.resource_listdir("epic", "scripts/chromsizes")
     name_dict = {n.lower().replace(".chromsizes", ""): n for n in genome_names}
@@ -25,6 +27,7 @@ def get_genome_size_file(genome):
 
 
 def create_genome_size_dict(genome):
+    # type: (str) -> Dict[str,int]
     """Creates genome size dict from string containing data."""
 
     size_file = get_genome_size_file(genome)
@@ -39,10 +42,11 @@ def create_genome_size_dict(genome):
 
 
 def create_genome_size_dict_custom_genome(chromsizes):
+    # type: (str) -> OrderedDict[str, int]
 
     chromosome_lengths = [l.split() for l in open(chromsizes).readlines()]
 
-    od = OrderedDict()
+    od = OrderedDict()          # type: OrderedDict[str, int]
 
     for c, l in natsorted(chromosome_lengths):
         od[c] = int(l)
@@ -51,6 +55,7 @@ def create_genome_size_dict_custom_genome(chromsizes):
 
 
 def get_effective_genome_length(genome, read_length):
+    # type: (str, int) -> float
 
     genome_names = pkg_resources.resource_listdir("epic",
                                                   "scripts/effective_sizes")
@@ -59,7 +64,7 @@ def get_effective_genome_length(genome, read_length):
 
     try:
         genome_exact = name_dict[genome.lower()]
-        egf = pkg_resources.resource_string(
+        egf = pkg_resources.resource_string( # type: ignore
             "epic", "scripts/effective_sizes/{}_{}.txt".format(
                 genome_exact, read_length)).split()[-1].decode()
     except KeyError:

@@ -5,6 +5,7 @@ from epic.config.constants import WINDOW_P_VALUE
 
 
 def compute_enriched_threshold(average_window_readcount):
+    # type: (float) -> int
     """
     Computes the minimum number of tags required in window for an island to be enriched.
     """
@@ -21,10 +22,11 @@ def compute_enriched_threshold(average_window_readcount):
     return island_enriched_threshold
 
 
-def compute_gap_factor(island_enriched_threshold, gap_intervals_allowed,
-                       poisson_distribution_parameter):
+def compute_gap_factor(island_enriched_threshold,
+                       gap_intervals_allowed, poisson_distribution_parameter):
+    # type: (int, int, float) -> float
 
-    max_gap_score = 1
+    max_gap_score = 1.0
     gap_factor = single_gap_factor(island_enriched_threshold,
                                    poisson_distribution_parameter)
     max_gap_score += sum([pow(gap_factor, i)
@@ -34,6 +36,7 @@ def compute_gap_factor(island_enriched_threshold, gap_intervals_allowed,
 
 def single_gap_factor(island_enriched_threshold,
                       poisson_distribution_parameter):
+    # type: (int, float) -> float
 
     poisson_scores = [poisson.pmf(i, poisson_distribution_parameter)
                       for i in range(island_enriched_threshold)]
@@ -42,6 +45,7 @@ def single_gap_factor(island_enriched_threshold,
 
 def compute_boundary(island_enriched_threshold, gap_intervals_allowed,
                      average):
+    # type: (int, int, float) -> float
 
     single_gap = single_gap_factor(island_enriched_threshold, average)
     single_boundary_score = pow(single_gap, gap_intervals_allowed + 1)

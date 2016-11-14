@@ -8,7 +8,8 @@ the faster version.
 """
 
 from __future__ import print_function
-
+from argparse import Namespace
+from typing import Tuple
 import logging
 
 from epic.statistics.compute_values_needed_for_recurrence import (
@@ -18,6 +19,7 @@ from epic.statistics.compute_score_threshold import compute_score_threshold
 
 # @MEMORY.cache(verbose=0)
 def compute_background_probabilities(total_chip_count, args):
+    # type: (int, Namespace) -> Tuple[float, int, float]
 
     effective_genome_size = args.effective_genome_size
     logging.debug(str(effective_genome_size) + " effective_genome_size")

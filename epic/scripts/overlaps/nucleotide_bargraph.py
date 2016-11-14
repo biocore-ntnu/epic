@@ -1,9 +1,10 @@
-
+import pytest
 
 from joblib import Parallel, delayed
 from collections import defaultdict
 import pandas as pd
 import numpy as np
+from typing import DefaultDict, Dict, Iterable
 
 import pkg_resources, os
 from natsort import natsorted
@@ -11,22 +12,23 @@ from natsort import natsorted
 from io import StringIO
 
 # from helper.functions
-from epic.scripts.overlaps.files_to_chromosome_coverage import (files_to_chromosome_coverage)
 
 import logging
 from rpy2.robjects import r, pandas2ri
 pandas2ri.activate()
+from rpy2.robjects.robject import RObject
 
 from rpy2.robjects.packages import importr
 importr("S4Vectors")
 bioc = importr("GenomicRanges")
 
-
+from epic.scripts.overlaps.files_to_chromosome_coverage import files_to_chromosome_coverage
 
 __author__ = "Endre Bakken Stovner https://github.com/endrebak/"
 __license__ = "MIT"
 
 def overlap_matrix_nucleotides(all_files, nb_cpu):
+    # type: (Iterable[str], int) -> pd.DataFrame
     rles = files_to_chromosome_coverage(all_files, nb_cpu)
 
     nucleotide_overlaps = Parallel(n_jobs=nb_cpu)(delayed(_overlap_matrix_nucleotides)(
@@ -38,6 +40,7 @@ def overlap_matrix_nucleotides(all_files, nb_cpu):
 
 
 def _overlap_matrix_nucleotides(bed_file, extended_rles):
+    # type: (str, Dict[str,Dict[str, RObject]]) -> pd.DataFrame
 
     overlaps = _create_overlap_matrix_nucleotides(bed_file, extended_rles)
     return _counts_runlengths(bed_file, overlaps)
@@ -47,6 +50,7 @@ def _overlap_matrix_nucleotides(bed_file, extended_rles):
 
 
 def _create_overlap_matrix_nucleotides(bed_file, coverages):
+    # type: (str, Dict[str,Dict[str, RObject]]) -> Dict[str, RObject]
 
     base_bed_other = bed_file.split("/")[-1]
     logging.info("Processing {} at nucleotide level".format(base_bed_other))
@@ -72,10 +76,11 @@ def _create_overlap_matrix_nucleotides(bed_file, coverages):
 
 
 def _counts_runlengths(bed_file, cvs):
+    # type: (str, Dict[str, RObject]) -> pd.DataFrame
 
     base_bed = bed_file.split("/")[-1].split(".")[0]
 
-    overlaps = defaultdict(int)
+    overlaps = defaultdict(int) # type: DefaultDict[str, int]
     get_runlength = r("function(x, v) runLength(x[x == v])")
     for chromosome, overlap in cvs.items():
         run_values = set(r["runValue"](overlap))

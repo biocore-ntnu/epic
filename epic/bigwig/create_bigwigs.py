@@ -2,13 +2,16 @@ import logging
 import numpy as np
 from os.path import join, basename, splitext
 from subprocess import call
-
+from argparse import Namespace
+import pandas as pd
+from typing import Any, Dict, Iterable, List
 import pyBigWig
 
 from joblib import Parallel, delayed
 
 
 def create_bigwigs(matrix, outdir, args):
+    # type: (pd.DataFrame, str, Namespace) -> None
     """Create bigwigs from matrix."""
     call("mkdir -p {}".format(outdir), shell=True)
     genome_size_dict = args.chromosome_sizes
@@ -25,10 +28,12 @@ def create_bigwigs(matrix, outdir, args):
 
 
 def _to_int(l):
+    # type: (Iterable[Any]) -> List[int]
     return [int(i) for i in l]
 
 
 def _create_bigwig(bed_column, outpath, genome_size_dict):
+    # type: (pd.Series, str, Dict[str, int]) -> None
 
     logging.info("Creating biwgwig " + outpath)
 
@@ -52,6 +57,7 @@ def _create_bigwig(bed_column, outpath, genome_size_dict):
 
 
 def create_sum_bigwigs(matrix, outdir, args):
+    # type: (pd.DataFrame, str, Namespace) -> None
     call("mkdir -p {}".format(outdir), shell=True)
 
     chip = matrix[args.treatment].sum(axis=1)

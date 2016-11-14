@@ -2,12 +2,14 @@ from io import StringIO
 from subprocess import check_output
 from os.path import basename
 import logging
+from typing import Iterable
 
 import pandas as pd
 from joblib import Parallel, delayed
 
 
 def overlap_matrix_region_counts(all_files, nb_cpu):
+    # type: (Iterable[str], int) -> pd.DataFrame
 
     # bargraph
     regions_matrixes = Parallel(n_jobs=nb_cpu)(
@@ -24,6 +26,7 @@ def overlap_matrix_region_counts(all_files, nb_cpu):
 
 
 def _create_overlap_matrix_regions(bed_file, all_files):
+    # type: (str, Iterable[str]) -> pd.DataFrame
 
     all_files_str = " ".join(all_files)
 
@@ -41,6 +44,7 @@ def _create_overlap_matrix_regions(bed_file, all_files):
 
 
 def _compute_region_overlap(df):
+    # type: (pd.DataFrame) -> pd.DataFrame
 
     main_file = df.Main.ix[0,0]
 
@@ -54,6 +58,7 @@ def _compute_region_overlap(df):
 
 
 def overlap_matrix_regions(all_files, nb_cpu):
+    # type: (Iterable[str], int) -> pd.DataFrame
 
     #heatmap
 

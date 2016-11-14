@@ -13,6 +13,7 @@ from epic.config import logging_settings
 
 
 def effective_genome_size(fasta, read_length, nb_cores, tmpdir="/tmp"):
+    # type: (str, int, int, str) -> None
     """Compute effective genome size for genome."""
 
     idx = Fasta(fasta)

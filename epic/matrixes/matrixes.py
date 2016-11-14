@@ -1,6 +1,9 @@
 import logging
 from os.path import dirname, join, basename
 from subprocess import call
+from itertools import chain
+from typing import Iterable, Sequence, Tuple
+from argparse import Namespace
 
 import pandas as pd
 
@@ -14,6 +17,7 @@ from epic.config.genomes import get_genome_size_file
 
 
 def write_matrix_files(chip_merged, input_merged, df, args):
+    # type: (Dict[str, pd.DataFrame], Dict[str, pd.DataFrame], pd.DataFrame, Namespace) -> None
 
     matrixes = create_matrixes(chip_merged, input_merged, df, args)
 
@@ -29,6 +33,7 @@ def write_matrix_files(chip_merged, input_merged, df, args):
 
     # TODO: remove out of bounds bins
 
+
     if args.bigwig:
         # defer initialization so not run during travis
         from epic.bigwig.create_bigwigs import create_bigwigs
@@ -40,8 +45,9 @@ def write_matrix_files(chip_merged, input_merged, df, args):
         create_sum_bigwigs(matrix, args.sum_bigwig, args)
 
 
-def _create_matrixes(chromosome, chip, input, islands, chromosome_size,
-                     window_size):
+def _create_matrixes(chromosome, chip, input, islands,
+                     chromosome_size, window_size):
+    # type: (str, Dict[str, pd.DataFrame], Dict[str, pd.DataFrame], pd.DataFrame, int, int) -> pd.DataFrame
 
     chip_df = get_chromosome_df(chromosome, chip)
     input_df = get_chromosome_df(chromosome, input)
@@ -66,7 +72,7 @@ def _create_matrixes(chromosome, chip, input, islands, chromosome_size,
 
 
 def create_matrixes(chip, input, df, args):
-
+    # type: (Iterable[pd.DataFrame], Iterable[pd.DataFrame], pd.DataFrame, Namespace) -> List[pd.DataFrame]
     "Creates matrixes which can be written to file as is (matrix) or as bedGraph."
 
     genome = args.chromosome_sizes
@@ -86,7 +92,7 @@ def create_matrixes(chip, input, df, args):
 
 
 def print_matrixes(matrixes, args):
-
+    # type: (Iterable[pd.DataFrame], Namespace) -> None
     outpath = args.store_matrix
 
     dir = dirname(outpath)
@@ -110,13 +116,14 @@ def print_matrixes(matrixes, args):
                               chunksize=1e6)
 
 
-def get_island_bins(df, window_size, genome):
+def get_island_bins(df, window_size, genome, args):
+    # type: (pd.DataFrame, int, str, Namespace) -> Dict[str, Set[int]]
     """Finds the enriched bins in a df."""
 
     # need these chromos because the df might not have islands in all chromos
     chromosomes = natsorted(list(args.chromosome_sizes))
 
-    chromosome_island_bins = {}
+    chromosome_island_bins = {} # type: Dict[str, Set[int]]
     df_copy = df.reset_index(drop=False)
     for chromosome in chromosomes:
         cdf = df_copy.loc[df_copy.Chromosome == chromosome]
@@ -134,7 +141,7 @@ def get_island_bins(df, window_size, genome):
 
 
 def put_dfs_in_dict(dfs):
-
+    # type: (Iterable[pd.DataFrame]) -> Dict[str, pd.DataFrame]
     sample_dict = {}
     for df in dfs:
 
@@ -148,8 +155,9 @@ def put_dfs_in_dict(dfs):
 
 
 def put_dfs_in_chromosome_dict(dfs):
+    # type: (Iterable[pd.DataFrame]) -> Dict[str, pd.DataFrame]
 
-    chromosome_dict = {}
+    chromosome_dict = {}        # type: Dict[str, pd.DataFrame]
     for df in dfs:
 
         if df.empty:
@@ -162,6 +170,7 @@ def put_dfs_in_chromosome_dict(dfs):
 
 
 def get_chromosome_df(chromosome, df_dict):
+    # type: (str, Dict[str, pd.DataFrame]) -> pd.DataFrame
 
     if chromosome in df_dict:
         df = df_dict[chromosome]
@@ -172,6 +181,7 @@ def get_chromosome_df(chromosome, df_dict):
 
 
 def enriched_bins(df, args):
+    # type: (pd.DataFrame, Namespace) -> pd.DataFrame
 
     df = df.loc[df.FDR < args.false_discovery_rate_cutoff]
 

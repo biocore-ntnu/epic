@@ -1,4 +1,7 @@
+import pandas as pd
+
 def remove_out_of_bounds_bins(df, chromosome_size):
+    # type: (pd.DataFrame, int) -> pd.DataFrame
     """Remove all reads that were shifted outside of the genome endpoints."""
 
     # The dataframe is empty and contains no bins out of bounds
@@ -10,7 +13,9 @@ def remove_out_of_bounds_bins(df, chromosome_size):
     return df.drop(df[df.Bin < 0].index)
 
 
-def remove_bins_with_ends_out_of_bounds(df, chromosome_size, window_size):
+def remove_bins_with_ends_out_of_bounds(df, chromosome_size,
+                                        window_size):
+    # type: (pd.DataFrame, int, int) -> pd.DataFrame
     """Remove all reads that were shifted outside of the genome endpoints."""
 
     # The dataframe is empty and contains no bins out of bounds

@@ -8,8 +8,10 @@ from epic.statistics.add_to_island_expectations import add_to_island_expectation
 
 
 def compute_score_threshold(average_window_readcount,
-                            island_enriched_threshold, gap_contribution,
-                            boundary_contribution, genome_length_in_bins):
+                            island_enriched_threshold,
+                            gap_contribution, boundary_contribution,
+                            genome_length_in_bins):
+    # type: (float, int, float, float, float) -> float
     """
     What does island_expectations do?
     """
@@ -23,7 +25,7 @@ def compute_score_threshold(average_window_readcount,
 
     current_scaled_score = int(round(score / BIN_SIZE))
 
-    island_expectations_d = {}
+    island_expectations_d = {}  # type: Dict[int, float]
     island_expectations_d[current_scaled_score] = prob * genome_length_in_bins
     island_expectations_d[
         0] = boundary_contribution * genome_length_in_bins / gap_contribution
@@ -31,7 +33,7 @@ def compute_score_threshold(average_window_readcount,
     current_max_scaled_score = current_scaled_score
 
     interval = int(1 / BIN_SIZE)
-    partial_cumu = 0
+    partial_cumu = 0.0
     logging.info("Finding the score required to consider an island enriched.")
     while (partial_cumu > E_VALUE_THRESHOLD or partial_cumu < 1e-100):
 
