@@ -1,6 +1,7 @@
-# 0.1.23 (unreleased)
+# 0.1.23 (15.11.2016)
 - (internal): add mypy/PEP484 typing to code. Thanks Ryan C. Thompson.
 - fix bug where shuffling of columns happen in epic-merge
+- fix error when no tmpdir was set in epic-effective
 
 # 0.1.22 (09.11.2016)
 - add epic-merge script to merge matrixes from multiple experiments into one

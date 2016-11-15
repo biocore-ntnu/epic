@@ -56,9 +56,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
-# 0.1.23 (unreleased)
+# 0.1.23 (15.11.2016)
 - (internal): add mypy/PEP484 typing to code. Thanks Ryan C. Thompson.
 - fix bug where shuffling of columns happen in epic-merge
+- fix error when no tmpdir was set in epic-effective
 
 # 0.1.22 (09.11.2016)
 - add epic-merge script to merge matrixes from multiple experiments into one
@@ -70,28 +71,6 @@ https://github.com/endrebak/epic and running `python setup.py install`
 - use pyBigWig to create bigwigs, drop R/bioconductor dependencies
 - argument effective_genome_length renamed to effective_genome_size
 - epic-overlaps script to graph overlapping regions/nucleotides for differential ChIP-Seq (experimental)
-
-# 0.1.20 (04.10.2016)
-- create bed file with -b option (for genome browsers or downstream analysis)
-- create sum bigwigs with -sbw option
-
-# 0.1.19 (03.10.2016)
-- print pandas and epic version on startup
-- remove all bedgraph options
-- remove summary bigwig options
-- now only creates individual bigwigs
-
-# 0.1.18 (06.09.16)
-- add hg18
-
-# 0.1.17 (30.08.16)
-- fix rare bug in bigwig creation
-
-# 0.1.16 (30.08.16)
-- remove out of bounds bins before creating bedgraph
-
-# 0.1.15 (26.08.16)
-- add options --bigwig/-bw and --individual-bigwig/-ibw to store bigwig files
 ```
 
 ## Quickstart

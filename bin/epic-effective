@@ -19,6 +19,7 @@ Options:
     -t --tmpdir TMP           temporary directory. Default is to use $TMPDIR if set, otherwise /tmp.
 """
 import logging
+import os
 
 from docopt import docopt
 
@@ -31,5 +32,7 @@ if __name__ == '__main__':
 
     fasta, read_length = args["FILE"], int(args["--read-length"])
     nb_cpu = int(args["--nb-cpu"])
-    tmpdir = args["--tmpdir"]
+
+    backup_tempdir = os.environ.get("TMPDIR", "/tmp/")
+    tmpdir = args["--tmpdir"] or backup_tempdir
     effective_genome_size(fasta, read_length, nb_cpu, tmpdir)
