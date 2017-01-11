@@ -56,6 +56,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
+# 0.1.24 (11.01.2017)
+- change the default FDR cutoff from 1 to 0.05
+- -k/--keep-duplicates argument is now a proper flag
+
 # 0.1.23 (15.11.2016)
 - (internal): add mypy/PEP484 typing to code. Thanks Ryan C. Thompson.
 - fix bug where shuffling of columns happen in epic-merge

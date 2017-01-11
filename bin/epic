@@ -58,7 +58,7 @@ parser.add_argument(
     '-k',
     required=False,
     default=False,
-    type=bool,
+    action='store_true',
     help=
     '''Keep reads mapping to the same position on the same strand within a library. Default is to remove all but the first duplicate.
                    ''')
@@ -97,10 +97,10 @@ parser.add_argument(
     '--false-discovery-rate-cutoff',
     '-fdr',
     required=False,
-    default=1.0,
+    default=0.05,
     type=float,
     help=
-    '''Remove all islands with an FDR below cutoff. Default 1.0 (i.e. all found islands included no matter how bad the adjusted p-value.).
+    '''Remove all islands with an FDR below cutoff. Default 0.05.
                    ''')
 
 parser.add_argument(
