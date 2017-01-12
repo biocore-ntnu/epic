@@ -39,6 +39,10 @@ To see what issues are currently being worked on, please use the [waffle board](
     - [Credit](#credit)
     - [NAQ/Various](#naqvarious)
 
+## Help wanted
+
+Do you have the time and ability to upload epic to bioconda every now and again? If so, please say so on the issues page :)
+
 <!-- markdown-toc end -->
 ## Citation
 
