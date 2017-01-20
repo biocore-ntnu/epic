@@ -33,7 +33,6 @@ def write_matrix_files(chip_merged, input_merged, df, args):
 
     # TODO: remove out of bounds bins
 
-
     if args.bigwig:
         # defer initialization so not run during travis
         from epic.bigwig.create_bigwigs import create_bigwigs
@@ -53,14 +52,38 @@ def _create_matrixes(chromosome, chip, input, islands,
     input_df = get_chromosome_df(chromosome, input)
 
     chip_df["Chromosome"] = chip_df["Chromosome"].astype("category")
-    chip_df["Bin"] = chip_df["Bin"].astype(int)
+
+    # START workaround
+    # Should ideally have been just one line: chip_df["Bin"] = chip_df["Bin"].astype(int)
+    # Workaround for the following error:
+    # ValueError: assignment destination is read-only
+    bins = chip_df["Bin"].astype(int)
+    chip_df = chip_df.drop("Bin", axis=1)
+
+    chip_df.insert(0, "Bin", bins)
+
+    # END workaround
+
     chip_df = chip_df.set_index("Chromosome Bin".split())
     chip_df = islands.join(chip_df, how="right")
     chip_df = chip_df[~chip_df.index.duplicated(keep='first')]
 
+
     input_df["Chromosome"] = input_df["Chromosome"].astype("category")
-    input_df["Bin"] = input_df["Bin"].astype(int)
+
+    # START workaround
+    # Should ideally have been just one line: input_df["Bin"] = input_df["Bin"].astype(int)
+    # Workaround for the following error:
+    # ValueError: assignment destination is read-only
+    bins = input_df["Bin"].astype(int)
+    input_df = input_df.drop("Bin", axis=1)
+
+    input_df.insert(0, "Bin", bins)
+
     input_df = input_df.set_index("Chromosome Bin".split())
+
+    # END workaround
+
     input_df = input_df[~input_df.index.duplicated(keep='first')]
 
     dfm = chip_df.join(input_df, how="outer", sort=False).fillna(0)

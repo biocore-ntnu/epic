@@ -39,9 +39,6 @@ To see what issues are currently being worked on, please use the [waffle board](
     - [Credit](#credit)
     - [NAQ/Various](#naqvarious)
 
-## Help wanted
-
-Do you have the time and ability to upload epic to bioconda every now and again? If so, please say so on the issues page :)
 
 <!-- markdown-toc end -->
 ## Citation
@@ -60,6 +57,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
+# 0.1.25 (20.01.2017)
+- work around pandas multiprocessing bug in matrix/bigwig creation
+
 # 0.1.24 (11.01.2017)
 - change the default FDR cutoff from 1 to 0.05
 - -k/--keep-duplicates argument is now a proper flag
