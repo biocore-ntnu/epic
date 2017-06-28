@@ -57,7 +57,7 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
-# 0.1.26
+# 0.1.26 (28.06.2017)
 - squash another multiproc bug
 
 # 0.1.25 (20.01.2017)
