@@ -170,6 +170,7 @@ bamToBed -bedpe -i paired_end_file.bam > file.bedpe
 
 [![Stories in In Progress](https://badge.waffle.io/endrebak/epic.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/endrebak/epic)
 
+* Fix bug that happens in matrix creation if you have chromosomes not in the genome, like chr9_KI270720v1_random, chr9_KI270823v1_alt or chrUn_KI270521v1.
 * Support gencode style chromosome names
 * Implement paired end distance cutoff for files based on the answers to [this question](https://www.biostars.org/p/206403/)
 * Run bigwig creation in parallel? (Might be IO-bound)
