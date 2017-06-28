@@ -134,7 +134,8 @@ def merge_same_files(sample1_dfs, sample2_dfs, nb_cpu):
 def _merge_same_files(sample1_df, sample2_df):
     # type: (pd.DataFrame, pd.DataFrame) -> pd.DataFrame
 
-    merged_df = sample1_df.merge(sample2_df,
+    # copying here due to pandas multiprocessing bug; source array is read only
+    merged_df = sample1_df.copy().merge(sample2_df.copy(),
                                  how="outer",
                                  on=["Chromosome", "Bin"])
     # merged_df = merged_df[~merged_df.index.duplicated(keep='first')]

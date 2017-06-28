@@ -57,6 +57,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
+# 0.1.26
+- squash another multiproc bug
+
 # 0.1.25 (20.01.2017)
 - work around pandas multiprocessing bug in matrix/bigwig creation
 
@@ -87,8 +90,8 @@ https://github.com/endrebak/epic and running `python setup.py install`
 $ pip install bioepic
 $ # you only need git clone to get the test data
 $ git clone https://github.com/endrebak/epic.git
-$ # -t is treatment files, -i input files
-$ epic -t epic/examples/test.bed -i epic/examples/control.bed > results.csv
+$ # -t is treatment files, -c input (control) files
+$ epic -t epic/examples/test.bed -c epic/examples/control.bed > results.csv
 ```
 
 ## Improvements
@@ -131,7 +134,7 @@ Contains many [genomes](https://github.com/endrebak/epic/tree/master/epic/script
 
 ## Version
 
-This is a pre-alpha release. Please do aggressively report issues, quirks, complaints and anything that just feels slightly off to the issue tracker. Also please ask questions and make docrequests - there are loads of neat stuff I have not documented.
+This is a beta release. Please do aggressively report issues, quirks, complaints and anything that just feels slightly off to the issue tracker. Also please ask questions and make docrequests - there are loads of neat stuff I have not documented.
 
 ## License
 
