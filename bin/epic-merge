@@ -1,163 +1,121 @@
-#!/usr/bin/env python
+import os
 
-"""
-epic-merge
-Merge several epic-matrixes into one.
+import argparse
 
-(Visit github.com/endrebak/epic for examples and help.)
+parser = argparse.ArgumentParser(
+    description="""Merge several epic count-matrixes into one.""",
 
-Usage:
-    epic-merge  [--nb-cpu=CPU] [--enriched-per-file] [--even-nonenriched] --output=OUT FILE...
-    epic-merge  --help
+    prog=os.path.basename(__file__))
 
-Arguments:
-    FILE                    input matrixes
-    -o=OUT --output=OUT     gzipped result matrix
+parser.add_argument(
+    '--matrixes',
+    '-m',
+    required=True,
+    type=str,
+    nargs='+',
+    help='''epic-count matrixes to merge.''')
 
-Options:
-    -h --help               show this help message
-    -e --even-nonenriched   even include non-enriched bins in output matrix (much slower and more mem used)
-    -f --enriched-per-file  include column about bin-enrichment per file
-    -n=CPU --nb-cpu=CPU     number of CPUs to use (at most one per chromosome)  [default: 1]
-"""
+parser.add_argument(
+    '--regions',
+    '-r',
+    required=False,
+    type=str,
+    nargs='+',
+    help='''Bed file(s) with regions to use. Does not work with --keep-nonenriched.''')
+
+
+parser.add_argument(
+    '--keep-nonenriched',
+    '-k',
+    required=False,
+    default=False,
+    action='store_true',
+    help='''Keep non-enriched bins also (takes much more time/mem). Not usable with --regions.''')
+
+
+parser.add_argument(
+    '--enriched-per-file',
+    '-e',
+    required=False,
+    default=False,
+    action='store_true',
+    help='''Keep a column of enrichment info per matrix used.''')
+
+
+parser.add_argument(
+    '--output',
+    '-o',
+    required=True,
+    type=str,
+    help=
+    '''Path to write gzipped output matrix.''')
+
+
+parser.add_argument(
+    '--number-cores',
+    '-cpu',
+    required=False,
+    default=1,
+    type=int,
+    help=
+    '''Number of cpus to use. Can use at most one per chromosome. Default: 1.''')
+
+
 
 import sys
-import logging
-from os.path import basename, dirname
 from subprocess import check_output
+import logging
 
-from collections import defaultdict, OrderedDict
+from math import gcd
+from functools import reduce
+
 import pandas as pd
 from io import StringIO
-from docopt import docopt
-from natsort import natsorted
-from joblib import Parallel, delayed
-
-args = docopt(__doc__)
 
 from epic.config import logging_settings
+from epic.merge.merge import merge_matrixes, read_dfs
+from epic.merge.compute_bed_bins import merge_bed_bins, compute_bins
 
 
-def read_dfs(files):
+def compute_bin_size(dfs):
 
-    dfs = OrderedDict()
-    for f in files:
-        df = pd.read_table(f, header=0, sep=" ", index_col=[0, 1])
-
-        columns = list(df.columns)
-        file_nick = "Enriched_"+ basename(f)
-        columns[0] = file_nick
-        df.columns = columns
-
-        logging.info("Calling " + f + " " + file_nick + " in matrix file.")
-        dfs[f] = df
-
-    return dfs
-
-
-def enriched_indexes(dfs):
-
-    # find all chromosomes in files
-    iter_dfs = iter(dfs.values())
-    df = next(iter_dfs)
-
-    current_index = df.filter(like="Enriched_")
-    name = current_index.columns[0]
-
-    enriched = current_index.loc[current_index[name] == 1].index
-
-    for df in iter_dfs:
-
-        current_index = df.filter(like="Enriched_")
-        name = current_index.columns[0]
-
-        current_index = current_index.loc[current_index[name] == 1].index
-
-        enriched = enriched.union(current_index)
-
-    return enriched
-
-
-def remove_nonenriched(enriched, dfs):
-
-    new_dfs = OrderedDict()
-    for f, df in dfs.items():
-
-        df = df.ix[df.index.intersection(enriched)]
-
-        new_dfs[f] = df
-
-    return new_dfs
-
-
-def all_chromosomes(dfs):
-
-    # find all chromosomes in files
-    chromosomes = set()
+    bin_sizes = []
     for df in dfs.values():
-        chromosomes.update(set(df.index.get_level_values("Chromosome").drop_duplicates()))
+        bins = df.head(100000).index.get_level_values("Bin")
+        bin_size = reduce(gcd, bins)
+        bin_sizes.append(bin_size)
 
-    return(chromosomes)
+    assert len(set(bin_sizes)) == 1, "Matrixes have different bin sizes: " + str(bin_sizes)
+    bin_size = bin_sizes.pop()
+    logging.info("Bin size: " + str(bin_size))
 
+    return bin_size
 
-def split_dfs_into_chromosome_dfs(dfs, chromosomes):
-
-    # separate files into chromosomes
-    chromosome_dfs = defaultdict(list)
-    for f, df in dfs.items():
-        for chromosome in chromosomes:
-            try:
-                chromosome_dfs[chromosome].append(df.xs(chromosome, level="Chromosome", drop_level=False))
-            except KeyError: # if file is missing chromosome, insert dummy df to ensure same column ordering
-                chromosome_dfs[chromosome].append(pd.DataFrame(columns=dfs[f].columns))
-
-    return chromosome_dfs
-
-def _merge_dfs(dfs):
-    return pd.concat(dfs, axis=1).fillna(0)
-
-def merge_dfs(chromosome_dfs, nb_cpu):
-
-    # merge all chromosome dfs horizontally, per df
-    merged_chromosome_dfs = Parallel(n_jobs=nb_cpu)(
-        delayed(_merge_dfs)(dfs)
-        for dfs in chromosome_dfs.values())
-
-    # vertically merge (concat) all chromosome dfs
-    merged_df = pd.concat(merged_chromosome_dfs)
-
-    # indexes are shuffled after the intersection, resort
-    merged_df = merged_df.reindex(index=natsorted(merged_df.index))
-
-    return merged_df
 
 
 if __name__ == '__main__':
 
-    files = args["FILE"]
+    args = parser.parse_args()
+    files = args.matrixes
+    nb_cpus = args.number_cores
+    regions = args.regions
+    keep_nonenriched = args.keep_nonenriched
+    enriched_per_file = args.enriched_per_file
+    output = args.output
 
     dfs = read_dfs(files)
+    bin_size = compute_bin_size(dfs)
 
-    if not args["--even-nonenriched"]:
-        enriched = enriched_indexes(dfs)
-        dfs = remove_nonenriched(enriched, dfs)
+    if regions:
+        names = ["Enriched_" + os.path.basename(r) for r in regions]
+        regions = [pd.read_table(r, sep="\s+", usecols=[0, 1, 2], header=None, names=["Chromosome", "Start", "End"]) for r in regions]
+        bins = [compute_bins(df, bin_size) for df in regions]
+        r = merge_bed_bins(bins)
+        overlapping_indices = [df.index.intersection(r.index) for df in dfs.values()]
+        dfs = {k: df.ix[ix].join(r.ix[ix], how="outer") for ix, (k, df) in zip(overlapping_indices, dfs.items())}
+        dfs = {k: df[~df.index.duplicated(keep="first")] for k, df in dfs.items()}
+        keep_nonenriched = False
 
-    chromosomes = all_chromosomes(dfs)
+    merged_df = merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus)
 
-    chromosome_dfs = split_dfs_into_chromosome_dfs(dfs, chromosomes)
-
-    merged_df = merge_dfs(chromosome_dfs, int(args["--nb-cpu"]))
-
-    enriched_cols = [c for c in merged_df if "Enriched_" in c]
-    total_enriched = merged_df.filter(like="Enriched_").sum(axis=1)
-
-    merged_df.insert(0, "TotalEnriched", total_enriched)
-
-    merged_df = merged_df.set_index("TotalEnriched", append=True)
-
-    if args["--enriched-per-file"]:
-        merged_df = merged_df.set_index(enriched_cols, append=True)
-    else:
-        merged_df = merged_df.drop(enriched_cols, axis=1)
-
-    merged_df.to_csv(args["--output"], sep=" ", compression="gzip")
+    merged_df.to_csv(output, sep=" ", compression="gzip")

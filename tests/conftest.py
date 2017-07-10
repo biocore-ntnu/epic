@@ -1,5 +1,6 @@
 import pytest
 
+from io import StringIO
 from collections import namedtuple
 
 import pandas as pd
@@ -85,3 +86,73 @@ def epic_overlap_intermediate_region_matrixes():
     return ["examples/epic-overlaps/0h_H3K4me3_region.matrix",
             "examples/epic-overlaps/3h_H3K4me3_region.matrix",
             "examples/epic-overlaps/6h_H3K4me3_region.matrix"]
+
+
+
+df1_no_enriched = """Chromosome Bin Enriched_AAG_KO.matrix.gz data/align/AAG_KO_ChIP_1.bed data/align/AAG_KO_ChIP_2.bed data/align/AAG_KO_ChIP_3.bed data/align/AAG_KO_Input_1.bed data/align/AAG_KO_Input_2.bed data/align/AAG_KO_Input_3.bed
+chr1 10000 0 0 2 0 5 1 3
+chr1 10200 0 0 0 0 2 0 0
+chr1 10400 0 0 0 0 1 0 1
+chr1 10600 0 0 0 0 2 0 3
+chr1 10800 0 0 0 0 6 8 5
+chr1 11000 0 0 0 0 7 4 8
+chr1 11200 0 0 0 0 4 0 1
+chr1 11400 0 1 0 0 2 0 0
+chr1 12200 0 0 0 0 5 0 1"""
+
+df2_no_enriched = """Chromosome Bin Enriched_ELP1.matrix.gz data/align/ELP1_KO_ChIP_1.bed data/align/ELP1_KO_ChIP_2.bed data/align/ELP1_KO_ChIP_3.bed data/align/ELP1_KO_Input_1.bed data/align/ELP1_KO_Input_2.bed data/align/ELP1_KO_Input_3.bed
+chr1 10000 0 0 3 0 3 2 1
+chr1 10200 0 0 1 1 2 2 1
+chr1 10400 0 0 0 0 2 1 1
+chr1 10600 0 0 0 0 2 2 1
+chr1 10800 0 0 1 0 0 11 4
+chr1 11000 0 0 0 0 3 12 12
+chr1 11200 0 0 0 0 1 0 3
+chr1 11400 0 0 0 0 2 0 0
+chr1 12200 0 0 0 0 3 6 8"""
+
+df3_no_enriched = """Chromosome Bin Enriched_WT.matrix.gz data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
+chr1 10000 0 0 0 1 2 2 0
+chr1 10200 0 0 1 0 2 0 0
+chr1 10400 0 0 0 0 2 3 4
+chr1 10600 0 0 0 0 0 0 1
+chr1 10800 0 0 0 0 2 1 15
+chr1 11000 0 0 3 0 1 3 10
+chr1 11200 0 0 0 0 0 1 0
+chr1 11400 0 0 2 1 0 0 0
+chr1 12200 0 0 0 0 3 0 2"""
+
+df3_enriched = """Chromosome Bin Enriched_WT.matrix.gz data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
+chr1 10000 0 0 0 1 2 2 0
+chr1 10200 1 0 1 0 2 0 0
+chr1 10400 1 0 0 0 2 3 4
+chr1 10600 1 0 0 0 0 0 1
+chr1 10800 0 0 0 0 2 1 15
+chr1 11000 0 0 3 0 1 3 10
+chr1 11200 0 0 0 0 0 1 0
+chr1 11400 0 0 2 1 0 0 0
+chr1 12200 0 0 0 0 3 0 2"""
+
+@pytest.fixture(scope="session")
+def merge_matrixes_dfs_no_enriched():
+
+    dfs = [pd.read_table(StringIO(c), sep=" ", header=0, index_col=[0, 1]) for c in [df1_no_enriched, df2_no_enriched, df3_no_enriched]]
+
+    names = "AAG_KO.matrix.gz ELP1_KO.matrix.gz WT.matrix.gz".split()
+
+    dfs = {k: v for k, v in zip(names, dfs)}
+
+    return dfs
+
+
+
+@pytest.fixture(scope="session")
+def merge_matrixes_dfs_one_enriched():
+
+    dfs = [pd.read_table(StringIO(c), sep=" ", header=0, index_col=[0, 1]) for c in [df1_no_enriched, df2_no_enriched, df3_enriched]]
+
+    names = "AAG_KO.matrix.gz ELP1_KO.matrix.gz WT.matrix.gz".split()
+
+    dfs = {k: v for k, v in zip(names, dfs)}
+
+    return dfs
