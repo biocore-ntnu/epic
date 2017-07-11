@@ -2,6 +2,7 @@ import pandas as pd
 
 from natsort import natsorted
 
+
 def trunks_flanks_valleys(df, trunk_diff=1, bin_size=200, distance_allowed=200):
 
         dfs = []
@@ -10,7 +11,7 @@ def trunks_flanks_valleys(df, trunk_diff=1, bin_size=200, distance_allowed=200):
         for chromosome, cdf in df.groupby("Chromosome"):
             for gid, gdf in cdf.groupby(((cdf.Bin - cdf.Bin.shift()).abs() > distance_allowed).cumsum()):
 
-                enriched_diff = gdf.TotalEnriched >= gdf.TotalEnriched.max() - trunk_diff
+                enriched_diff = gdf.TotalEnriched >= (gdf.TotalEnriched.max() - trunk_diff)
                 enriched_sum = (enriched_diff.shift(1) != enriched_diff).cumsum()
                 grpby = gdf.groupby(enriched_sum)
                 nb_groups = len(grpby)
@@ -20,7 +21,7 @@ def trunks_flanks_valleys(df, trunk_diff=1, bin_size=200, distance_allowed=200):
                 # group islands into trunks/flanks/valleys
                 for (i, gdf2) in grpby:
 
-                    is_trunk = gdf2.head(1).TotalEnriched.iloc[0] >= max_value - trunk_diff
+                    is_trunk = gdf2.head(1).TotalEnriched.iloc[0] >= (max_value - trunk_diff)
 
                     if not is_trunk and (i == 1 or i == (nb_groups)): # first or last, i.e. flank
                         status = "flank"

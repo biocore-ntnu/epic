@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def compute_bins(df, bin_size):
     bins = []
 
@@ -9,15 +10,13 @@ def compute_bins(df, bin_size):
             bins.append({"Chromosome": chromosome, "Bin": chromosome_bin})
 
     bins = pd.DataFrame.from_dict(bins).set_index(["Chromosome", "Bin"])
+
     return bins
-
-
 
 
 def merge_bed_bins(dfs):
     from functools import reduce
 
     df = reduce(lambda l, r: l.join(r, how="outer"), dfs).fillna(0)
-    # df.insert(0, "TotalEnriched", df.sum(axis=1))
 
     return df

@@ -9,7 +9,7 @@ from epic.merge.compute_bed_bins import compute_bins, merge_bed_bins
 @pytest.fixture
 def bed_dfs():
 
-    c1 = """chr1    887771  887796  U0      0       -
+    c1 = u"""chr1    887771  887796  U0      0       -
 chr1    994660  994685  U0      0       -
 chr1    1041102 1041127 U0      0       +
 chr1    1770383 1770408 U0      0       -
@@ -20,7 +20,7 @@ chr1    2239108 2239133 U0      0       +
 chr1    2318805 2318830 U0      0       +
 chr1    3006132 3006157 U0      0       -"""
 
-    c2 = """chr1    1325303 1325328 U0      0       -
+    c2 = u"""chr1    1325303 1325328 U0      0       -
 chr1    1541598 1541623 U0      0       +
 chr1    1599121 1599146 U0      0       +
 chr1    1820285 1820310 U0      0       -
@@ -37,7 +37,7 @@ chr1    3681903 3681928 U0      0       -"""
 @pytest.fixture()
 def expected_result():
 
-    c = """Bin Chromosome
+    c = u"""Bin Chromosome
 887600       chr1
 994600       chr1
 1041000       chr1
@@ -55,7 +55,7 @@ def expected_result():
 
 @pytest.fixture()
 def expected_result2():
-    c = """Bin Chromosome
+    c = u"""Bin Chromosome
 1325200       chr1
 1541400       chr1
 1541600       chr1
@@ -93,7 +93,7 @@ def test_compute_bins(bed_dfs, expected_result):
 
 @pytest.fixture()
 def expected_result_merge_bed_bins():
-    c = """Chromosome Bin Enriched_f1 Enriched_f2
+    c = u"""Chromosome Bin Enriched_f1 Enriched_f2
 chr1 887600 1.0 0.0
 chr1 994600 1.0 0.0
 chr1 1041000 1.0 0.0

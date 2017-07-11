@@ -5,12 +5,9 @@ from os.path import basename
 
 import pandas as pd
 
-
 from docopt import docopt
 from natsort import natsorted
 from joblib import Parallel, delayed
-
-
 
 
 def enriched_indexes(dfs):
@@ -71,8 +68,10 @@ def split_dfs_into_chromosome_dfs(dfs, chromosomes):
 
     return chromosome_dfs
 
+
 def _merge_dfs(dfs):
     return pd.concat(dfs, axis=1).fillna(0)
+
 
 def merge_dfs(chromosome_dfs, nb_cpu):
 
@@ -88,8 +87,6 @@ def merge_dfs(chromosome_dfs, nb_cpu):
     merged_df = merged_df.reindex(index=natsorted(merged_df.index))
 
     return merged_df
-
-
 
 
 def merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus):
@@ -122,7 +119,6 @@ def merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus):
     column_order = natsorted(merged_df.columns)
 
     return merged_df[column_order]
-
 
 
 def read_dfs(files):
