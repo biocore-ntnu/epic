@@ -32,6 +32,7 @@ chr1 10600 1 0 0 0 2 0 3 0 0 0 2 2 1 0 0 0 0 0 1"""
 
     return pd.read_table(StringIO(c), sep=" ", index_col=[0, 1, 2])
 
+
 @pytest.mark.unit
 def test_merge_matrixes_no_enriched_raises(merge_matrixes_dfs_no_enriched, expected_result_no_enriched):
 
@@ -43,6 +44,7 @@ def test_merge_matrixes_no_enriched_raises(merge_matrixes_dfs_no_enriched, expec
 
     with pytest.raises(Exception):
         df = merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus)
+
 
 @pytest.mark.unit
 def test_merge_matrixes_one_enriched(merge_matrixes_dfs_one_enriched, expected_result_one_enriched):
@@ -57,4 +59,5 @@ def test_merge_matrixes_one_enriched(merge_matrixes_dfs_one_enriched, expected_r
 
     print(df.head().to_csv(sep=" "))
     print(expected_result_one_enriched.head().to_csv(sep=" "))
+
     assert df.equals(expected_result_one_enriched)

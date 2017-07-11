@@ -119,7 +119,9 @@ def merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus):
     else:
         merged_df = merged_df.drop(enriched_cols, axis=1)
 
-    return merged_df
+    column_order = natsorted(merged_df.columns)
+
+    return merged_df[column_order]
 
 
 
