@@ -89,7 +89,7 @@ def epic_overlap_intermediate_region_matrixes():
 
 
 
-df1_no_enriched = """Chromosome Bin Enriched_AAG_KO.matrix.gz data/align/AAG_KO_ChIP_1.bed data/align/AAG_KO_ChIP_2.bed data/align/AAG_KO_ChIP_3.bed data/align/AAG_KO_Input_1.bed data/align/AAG_KO_Input_2.bed data/align/AAG_KO_Input_3.bed
+df1_no_enriched = u"""Chromosome Bin Enriched_AAG_KO.matrix.gz data/align/AAG_KO_ChIP_1.bed data/align/AAG_KO_ChIP_2.bed data/align/AAG_KO_ChIP_3.bed data/align/AAG_KO_Input_1.bed data/align/AAG_KO_Input_2.bed data/align/AAG_KO_Input_3.bed
 chr1 10000 0 0 2 0 5 1 3
 chr1 10200 0 0 0 0 2 0 0
 chr1 10400 0 0 0 0 1 0 1
@@ -100,7 +100,7 @@ chr1 11200 0 0 0 0 4 0 1
 chr1 11400 0 1 0 0 2 0 0
 chr1 12200 0 0 0 0 5 0 1"""
 
-df2_no_enriched = """Chromosome Bin Enriched_ELP1.matrix.gz data/align/ELP1_KO_ChIP_1.bed data/align/ELP1_KO_ChIP_2.bed data/align/ELP1_KO_ChIP_3.bed data/align/ELP1_KO_Input_1.bed data/align/ELP1_KO_Input_2.bed data/align/ELP1_KO_Input_3.bed
+df2_no_enriched = u"""Chromosome Bin Enriched_ELP1.matrix.gz data/align/ELP1_KO_ChIP_1.bed data/align/ELP1_KO_ChIP_2.bed data/align/ELP1_KO_ChIP_3.bed data/align/ELP1_KO_Input_1.bed data/align/ELP1_KO_Input_2.bed data/align/ELP1_KO_Input_3.bed
 chr1 10000 0 0 3 0 3 2 1
 chr1 10200 0 0 1 1 2 2 1
 chr1 10400 0 0 0 0 2 1 1
@@ -111,7 +111,7 @@ chr1 11200 0 0 0 0 1 0 3
 chr1 11400 0 0 0 0 2 0 0
 chr1 12200 0 0 0 0 3 6 8"""
 
-df3_no_enriched = """Chromosome Bin Enriched_WT.matrix.gz data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
+df3_no_enriched = u"""Chromosome Bin Enriched_WT.matrix.gz data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
 chr1 10000 0 0 0 1 2 2 0
 chr1 10200 0 0 1 0 2 0 0
 chr1 10400 0 0 0 0 2 3 4
@@ -122,7 +122,7 @@ chr1 11200 0 0 0 0 0 1 0
 chr1 11400 0 0 2 1 0 0 0
 chr1 12200 0 0 0 0 3 0 2"""
 
-df3_enriched = """Chromosome Bin Enriched_WT.matrix.gz data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
+df3_enriched = u"""Chromosome Bin Enriched_WT.matrix.gz data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
 chr1 10000 0 0 0 1 2 2 0
 chr1 10200 1 0 1 0 2 0 0
 chr1 10400 1 0 0 0 2 3 4
