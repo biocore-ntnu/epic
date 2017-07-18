@@ -1,3 +1,8 @@
+# 0.1.27 (18.07.17)
+- epic-cluster script to cluster islands across experiments
+- ensure files given on command line exist
+- fix bug in matrix concat due to no enriched regions in some chromosomes
+
 # 0.1.26 (28.06.2017)
 - squash another multiproc bug
 

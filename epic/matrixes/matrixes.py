@@ -5,6 +5,7 @@ from itertools import chain
 from typing import Iterable, Sequence, Tuple
 from argparse import Namespace
 
+import numpy as np
 import pandas as pd
 
 from joblib import Parallel, delayed
@@ -24,7 +25,11 @@ def write_matrix_files(chip_merged, input_merged, df, args):
     if args.store_matrix:
         print_matrixes(matrixes, args)
 
+    # reset and setting index hack to work around pandas bug
+    matrixes = [m.astype(np.float64).reset_index() for m in matrixes]
     matrix = pd.concat(matrixes, axis=0)
+    matrix = matrix.set_index("Chromosome Bin".split())
+
     matrix = matrix.drop("Enriched", axis=1)
     ends = matrix.index.get_level_values("Bin") + int(args.window_size) - 1
     matrix.insert(0, "End", ends)

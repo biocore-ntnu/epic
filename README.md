@@ -57,9 +57,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
-# unreleased
+# 0.1.27 (18.07.17)
 - add test for whether files given on command line exist
 - epic-cluster script to cluster islands across experiments
+- fix bug in matrix concat due to no enriched regions in some chromosomes
 
 # 0.1.26 (28.06.2017)
 - squash another multiproc bug
