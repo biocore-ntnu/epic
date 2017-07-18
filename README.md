@@ -56,7 +56,6 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ## Changelog
 
-
 ```
 # 0.1.27 (18.07.17)
 - add test for whether files given on command line exist
