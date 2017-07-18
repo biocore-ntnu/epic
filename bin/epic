@@ -198,6 +198,9 @@ if __name__ == '__main__':
     from epic.run.run_epic import run_epic
     from epic.config import logging_settings
 
+    for f in args.treatment + args.control:
+        assert os.path.exists(f), "File " + f + " does not exist!"
+
     # in case the user entered no effective genome size
     if not args.effective_genome_size and not args.paired_end:
         estimated_readlength = find_readlength(args)

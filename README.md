@@ -57,6 +57,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 
 ```
+# unreleased
+- add test for whether files given on command line exist
+- epic-cluster script to cluster islands across experiments
+
 # 0.1.26 (28.06.2017)
 - squash another multiproc bug
 

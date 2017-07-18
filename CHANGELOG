@@ -1,3 +1,6 @@
+# 0.1.26 (28.06.2017)
+- squash another multiproc bug
+
 # 0.1.25 (20.01.2017)
 - work around pandas multiprocessing bug in matrix/bigwig creation
 

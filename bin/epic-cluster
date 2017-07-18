@@ -1,0 +1,99 @@
+import os
+
+import argparse
+
+parser = argparse.ArgumentParser(
+    description="""Cluster enriched regions.""",
+
+    prog=os.path.basename(__file__))
+
+
+parser.add_argument(
+    '--matrix',
+    '-m',
+    required=True,
+    type=str,
+    help='''Matrix to run clustering algorithm on.''')
+
+
+parser.add_argument(
+    '--trunk-diff',
+    '-t',
+    required=False,
+    default=1,
+    type=int,
+    help='''The difference from the max an area needs to be not considered a trunk.''')
+
+
+parser.add_argument(
+    '--bin-size',
+    '-b',
+    required=False,
+    type=int,
+    help='''The bin size used in the matrix file. Auto-inferred by default.''')
+
+
+parser.add_argument(
+    '--distance-allowed',
+    '-d',
+    required=False,
+    type=int,
+    help='''The max distance allowed before two bins are considered to belong to a separate region. By default set to be the bin-size.''')
+
+
+parser.add_argument(
+    '--number-cores',
+    '-cpu',
+    required=False,
+    default=1,
+    type=int,
+    help=
+    '''Number of cpus to use. Can use at most one per chromosome. Default: 1.''')
+
+import sys
+from subprocess import check_output
+import logging
+
+from math import gcd
+from functools import reduce
+
+import pandas as pd
+from io import StringIO
+
+from epic.config import logging_settings
+from epic.cluster.cluster import trunks_flanks_valleys
+
+
+def compute_bin_size(df):
+
+    print(df.head())
+    bins = df.head(10000).Bin
+    bin_size = reduce(gcd, bins)
+    print("The bin size is: " + str(bin_size), file=sys.stderr)
+
+    return bin_size
+
+
+if __name__ == '__main__':
+
+    args = parser.parse_args()
+    print(args, file=sys.stderr)
+    matrix = args.matrix
+    nb_cpus = args.number_cores
+
+    distance_allowed = args.distance_allowed
+    trunk_diff = args.trunk_diff
+
+    df = pd.read_table(matrix, sep=" ", header=0)
+
+    if not args.bin_size:
+        bin_size = compute_bin_size(df)
+    else:
+        bin_size = args.bin_size
+
+    if not distance_allowed:
+        distance_allowed = bin_size
+
+    df = trunks_flanks_valleys(df, bin_size, trunk_diff, distance_allowed, nb_cpus)
+
+    df.to_csv(sys.stdout, sep=" ")
