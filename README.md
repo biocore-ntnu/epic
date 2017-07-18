@@ -48,7 +48,8 @@ For now, please cite the original SICER paper, but include a link to this repo.
 ## Install
 
 epic is available for python2.7 and above. It can be installed from the Python
-Package Index with `pip install bioepic` or by cloning the repo at
+Package Index with `pip install bioepic` or preferably from bioconda with `conda
+install -c bioconda epic`, or by cloning the repo at
 https://github.com/endrebak/epic and running `python setup.py install`
 <!-- , with bioconda using `conda install bioepic` ([bioconda setup instructions](http://bioconda.github.io/index.html#setup)) -->
 
