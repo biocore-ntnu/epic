@@ -16,7 +16,7 @@ MockNamespace = namedtuple(
      "fragment_size", "paired_end", "gaps_allowed",
      "false_discovery_rate_cutoff", "effective_genome_fraction", "store_matrix",
      "bigwig", "bed", "sum_bigwig", "chromosome_sizes",
-     "treatment", "control"])
+     "treatment", "control", "outfile"])
 
 egs = 2290813547.4  # this is the effective genome size used by the original sicer for hg19
 gsd = create_genome_size_dict("hg19")
@@ -26,21 +26,21 @@ gsd = create_genome_size_dict("hg19")
 def args_200_fast():
     return MockNamespace(25, "hg19", False, 200, 150, False, 3, 1, egs, False, False, False,
                          False, gsd, ["examples/test.bed"],
-                         ["examples/control.bed"])
+                         ["examples/control.bed"], None)
 
 
 @pytest.fixture(scope="session")
 def args_200():
     return MockNamespace(1, "hg19", False, 200, 150, False, 3, 0.05, egs,
                          False, False, False, False, gsd,
-                         ["examples/test.bed"], ["examples/control.bed"])
+                         ["examples/test.bed"], ["examples/control.bed"], None)
 
 
 @pytest.fixture(scope="session")
 def args_50():
     return MockNamespace(1, "hg19", False, 50, 150, False, 3, 0.05, egs, False, False, False,
                          False, gsd, ["examples/test.bed"],
-                         ["examples/control.bed"])
+                         ["examples/control.bed"], None)
 
 
 @pytest.fixture(scope="session")

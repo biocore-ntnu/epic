@@ -4,7 +4,7 @@ __author__ = "Endre Bakken Stovner https://github.com/endrebak/"
 __license__ = "MIT"
 
 from os.path import dirname, join, basename
-from sys import stdout
+from sys import stdout, argv
 from itertools import chain
 from collections import OrderedDict
 from subprocess import call
@@ -63,16 +63,23 @@ def run_epic(args):
     logging.info("Computing FDR.")
     df = compute_fdr(df, nb_chip_reads, nb_input_reads, args)
 
-    if (args.store_matrix or args.bigwig or args.sum_bigwig):
-        write_matrix_files(chip_merged, input_merged, df, args)
-
     # Just in case some ints got promoted to float somewhere
     df[["Start", "End", "ChIP", "Input"]] = df[["Start", "End", "ChIP", "Input"
                                                 ]].astype(int)
-    df.to_csv(stdout, index=False, sep=" ", na_rep="NA")
+    outfile = args.outfile if args.outfile else stdout
+    if args.outfile:
+        with open(outfile, "w+") as h:
+            print("# epic " + " ".join(argv[1:]), file=h)
+    else:
+        print("# epic " + " ".join(argv[1:]), file=stdout)
+
+    df.to_csv(outfile, index=False, sep=" ", na_rep="NA", mode="a")
 
     if args.bed:
         df_to_bed(df).to_csv(args.bed, header=False, index=False, sep="\t")
+
+    if (args.store_matrix or args.bigwig or args.sum_bigwig):
+        write_matrix_files(chip_merged, input_merged, df, args)
 
     return df.reset_index(
     )  # only returns a value to simplify integration tests

@@ -34,7 +34,6 @@ To see what issues are currently being worked on, please use the [waffle board](
     - [License](#license)
     - [Requirements](#requirements)
     - [Helper scripts](#helper-scripts)
-    - [TODO](#todo)
     - [Usage](#usage)
     - [Credit](#credit)
     - [NAQ/Various](#naqvarious)
@@ -57,6 +56,11 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.29 (19.07.17)
+- Add log flag
+- Add outfile flag
+- Write results before creating bigwigs/matrix in case the latter fails
+
 # 0.1.28 (19.07.17) BREAKING CHANGES!!
 - now autoinfers paired end so can mix pe and non-pe files
 - effective_genome_size renamed effective_genome_fraction
@@ -176,21 +180,6 @@ If you have paired-end data, you can use
 bamToBed -bedpe -i paired_end_file.bam > file.bedpe
 ```
 
-## TODO
-
-[![Stories in In Progress](https://badge.waffle.io/endrebak/epic.svg?label=In%20Progress&title=In%20Progress)](http://waffle.io/endrebak/epic)
-
-* Fix bug that happens in matrix creation if you have chromosomes not in the genome, like chr9_KI270720v1_random, chr9_KI270823v1_alt or chrUn_KI270521v1.
-* Support gencode style chromosome names
-* Implement paired end distance cutoff for files based on the answers to [this question](https://www.biostars.org/p/206403/)
-* Run bigwig creation in parallel? (Might be IO-bound)
-* Clean up tests
-* Add more examples of usage
-* Improve logging messages
-* Write proper docs
-* Explain the effective genome size and test how much it matters
-* Test island threshold difference between SICER and epic on different datasets
-
 ## Usage
 
 (Might be slightly out of date.)
@@ -198,13 +187,13 @@ bamToBed -bedpe -i paired_end_file.bam > file.bedpe
 ```
 usage: epic [-h] --treatment TREATMENT [TREATMENT ...] --control CONTROL
             [CONTROL ...] [--number-cores NUMBER_CORES] [--genome GENOME]
-            [--keep-duplicates KEEP_DUPLICATES] [--window-size WINDOW_SIZE]
+            [--keep-duplicates] [--window-size WINDOW_SIZE]
             [--gaps-allowed GAPS_ALLOWED] [--fragment-size FRAGMENT_SIZE]
             [--false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF]
             [--effective_genome_fraction EFFECTIVE_GENOME_FRACTION]
             [--chromsizes CHROMSIZES] [--store-matrix STORE_MATRIX]
             [--bigwig BIGWIG] [--sum-bigwig SUM_BIGWIG] [--bed BED]
-            [--version]
+            [--log LOG] [--outfile OUTFILE] [--version]
 
 Diffuse domain ChIP-Seq caller based on SICER. (Visit github.com/endrebak/epic
 for examples and help.)
@@ -222,7 +211,7 @@ optional arguments:
                         chromosome. Default: 1.
   --genome GENOME, -gn GENOME
                         Which genome to analyze. Default: hg19.
-  --keep-duplicates KEEP_DUPLICATES, -k KEEP_DUPLICATES
+  --keep-duplicates, -k
                         Keep reads mapping to the same position on the same
                         strand within a library. Default is to remove all but
                         the first duplicate.
@@ -233,23 +222,22 @@ optional arguments:
                         Multiple of window size used to determine the gap
                         size. Must be an integer. Default: 3.
   --fragment-size FRAGMENT_SIZE, -fs FRAGMENT_SIZE
-                        Size of the sequenced fragment. The center of the the
-                        fragment will be taken as half the fragment size.
-                        Default 150.
+                        (Single end reads only) Size of the sequenced
+                        fragment. The center of the the fragment will be taken
+                        as half the fragment size. Default 150.
   --false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF, -fdr FALSE_DISCOVERY_RATE_CUTOFF
                         Remove all islands with an FDR below cutoff. Default
-                        1.0 (i.e. all found islands included no matter how bad
-                        the adjusted p-value.).
-  --effective_genome_fraction EFFECTIVE_GENOME_FRACTION, -egs EFFECTIVE_GENOME_FRACTION
+                        0.05.
+  --effective_genome_fraction EFFECTIVE_GENOME_FRACTION, -egf EFFECTIVE_GENOME_FRACTION
                         Use a different effective genome fraction than the one
-                        included in epic. Must be a number between 0 and 1. The default
-                        value depends on the genome and readlength.
+                        included in epic. The default value depends on the
+                        genome and readlength, but is a number between 0 and
+                        1.
   --chromsizes CHROMSIZES, -cs CHROMSIZES
-                        Set the chromosome lengths yourself in a file with one
-                        column of chromosome names and one with sizes. Useful
-                        to analyze custom genomes, assemblies or simulated
-                        data. Only chromosomes included in the file will be
-                        analyzed.
+                        Set the chromosome lengths yourself in a file with two
+                        columns: chromosome names and sizes. Useful to analyze
+                        custom genomes, assemblies or simulated data. Only
+                        chromosomes included in the file will be analyzed.
   --store-matrix STORE_MATRIX, -sm STORE_MATRIX
                         Store the matrix of counts per bin for ChIP and input
                         to gzipped file <STORE_MATRIX>.
@@ -264,6 +252,9 @@ optional arguments:
                         UCSC genome browser or downstream analyses with e.g.
                         bedtools. The score field is log2(#ChIP/#Input) * 100
                         capped at a 1000.
+  --log LOG, -l LOG     File to write log messages to.
+  --outfile OUTFILE, -o OUTFILE
+                        File to write results to. By default sent to stdout.
   --version, -v         show program's version number and exit
 ```
 

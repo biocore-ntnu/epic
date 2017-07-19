@@ -152,6 +152,24 @@ parser.add_argument(
     help=
     '''A summary bed file of all regions for display in the UCSC genome browser or downstream analyses with e.g. bedtools. The score field is log2(#ChIP/#Input) * 100 capped at a 1000.''')
 
+
+parser.add_argument(
+    '--log',
+    '-l',
+    required=False,
+    type=str,
+    help=
+    '''File to write log messages to.''')
+
+
+parser.add_argument(
+    '--outfile',
+    '-o',
+    required=False,
+    type=str,
+    help=
+    '''File to write results to. By default sent to stdout.''')
+
 # parser.add_argument('--paired-end',
 #                     '-pe',
 #                     action="store_true",
@@ -167,8 +185,6 @@ Note:
         H3K27me3: --window-size=200 --gaps=3
         H3K4me3:  --window-size=200 --gaps=1
 """
-
-# from docopt import docopt
 
 import logging
 from sys import argv
@@ -188,15 +204,31 @@ if __name__ == '__main__':
 
 
     args = parser.parse_args()
-    print("# epic " + " ".join(argv[1:]))
-    logging.info("# epic " + " ".join(argv[
-        1:]) + " # epic_version: {}, pandas_version: {}".format(
-            __version__, pd.__version__))
 
     from sys import argv
 
     from epic.run.run_epic import run_epic
     from epic.config import logging_settings
+
+    if args.log:
+        logger = logging.getLogger()
+        log_formatter = logging.Formatter('%(message)s (File: %(module)s, Log level: %(levelname)s, Time: %(asctime)s )')
+        log_directory = os.path.dirname(args.log)
+        if log_directory and not os.path.exists(log_directory):
+            os.makedirs(log_directory)
+        handler = logging.FileHandler(args.log)
+        handler.setFormatter(log_formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.INFO)
+
+    logging.info("# epic " + " ".join(argv[
+        1:]) + " # epic_version: {}, pandas_version: {}".format(
+            __version__, pd.__version__))
+
+    if args.outfile:
+        outfile_directory = os.path.dirname(args.outfile)
+        if outfile_directory and not os.path.exists(outfile_directory):
+            os.makedirs(outfile_directory)
 
     for f in args.treatment + args.control:
         assert os.path.exists(f), "File " + f + " does not exist!"
