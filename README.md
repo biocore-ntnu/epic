@@ -56,6 +56,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.0 (19.07.17)
+- Fix teensy 2.7 bug
+
 # 0.1.29 (19.07.17)
 - Add log flag
 - Add outfile flag
@@ -70,32 +73,6 @@ https://github.com/endrebak/epic and running `python setup.py install`
 - add test for whether files given on command line exist
 - epic-cluster script to cluster islands across experiments
 - fix bug in matrix concat due to no enriched regions in some chromosomes
-
-# 0.1.26 (28.06.2017)
-- squash another multiproc bug
-
-# 0.1.25 (20.01.2017)
-- work around pandas multiprocessing bug in matrix/bigwig creation
-
-# 0.1.24 (11.01.2017)
-- change the default FDR cutoff from 1 to 0.05
-- -k/--keep-duplicates argument is now a proper flag
-
-# 0.1.23 (15.11.2016)
-- (internal): add mypy/PEP484 typing to code. Thanks Ryan C. Thompson.
-- fix bug where shuffling of columns happen in epic-merge
-- fix error when no tmpdir was set in epic-effective
-
-# 0.1.22 (09.11.2016)
-- add epic-merge script to merge matrixes from multiple experiments into one
-- fix bugs and bad logic in epic-overlaps script
-- allow renaming axes and legend in epic-overlaps
-
-# 0.1.21 (18.10.2016)
-- add argument --chromsizes/-cs to allow for custom genomes, assemblies and simulated data
-- use pyBigWig to create bigwigs, drop R/bioconductor dependencies
-- argument effective_genome_length renamed to effective_genome_size
-- epic-overlaps script to graph overlapping regions/nucleotides for differential ChIP-Seq (experimental)
 ```
 
 ## Quickstart
@@ -285,7 +262,6 @@ Endre Bakken Stovner
 ![alt tag](img/4C.png)
 
 Briefings in Bioinformatics, 2016, 1–14
-
 
 ## NAQ/Various
 

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 """Run whole epic pipeline."""
 
 __author__ = "Endre Bakken Stovner https://github.com/endrebak/"
