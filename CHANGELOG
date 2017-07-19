@@ -1,3 +1,7 @@
+# 0.1.28 (19.07.17) BREAKING CHANGES
+- now autoinfers paired end so can mix pe and non-pe files
+- effective_genome_size renamed effective_genome_fraction
+
 # 0.1.27 (18.07.17)
 - epic-cluster script to cluster islands across experiments
 - ensure files given on command line exist

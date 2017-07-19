@@ -104,8 +104,8 @@ parser.add_argument(
                    ''')
 
 parser.add_argument(
-    '--effective_genome_size',
-    '-egs',
+    '--effective_genome_fraction',
+    '-egf',
     required=False,
     type=float,
     help=
@@ -152,10 +152,10 @@ parser.add_argument(
     help=
     '''A summary bed file of all regions for display in the UCSC genome browser or downstream analyses with e.g. bedtools. The score field is log2(#ChIP/#Input) * 100 capped at a 1000.''')
 
-parser.add_argument('--paired-end',
-                    '-pe',
-                    action="store_true",
-                    help='''Use paired end data (bedpe).''')
+# parser.add_argument('--paired-end',
+#                     '-pe',
+#                     action="store_true",
+#                     help='''Use paired end data (bedpe).''')
 
 parser.add_argument('--version',
                     '-v',
@@ -201,22 +201,29 @@ if __name__ == '__main__':
     for f in args.treatment + args.control:
         assert os.path.exists(f), "File " + f + " does not exist!"
 
+    if args. effective_genome_fraction:
+        assert 0 <= args.effective_genome_fraction <= 1, "effective genome fraction not a number between 0 and 1: " + str(args.effective_genome_fraction)
+
+    most_paired_end = sum([f.endswith(".bedpe") for f in args.treatment]) / float(len(args.treatment)) > 0.5
+
     # in case the user entered no effective genome size
-    if not args.effective_genome_size and not args.paired_end:
+    if not args.effective_genome_fraction and not most_paired_end:
         estimated_readlength = find_readlength(args)
         closest_readlength = get_closest_readlength(estimated_readlength)
-        args.effective_genome_size = get_effective_genome_length(
+        args.effective_genome_fraction = get_effective_genome_length(
             args.genome, closest_readlength)
     # for paired end the effective genome size is max
-    elif not args.effective_genome_size and args.paired_end:
+    elif not args.effective_genome_fraction and most_paired_end:
         logging.info("Using paired end so setting readlength to 100.")
-        args.effective_genome_size = get_effective_genome_length(args.genome,
+        args.effective_genome_fraction = get_effective_genome_length(args.genome,
                                                                  100)
 
     if not args.chromsizes:
         args.chromosome_sizes = create_genome_size_dict(args.genome)
     else:
         args.chromosome_sizes = create_genome_size_dict_custom_genome(args.chromsizes)
-        args.effective_genome_size *= sum(args.chromosome_sizes.values())
+        total_genome_length *= sum(args.chromosome_sizes.values())
+        args.effective_genome_fraction = total_genome_length * args.effective_genome_fraction
+
 
     run_epic(args)

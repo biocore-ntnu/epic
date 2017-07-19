@@ -17,7 +17,7 @@ def compute_fdr(df, total_chip_reads, total_input_reads, args):
 
     scaling_factor = (total_chip_reads * 1.0) / total_input_reads
 
-    zero_controls_multiplier = total_input_reads * 1.0 / args.effective_genome_size
+    zero_controls_multiplier = total_input_reads * 1.0 / args.effective_genome_fraction
 
     avg_0_denom = (df.End - df.Start + 1) * zero_controls_multiplier
     avg_0_denom[avg_0_denom > 0.25] = 0.25

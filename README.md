@@ -57,6 +57,11 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.1.28 (19.07.17) BREAKING CHANGES!!
+- now autoinfers paired end so can mix pe and non-pe files
+- effective_genome_size renamed effective_genome_fraction
+- fix bug in computing effective genome size for custom genomes
+
 # 0.1.27 (18.07.17)
 - add test for whether files given on command line exist
 - epic-cluster script to cluster islands across experiments
@@ -196,10 +201,10 @@ usage: epic [-h] --treatment TREATMENT [TREATMENT ...] --control CONTROL
             [--keep-duplicates KEEP_DUPLICATES] [--window-size WINDOW_SIZE]
             [--gaps-allowed GAPS_ALLOWED] [--fragment-size FRAGMENT_SIZE]
             [--false-discovery-rate-cutoff FALSE_DISCOVERY_RATE_CUTOFF]
-            [--effective_genome_size EFFECTIVE_GENOME_SIZE]
+            [--effective_genome_fraction EFFECTIVE_GENOME_FRACTION]
             [--chromsizes CHROMSIZES] [--store-matrix STORE_MATRIX]
             [--bigwig BIGWIG] [--sum-bigwig SUM_BIGWIG] [--bed BED]
-            [--paired-end] [--version]
+            [--version]
 
 Diffuse domain ChIP-Seq caller based on SICER. (Visit github.com/endrebak/epic
 for examples and help.)
@@ -235,10 +240,10 @@ optional arguments:
                         Remove all islands with an FDR below cutoff. Default
                         1.0 (i.e. all found islands included no matter how bad
                         the adjusted p-value.).
-  --effective_genome_size EFFECTIVE_GENOME_SIZE, -egs EFFECTIVE_GENOME_SIZE
-                        Use a different effective genome size than the one
-                        included in epic. The default value depends on the
-                        genome and readlength.
+  --effective_genome_fraction EFFECTIVE_GENOME_FRACTION, -egs EFFECTIVE_GENOME_FRACTION
+                        Use a different effective genome fraction than the one
+                        included in epic. Must be a number between 0 and 1. The default
+                        value depends on the genome and readlength.
   --chromsizes CHROMSIZES, -cs CHROMSIZES
                         Set the chromosome lengths yourself in a file with one
                         column of chromosome names and one with sizes. Useful
@@ -259,7 +264,6 @@ optional arguments:
                         UCSC genome browser or downstream analyses with e.g.
                         bedtools. The score field is log2(#ChIP/#Input) * 100
                         capped at a 1000.
-  --paired-end, -pe     Use paired end data (bedpe).
   --version, -v         show program's version number and exit
 ```
 

@@ -14,7 +14,7 @@ MockNamespace = namedtuple(
     "MockNamespace",
     ["number_cores", "genome", "keep_duplicates", "window_size",
      "fragment_size", "paired_end", "gaps_allowed",
-     "false_discovery_rate_cutoff", "effective_genome_size", "store_matrix",
+     "false_discovery_rate_cutoff", "effective_genome_fraction", "store_matrix",
      "bigwig", "bed", "sum_bigwig", "chromosome_sizes",
      "treatment", "control"])
 
