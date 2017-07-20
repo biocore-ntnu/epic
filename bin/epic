@@ -254,7 +254,7 @@ if __name__ == '__main__':
         args.chromosome_sizes = create_genome_size_dict(args.genome)
     else:
         args.chromosome_sizes = create_genome_size_dict_custom_genome(args.chromsizes)
-        total_genome_length *= sum(args.chromosome_sizes.values())
+        total_genome_length = sum(args.chromosome_sizes.values())
         args.effective_genome_fraction = total_genome_length * args.effective_genome_fraction
 
 

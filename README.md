@@ -56,6 +56,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.1 (20.07.17)
+- Fix bug
+
 # 0.2.0 (19.07.17)
 - Fix teensy 2.7 bug
 
