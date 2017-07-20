@@ -127,7 +127,7 @@ def multiple_files_count_reads_in_windows(bed_files, args):
     bed_windows = OrderedDict() # type: OrderedDict[str, List[pd.DataFrame]]
     for bed_file in bed_files:
         logging.info("Binning " + bed_file)
-        if bed_file.endswith(".bedpe"):
+        if ".bedpe" in bed_file:
             chromosome_dfs = count_reads_in_windows_paired_end(bed_file, args)
         else:
             chromosome_dfs = count_reads_in_windows(bed_file, args)

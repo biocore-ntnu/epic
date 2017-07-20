@@ -104,7 +104,7 @@ parser.add_argument(
                    ''')
 
 parser.add_argument(
-    '--effective_genome_fraction',
+    '--effective-genome-fraction',
     '-egf',
     required=False,
     type=float,

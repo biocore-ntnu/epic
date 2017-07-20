@@ -56,6 +56,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.2 (unreleased)
+- Change flag --effective_genome_fraction to --effective-genome-fraction
+- Fix autoinferring of bed/bedpe when files are (b/g)zipped
+
 # 0.2.1 (20.07.17)
 - Fix bug
 
@@ -66,16 +70,6 @@ https://github.com/endrebak/epic and running `python setup.py install`
 - Add log flag
 - Add outfile flag
 - Write results before creating bigwigs/matrix in case the latter fails
-
-# 0.1.28 (19.07.17) BREAKING CHANGES!!
-- now autoinfers paired end so can mix pe and non-pe files
-- effective_genome_size renamed effective_genome_fraction
-- fix bug in computing effective genome size for custom genomes
-
-# 0.1.27 (18.07.17)
-- add test for whether files given on command line exist
-- epic-cluster script to cluster islands across experiments
-- fix bug in matrix concat due to no enriched regions in some chromosomes
 ```
 
 ## Quickstart

@@ -1,3 +1,14 @@
+# 0.2.1 (20.07.17)
+- Fix bug
+
+# 0.2.0 (19.07.17)
+- Fix teensy 2.7 bug
+
+# 0.1.29 (19.07.17)
+- Add log flag
+- Add outfile flag
+- Write results before creating bigwigs/matrix in case the latter fails
+
 # 0.1.28 (19.07.17) BREAKING CHANGES
 - now autoinfers paired end so can mix pe and non-pe files
 - effective_genome_size renamed effective_genome_fraction
