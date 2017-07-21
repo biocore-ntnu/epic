@@ -58,7 +58,8 @@ FDR is the p-value adjusted for multiple testing with Benjamini-Hochberg.
 -bw/--bigwig
 ~~~~~~~~~~~~
 
-Here one bigwig file is created per bed/bedpe file given for epic to analyze.
+This flag takes a folder to store bigwigs in. One bigwig file is created per
+bed/bedpe file given for epic to analyze.
 
 .. code-block:: bash
 

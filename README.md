@@ -15,7 +15,11 @@ efficient, multicore, and significantly much easier to install and use.
 
 The MIT-licensed code is available at https://github.com/endrebak/epic
 Please post issues, questions, docrequests or whatever is on your mind on the [epic google groups forum](https://groups.google.com/forum/#!forum/epic-chip-seq).
-To see what issues are currently being worked on, please use the [waffle board](https://waffle.io/endrebak/epic).
+
+The [documentation](http://bioepic.readthedocs.io/en/latest/) is currently being worked on.
+
+
+
 
 <!-- If you use, or intend to use epic, please say hi in this google -->
 <!-- groups -->
