@@ -8,7 +8,7 @@ from epic.windows.count.count_reads_in_windows import count_reads_in_windows, _c
 
 
 @pytest.mark.integration
-def test_fdr(expected_result, args_200):
+def test_fdr(expected_result, args_200_fast):
     # total_chip_reads 9904
     # total_input_reads 9290
     pass

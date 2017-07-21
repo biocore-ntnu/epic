@@ -19,7 +19,7 @@ def test_get_closest_readlength():
     assert 100 == get_closest_readlength(1500)
 
 
-def test_find_readlength(args_200):
+def test_find_readlength(args_200_fast):
 
-    result = find_readlength(args_200)
+    result = find_readlength(args_200_fast)
     assert result == 25

@@ -10,9 +10,9 @@ from epic.windows.count.count_reads_in_windows import (
 
 
 @pytest.mark.integration
-def test_count_reads_in_windows(expected_result, input_bed_file, args_200):
+def test_count_reads_in_windows(expected_result, input_bed_file, args_200_fast):
 
-    actual_result = count_reads_in_windows(input_bed_file, args_200)
+    actual_result = count_reads_in_windows(input_bed_file, args_200_fast)
 
     actual_result = pd.concat(actual_result)
 

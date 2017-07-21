@@ -43,11 +43,11 @@ def output_bigwig(tmpdir):
 
 # not used due to travis/bioconda r problem
 @pytest.mark.unit
-def test_create_bigwigs(input_data, output_bigwig, args_200):
+def test_create_bigwigs(input_data, output_bigwig, args_200_fast):
 
     print(input_data)
     print(output_bigwig)
-    d = create_genome_size_dict(args_200.genome)
+    d = create_genome_size_dict(args_200_fast.genome)
 
     print(d)
     _create_bigwig(input_data, output_bigwig, d)
