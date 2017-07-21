@@ -52,7 +52,6 @@ install -c bioconda epic`, or by cloning the repo at
 https://github.com/endrebak/epic and running `python setup.py install`
 <!-- , with bioconda using `conda install bioepic` ([bioconda setup instructions](http://bioconda.github.io/index.html#setup)) -->
 
-
 ## Changelog
 
 ```

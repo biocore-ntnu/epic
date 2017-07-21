@@ -1,0 +1,74 @@
+Output files
+============
+
+epic can produce many output files. Here we explain what they contain.
+
+-o/--outfile
+~~~~~~~~~~~~
+
+The main output is the file of regions with an FDR score lower than the cutoff (0.05 by default).
+
+.. code-block:: text
+
+    # epic -cpu 25 -t examples/test.bed -c examples/control.bed -o enriched_regions.csv
+    Chromosome Start End ChIP Input Score Log2FC P FDR
+    chr1 23568400 23568599 2 0 13.54464274405703 11.30748585550573 8.184731894908448e-11 6.319374393278151e-10
+    chr1 26401200 26401399 2 0 13.54464274405703 11.30748585550573 8.184731894908448e-11 6.319374393278151e-10
+    chr1 33054800 33055399 2 0 14.288252844518933 9.722523354784574 2.207263610333191e-09 3.85690272963484e-09
+    chr1 33365200 33365399 2 0 13.54464274405703 11.30748585550573 8.184731894908448e-11 6.319374393278151e-10
+    chr1 39422200 39422799 2 0 14.288252844518933 9.722523354784574 2.207263610333191e-09 3.85690272963484e-09
+    chr1 51473600 51474399 2 0 14.288252844518933 9.30748585550573 5.228937118152232e-09 6.861688234097e-09
+    chr1 58785200 58786199 2 0 14.288252844518933 8.985557760618368 1.0206726421638307e-08 1.1002055753194539e-08
+    chr1 59430000 59430199 2 0 13.54464274405703 11.30748585550573 8.184731894908448e-11 6.319374393278151e-10
+
+The first two lines are special and do not contain any data:
+
+#. The first line contains the command invoked to produce the output file below
+#. The second line contains the column names
+
+The column names are:
+
+* **Chromosome, Start, End**
+
+This is the location of the region.
+
+* **ChIP, Input**
+
+These two columns contain the number of ChIP-reads and Input-reads within the
+region.
+
+* **Score**
+
+(Mostly uninteresting to end users). This is the region Poisson score.
+
+* **Fold_change**
+
+The log2_fold change is the number of ChIP reads divided by the number of Input
+reads in the region (where a pseudocount is computed for regions with no
+input-reads.)
+
+* **P**
+
+This is the p-value, based on the Poisson-distribution.
+
+* **FDR**
+
+FDR is the p-value adjusted for multiple testing with Benjamini-Hochberg.
+
+-bw/--bigwig
+~~~~~~~~~~~~
+
+Here one bigwig file is created per bed/bedpe file given for epic to analyze.
+
+.. code-block:: bash
+
+    epic -bw bigwigs/ -t examples/test.bed -c examples/control.bed -o examples/expected_results_log2fc.csv
+    ls bigwigs/
+    # control.bw test.bw
+
+These bigwigs show how epic saw the data. So the data will look like a histogram
+where the bars are bins and the counts within a bin gives the height of the bar.
+The results are RPKM-normalized. Here are two bigwigs displayed in an arbitrary
+genomic region in the UCSC genome browser:
+
+.. image:: img/epic_bigwigs.png
