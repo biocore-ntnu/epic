@@ -1,3 +1,10 @@
+# 0.2.2 (21.07.17)
+- Change flag --effective_genome_fraction to --effective-genome-fraction
+- Fix autoinferring of bed/bedpe when files are (b/g)zipped
+- Use log2FC in output, not raw fold change
+- Now separate flags for sum bigwigs: --chip-bigwig and --input-bigwig
+- Add support for log2FC bigwig: --log2fc-bigwig
+
 # 0.2.1 (20.07.17)
 - Fix bug
 

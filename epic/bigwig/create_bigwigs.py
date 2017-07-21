@@ -1,6 +1,6 @@
 import logging
 import numpy as np
-from os.path import join, basename, splitext
+from os.path import join, basename, splitext, dirname
 from subprocess import call
 from argparse import Namespace
 import pandas as pd
@@ -56,17 +56,34 @@ def _create_bigwig(bed_column, outpath, genome_size_dict):
     bw.close()
 
 
-def create_sum_bigwigs(matrix, outdir, args):
-    # type: (pd.DataFrame, str, Namespace) -> None
-    call("mkdir -p {}".format(outdir), shell=True)
+def create_sum_bigwigs(matrix, args):
 
-    chip = matrix[args.treatment].sum(axis=1)
-    input = matrix[args.control].sum(axis=1)
+    rpkm_matrix = 1e6 * matrix / matrix.sum()
 
-    chip_outpath = join(outdir, "chip_sum" + ".bw")
-    input_outpath = join(outdir, "input_sum" + ".bw")
+    chip = rpkm_matrix[args.treatment].sum(axis=1)
+    input = rpkm_matrix[args.control].sum(axis=1)
 
-    # _create_bigwig(chip, chip_outpath, args)
-    # _create_bigwig(input, input_outpath, args)
+    input_pseudo = input.copy()
+    input_pseudo.loc[input_pseudo == 0] = 1
+    log2fc = chip / input_pseudo.values
 
-    Parallel(n_jobs=args.number_cores)(delayed(_create_bigwig)(bed_column, outpath, args.chromosome_sizes) for outpath, bed_column in zip([chip_outpath, input_outpath], [chip, input]))
+    bigwigs_to_create = []
+    if args.chip_bigwig:
+        folder = dirname(args.chip_bigwig)
+        if folder:
+            call("mkdir -p {}".format(folder), shell=True)
+        bigwigs_to_create.append([args.chip_bigwig, chip])
+
+    if args.input_bigwig:
+        folder = dirname(args.input_bigwig)
+        if folder:
+            call("mkdir -p {}".format(folder), shell=True)
+        bigwigs_to_create.append([args.input_bigwig, input])
+
+    if args.log2fc_bigwig:
+        folder = dirname(args.log2fc_bigwig)
+        if folder:
+            call("mkdir -p {}".format(folder), shell=True)
+        bigwigs_to_create.append([args.log2fc_bigwig, log2fc])
+
+    Parallel(n_jobs=args.number_cores)(delayed(_create_bigwig)(bed_column, outpath, args.chromosome_sizes) for outpath, bed_column in bigwigs_to_create)

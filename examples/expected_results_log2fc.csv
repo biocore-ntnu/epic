@@ -1,4 +1,4 @@
-# epic -cpu 25 -t examples/test.bed -c examples/control.bed -o examples/expected_results_log2fc.csv -bw bigwigs/
+# epic -cpu 25 -t examples/test.bed -c examples/control.bed -o examples/expected_results_log2fc.csv --log2fc-bigwig log2fc.bw --chip-bigwig bigwigs/chip.bw -sm matrix.gz
 Chromosome Start End ChIP Input Score Log2FC P FDR
 chr1 23568400 23568599 2 0 13.54464274405703 11.30748585550573 8.184731894908448e-11 6.319374393278151e-10
 chr1 26401200 26401399 2 0 13.54464274405703 11.30748585550573 8.184731894908448e-11 6.319374393278151e-10

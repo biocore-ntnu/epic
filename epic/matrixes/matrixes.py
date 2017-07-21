@@ -16,7 +16,6 @@ from epic.windows.count.remove_out_of_bounds_bins import remove_bins_with_ends_o
 from epic.config.genomes import get_genome_size_file
 
 
-
 def write_matrix_files(chip_merged, input_merged, df, args):
     # type: (Dict[str, pd.DataFrame], Dict[str, pd.DataFrame], pd.DataFrame, Namespace) -> None
 
@@ -44,10 +43,10 @@ def write_matrix_files(chip_merged, input_merged, df, args):
         from epic.bigwig.create_bigwigs import create_bigwigs
         create_bigwigs(matrix, args.bigwig, args)
 
-    if args.sum_bigwig:
+    if args.chip_bigwig or args.input_bigwig or args.log2fc_bigwig:
         # defer initialization so not run during travis
         from epic.bigwig.create_bigwigs import create_sum_bigwigs
-        create_sum_bigwigs(matrix, args.sum_bigwig, args)
+        create_sum_bigwigs(matrix, args)
 
 
 def _create_matrixes(chromosome, chip, input, islands,

@@ -18,9 +18,6 @@ Please post issues, questions, docrequests or whatever is on your mind on the [e
 
 The [documentation](http://bioepic.readthedocs.io/en/latest/) is currently being worked on.
 
-
-
-
 <!-- If you use, or intend to use epic, please say hi in this google -->
 <!-- groups -->
 <!-- [thread](https://groups.google.com/forum/#!topic/epic-chip-seq/zWlsun_yfZQ). -->
@@ -59,10 +56,12 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
-# 0.2.2 (unreleased)
+# 0.2.2 (21.07.17)
 - Change flag --effective_genome_fraction to --effective-genome-fraction
 - Fix autoinferring of bed/bedpe when files are (b/g)zipped
 - Use log2FC in output, not raw fold change
+- Now separate flags for sum bigwigs: --chip-bigwig and --input-bigwig
+- Add support for log2FC bigwig: --log2fc-bigwig
 
 # 0.2.1 (20.07.17)
 - Fix bug
