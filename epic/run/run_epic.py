@@ -83,8 +83,7 @@ def run_epic(args):
     if (args.store_matrix or args.bigwig or args.sum_bigwig):
         write_matrix_files(chip_merged, input_merged, df, args)
 
-    return df.reset_index(
-    )  # only returns a value to simplify integration tests
+    return df.reset_index(drop=True) # only returns a value to simplify integration tests
 
 
 def df_to_bed(df):

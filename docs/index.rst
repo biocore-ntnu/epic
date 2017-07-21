@@ -62,6 +62,7 @@ epic contains a slew of improvements
 
    basic_intro
    options
+   output_files
 
 Indices and tables
 ==================

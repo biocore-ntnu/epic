@@ -1,4 +1,5 @@
 import pandas as pd
+from numpy import log2
 from scipy.stats import poisson, rankdata
 from argparse import Namespace
 
@@ -27,7 +28,8 @@ def compute_fdr(df, total_chip_reads, total_input_reads, args):
     avg[df.Input == 0] = avg_0_denom[df.Input == 0]
 
     fold_change = df.ChIP / avg
-    df.insert(len(df.columns), "Fold_change", fold_change)
+    log2FC = log2(fold_change)
+    df.insert(len(df.columns), "Log2FC", log2FC)
 
     p_vals = pd.Series(poisson.sf(df.ChIP, avg), index=df.index)
 

@@ -59,6 +59,7 @@ https://github.com/endrebak/epic and running `python setup.py install`
 # 0.2.2 (unreleased)
 - Change flag --effective_genome_fraction to --effective-genome-fraction
 - Fix autoinferring of bed/bedpe when files are (b/g)zipped
+- Use log2FC in output, not raw fold change
 
 # 0.2.1 (20.07.17)
 - Fix bug

@@ -18,13 +18,14 @@ MockNamespace = namedtuple(
      "bigwig", "bed", "sum_bigwig", "chromosome_sizes",
      "treatment", "control", "outfile"])
 
-egs = 2290813547.4  # this is the effective genome size used by the original sicer for hg19
+# egs = 2290813547.4  # this is the effective genome size used by the original sicer for hg19
+egs = 2510169508.0003734
 gsd = create_genome_size_dict("hg19")
 
 
 @pytest.fixture(scope="session")
 def args_200_fast():
-    return MockNamespace(25, "hg19", False, 200, 150, False, 3, 1, egs, False, False, False,
+    return MockNamespace(25, "hg19", False, 200, 150, False, 3, 0.05, egs, False, False, False,
                          False, gsd, ["examples/test.bed"],
                          ["examples/control.bed"], None)
 
@@ -45,7 +46,7 @@ def args_50():
 
 @pytest.fixture(scope="session")
 def expected_result_example_input():
-    return pd.read_table("examples/expected_results.csv", sep=" ", skiprows=1)
+    return pd.read_table("examples/expected_results_log2fc.csv", sep=" ", skiprows=1)
 
 
 @pytest.fixture(scope="session")
