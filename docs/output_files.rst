@@ -23,8 +23,8 @@ The main output is the file of regions with an FDR score lower than the cutoff (
 
 The first two lines are special and do not contain any data:
 
-#. The first line contains the command invoked to produce the output file below
-#. The second line contains the column names
+* The first line contains the command invoked
+* The second line contains the column names
 
 The column names are:
 
@@ -63,7 +63,8 @@ bed/bedpe file given for epic to analyze.
 
 .. code-block:: bash
 
-    epic -bw bigwigs/ -t examples/test.bed -c examples/control.bed -o examples/expected_results_log2fc.csv
+    epic -bw bigwigs/ -t examples/test.bed -c examples/control.bed \
+                -o examples/expected_results_log2fc.csv
     ls bigwigs/
     # control.bw test.bw
 
@@ -84,7 +85,7 @@ for a region and is not usable as-is by most tools.)
 
 The three first columns are the region, the fourth is the FDR score (same as in
 the --outfile), and the fifth contains the log2 fold change * 100 capped at 1000.
-The sixth contains the strand, which does not make sense for ChIP-Seq data.
+The sixth contains the strand, but ChIP-Seq data is not stranded.
 
 .. code-block:: text
 
@@ -136,3 +137,30 @@ analyses. It is gzipped since it can be enormously big.
     # chr1 1770200 0 0 1
     # chr1 1820200 0 1 0
     # chr1 1995000 0 0 1
+
+-cbw/--chip-bigwig
+~~~~~~~~~~~~~~~~~~
+
+The ChIP-bigwig creates a common bigwig for all the ChIP-Seq files. First the
+RPKM is computed for each bed/bedpe file, then these are added together and
+the --chip-bigwig is produced.
+
+-ibw/--input-bigwig
+~~~~~~~~~~~~~~~~~~~
+
+The Input-bigwig creates a common bigwig for all the input files. First the
+RPKM is computed for each bed/bedpe file, then these are added together and
+the --input-bigwig is produced.
+
+-2bw/--log2fc-bigwig
+~~~~~~~~~~~~~~~~~~~~
+
+Sums of the RPKM-scores for each library is computed like described in `-cbw`
+and `-ibw`. Then a pseudocount of one is added to each bin with a count of zero
+in the input. Finally the summed ChIP and Input vectors are divided and then the
+log2 is computed.
+
+-l/--log
+~~~~~~~~
+
+Write all the logging messages to a file (in addition to stderr).

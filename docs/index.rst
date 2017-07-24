@@ -56,13 +56,22 @@ epic contains a slew of improvements
    quick_start
 
 .. toctree::
-   :caption: Usage
+   :caption: epic
    :hidden:
    :maxdepth: 2
 
    basic_intro
    options
    output_files
+
+.. toctree::
+   :caption: epic-tools
+   :hidden:
+   :maxdepth: 2
+
+   epic_merge
+   epic_cluster
+
 
 Indices and tables
 ==================

@@ -17,6 +17,13 @@ parser.add_argument(
 
 
 parser.add_argument(
+    '--outfile',
+    '-o',
+    required=True,
+    type=str,
+    help='''Where to store the merged matrix.''')
+
+parser.add_argument(
     '--trunk-diff',
     '-t',
     required=False,
@@ -66,10 +73,9 @@ from epic.cluster.cluster import trunks_flanks_valleys
 
 def compute_bin_size(df):
 
-    print(df.head())
     bins = df.head(10000).Bin
     bin_size = reduce(gcd, bins)
-    print("The bin size is: " + str(bin_size), file=sys.stderr)
+    logging.info("The bin size is: " + str(bin_size))
 
     return bin_size
 
@@ -77,7 +83,6 @@ def compute_bin_size(df):
 if __name__ == '__main__':
 
     args = parser.parse_args()
-    print(args, file=sys.stderr)
     matrix = args.matrix
     nb_cpus = args.number_cores
 
@@ -96,4 +101,4 @@ if __name__ == '__main__':
 
     df = trunks_flanks_valleys(df, bin_size, trunk_diff, distance_allowed, nb_cpus)
 
-    df.to_csv(sys.stdout, sep=" ")
+    df.to_csv(args.outfile, sep=" ", compression="gzip")

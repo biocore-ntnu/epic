@@ -65,7 +65,7 @@ def create_sum_bigwigs(matrix, args):
 
     input_pseudo = input.copy()
     input_pseudo.loc[input_pseudo == 0] = 1
-    log2fc = chip / input_pseudo.values
+    log2fc = np.log2(chip / input_pseudo.values)
 
     bigwigs_to_create = []
     if args.chip_bigwig:

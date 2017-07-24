@@ -1,16 +1,16 @@
 Options
 =======
 
-epic allows for many flags to denote (optional) output files or change the
+epic allows for many flags to denote (optional) output files or to change the
 execution of epic.
 
 * **-t, --treatment**
 
-   One or more ChIP files to analyze (bed or bedpe format)
+   One or more ChIP files (bed or bedpe format)
 
 * **-c, --control**
 
-   One or more input files to analyze (bed or bedpe format)
+   One or more input files (bed or bedpe format)
 
 * **-o, --outfile**
 
