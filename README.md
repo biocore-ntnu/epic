@@ -56,6 +56,11 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+
+# 0.2.3 (25.07.17)
+- fix RPKM normalization in bigwigs
+- add `--individual-log2fc-bigwigs` flag, which creates a log2fc bigwig of the ChIP divided by all the normalized input.
+
 # 0.2.2 (21.07.17)
 - Change flag --effective_genome_fraction to --effective-genome-fraction
 - Fix autoinferring of bed/bedpe when files are (b/g)zipped

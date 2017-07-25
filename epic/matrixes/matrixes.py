@@ -43,6 +43,11 @@ def write_matrix_files(chip_merged, input_merged, df, args):
         from epic.bigwig.create_bigwigs import create_bigwigs
         create_bigwigs(matrix, args.bigwig, args)
 
+    if args.individual_log2fc_bigwigs:
+        # defer initialization so not run during travis
+        from epic.bigwig.create_bigwigs import create_log2fc_bigwigs
+        create_log2fc_bigwigs(matrix, args.individual_log2fc_bigwigs, args)
+
     if args.chip_bigwig or args.input_bigwig or args.log2fc_bigwig:
         # defer initialization so not run during travis
         from epic.bigwig.create_bigwigs import create_sum_bigwigs

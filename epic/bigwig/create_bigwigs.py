@@ -10,6 +10,30 @@ import pyBigWig
 from joblib import Parallel, delayed
 
 
+def create_log2fc_bigwigs(matrix, outdir, args):
+    # type: (pd.DataFrame, str, Namespace) -> None
+    """Create bigwigs from matrix."""
+    call("mkdir -p {}".format(outdir), shell=True)
+    genome_size_dict = args.chromosome_sizes
+
+    input_columns = matrix[args.control]
+    input_rpkm_sum = (1e6 * input_columns / input_columns.sum()).sum(axis=1) / len(args.control)
+
+    outpaths, data = [], []
+    for bed_file in matrix[args.treatment]:
+        outpath = join(outdir, splitext(basename(bed_file))[0] + "_log2fc.bw")
+        outpaths.append(outpath)
+
+        bed_column = matrix[bed_file]
+        bed_column = 1e6 * bed_column / bed_column.sum()
+        divided = bed_column / input_rpkm_sum
+        divided.loc[divided == 0] = 0.01
+        log2_fc_column = np.log2(divided)
+        data.append(log2_fc_column)
+
+    Parallel(n_jobs=args.number_cores)(delayed(_create_bigwig)(bed_column, outpath, genome_size_dict) for outpath, bed_column in zip(outpaths, data))
+
+
 def create_bigwigs(matrix, outdir, args):
     # type: (pd.DataFrame, str, Namespace) -> None
     """Create bigwigs from matrix."""
@@ -22,6 +46,7 @@ def create_bigwigs(matrix, outdir, args):
         outpaths.append(outpath)
 
         bed_column = matrix[bed_file]
+        bed_column = 1e6 * bed_column / bed_column.sum()
         data.append(bed_column)
 
     Parallel(n_jobs=args.number_cores)(delayed(_create_bigwig)(bed_column, outpath, genome_size_dict) for outpath, bed_column in zip(outpaths, data))
@@ -37,11 +62,9 @@ def _create_bigwig(bed_column, outpath, genome_size_dict):
 
     logging.info("Creating biwgwig " + outpath)
 
-    rpkm = 1e6 * bed_column / bed_column.sum()
-
-    rpkm = [float(f) for f in list(rpkm.fillna(0).values.flatten())]
-
     bed_column = bed_column.reset_index()
+
+    values = [float(f) for _, _, _, f in bed_column.values]
     unique_chromosomes = list(bed_column.Chromosome.drop_duplicates())
     chromosomes = list(bed_column.Chromosome)
     starts = _to_int(list(bed_column.Bin))
@@ -52,7 +75,7 @@ def _create_bigwig(bed_column, outpath, genome_size_dict):
     bw = pyBigWig.open(outpath, "w")
     bw.addHeader(header)
 
-    bw.addEntries(chromosomes, starts, ends=ends, values=rpkm)
+    bw.addEntries(chromosomes, starts, ends=ends, values=values)
     bw.close()
 
 
@@ -60,8 +83,11 @@ def create_sum_bigwigs(matrix, args):
 
     rpkm_matrix = 1e6 * matrix / matrix.sum()
 
-    chip = rpkm_matrix[args.treatment].sum(axis=1)
-    input = rpkm_matrix[args.control].sum(axis=1)
+    number_chip_files = len(args.treatment)
+    number_input_files = len(args.control)
+
+    chip = rpkm_matrix[args.treatment].sum(axis=1) / number_chip_files
+    input = rpkm_matrix[args.control].sum(axis=1) / number_input_files
 
     input_pseudo = input.copy()
     input_pseudo.loc[input_pseudo == 0] = 1

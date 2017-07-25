@@ -41,7 +41,6 @@ def output_bigwig(tmpdir):
     return str(p)
 
 
-# not used due to travis/bioconda r problem
 @pytest.mark.unit
 def test_create_bigwigs(input_data, output_bigwig, args_200_fast):
 

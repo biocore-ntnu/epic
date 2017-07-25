@@ -80,7 +80,7 @@ def run_epic(args):
     if args.bed:
         df_to_bed(df).to_csv(args.bed, header=False, index=False, sep="\t")
 
-    if (args.store_matrix or args.bigwig or args.chip_bigwig or args.input_bigwig or args.log2fc_bigwig):
+    if (args.store_matrix or args.bigwig or args.chip_bigwig or args.input_bigwig or args.log2fc_bigwig or args.individual_log2fc_bigwigs):
         write_matrix_files(chip_merged, input_merged, df, args)
 
     return df.reset_index(drop=True) # only returns a value to simplify integration tests
