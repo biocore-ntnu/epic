@@ -77,17 +77,30 @@ execution of epic.
    The path in which to store a gzipped matrix of read counts per window. One
    column for each ChIP and Input file.
 
+* **-b, --bed**
+
+   A summary bed file of all regions, for display in the UCSC genome browser or
+   for use in downstream analyses with e.g. bedtools. The score field is
+   log2(#ChIP/#Input) * 100 capped at a 1000.
+
 * **-bw, --bigwig**
 
    The folder in which to store a RPKM-normalized bigwig for each file in the
    dataset. The bigwig shows how epic sees the data. It shows all bins, not just
    those in enriched regions.
 
-* **-b, --bed**
+* **-i2bw, --individual-log2fc-bigwigs**
 
-   A summary bed file of all regions, for display in the UCSC genome browser or
-   for use in downstream analyses with e.g. bedtools. The score field is
-   log2(#ChIP/#Input) * 100 capped at a 1000.
+   The folder in which to store a log2FC bigwig for each ChIP bed/bedpe. Each
+   file is divided against a normalized sum of the Input.
+
+* **-cbw, --chip-bigwig**
+
+   Store the sum of the RPKM-normalized ChIP-data to a bigwig file.
+
+* **-ibw, --input-bigwig**
+
+   Store the sum of the RPKM-normalized Input-data to a bigwig file.
 
 * **-v, --version**
 

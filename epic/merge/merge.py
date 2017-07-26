@@ -89,9 +89,9 @@ def merge_dfs(chromosome_dfs, nb_cpu):
     return merged_df
 
 
-def merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus):
+def merge_matrixes(dfs, keep_nonenriched, regions, enriched_per_file, nb_cpus):
 
-    if not keep_nonenriched:
+    if not keep_nonenriched and not regions:
         enriched = enriched_indexes(dfs)
         dfs = remove_nonenriched(enriched, dfs)
 
@@ -105,7 +105,7 @@ def merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus):
     merged_df = merge_dfs(chromosome_dfs, nb_cpus)
 
     enriched_cols = [c for c in merged_df if "Enriched_" in c]
-    total_enriched = merged_df.filter(like="Enriched_").sum(axis=1)
+    total_enriched = merged_df[enriched_cols].sum(axis=1)
 
     merged_df.insert(0, "TotalEnriched", total_enriched)
 

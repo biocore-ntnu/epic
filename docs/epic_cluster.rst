@@ -9,11 +9,23 @@ epic-cluster takes one merged-matrix created by the epic-merge tool and clusters
 the genomic bins within it to produce regions that should be tested for
 differential enrichment.
 
-Several algorithms might be added to the tool; for now epic-merge contains one,
-which we have called trunks, flanks and valleys.
+Several algorithms might be added to the tool; for now epic-cluster contains
+one, which we have called trunks, flanks and valleys.
 
 Algorithm: trunks, flanks and valleys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each matrix from epic-merge contains a column with the number of experiments in
+which the bin was considered part of an enriched region. In this example the
+matrix contains four experiments. The illustration below shows which regions
+were considered enriched in which experiments:
+
+.. _trunks_flanks_valleys_counts:
+.. figure:: img/trunks_flanks_valleys_counts.png
+
+   Which regions are enriched in which experiments.
+
+In the illustration below you see how this translates into clusters:
 
 .. _trunks_flanks_valleys:
 .. figure:: img/trunks_flanks_valleys.png
@@ -27,13 +39,14 @@ any.
 This algorithm first looks for genomic bins that are at most
 `--distance-allowed` apart. So if the bin-size is 200 and the
 `--distance-allowed` is 400, the data is subdivided into two clusters as seen
-above.
+above (since the two clusters are separated by 3 bins or 600 nucleotides).
 
-In the first cluster the max number of enriched regions of any bin is 4 so
-anything with 4 - trunk-diff number of enriched regions is considered a trunk,
-while anything else is a flank or a valley. Flanks and valleys are regions where
-the total number of enriched is lower than `max_enriched - trunk-diff`. Flanks
-lie at the edges of a cluster, while valleys lie in-between trunks.
+In the first cluster the max number of enriched regions of any bin is 4 and the
+`--trunk-diff` has the default value, namely 1. So anything with 4 -
+`--trunk-diff` number of enriched regions is considered a trunk, while anything
+else is a flank or a valley. Flanks and valleys are regions where the total
+number of enriched is lower than `max_enriched - trunk-diff`. Flanks lie at the
+edges of a cluster, while valleys lie in-between trunks.
 
 Options
 ~~~~~~~

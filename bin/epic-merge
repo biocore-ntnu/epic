@@ -93,6 +93,15 @@ def compute_bin_size(dfs):
     return bin_size
 
 
+def _remove_epic_enriched(dfs):
+
+    new_dfs = {}
+    for n, df in dfs.items():
+        bad_cols = [c for c in df.columns if "Enriched_" in c]
+        df = df.drop(bad_cols, axis=1)
+        new_dfs[n] = df
+
+    return new_dfs
 
 if __name__ == '__main__':
 
@@ -108,15 +117,20 @@ if __name__ == '__main__':
     bin_size = compute_bin_size(dfs)
 
     if regions:
+        dfs = _remove_epic_enriched(dfs)
         names = ["Enriched_" + os.path.basename(r) for r in regions]
-        regions = [pd.read_table(r, sep="\s+", usecols=[0, 1, 2], header=None, names=["Chromosome", "Start", "End"]) for r in regions]
-        bins = [compute_bins(df, bin_size) for df in regions]
+        regions = [(name, pd.read_table(r, sep="\s+", usecols=[0, 1, 2], header=None, names=["Chromosome", "Start", "End"])) for name, r in zip(names, regions)]
+        bins = [compute_bins(df, bin_size, name) for name, df in regions]
         r = merge_bed_bins(bins)
         overlapping_indices = [df.index.intersection(r.index) for df in dfs.values()]
-        dfs = {k: df.ix[ix].join(r.ix[ix], how="outer") for ix, (k, df) in zip(overlapping_indices, dfs.items())}
-        dfs = {k: df[~df.index.duplicated(keep="first")] for k, df in dfs.items()}
+
+        key, first_df = list(dfs.items())[0]
+        new_dfs = {key: first_df.ix[overlapping_indices[0]].join(r.ix[overlapping_indices[0]], how="inner")}
+        for ix, (k, df) in zip(overlapping_indices[1:], list(dfs.items())[1:]):
+            new_dfs[k] = df.ix[ix]
+        dfs = {k: df[~df.index.duplicated(keep="first")] for k, df in new_dfs.items()}
         keep_nonenriched = False
 
-    merged_df = merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus)
+    merged_df = merge_matrixes(dfs, keep_nonenriched, regions, enriched_per_file, nb_cpus)
 
     merged_df.to_csv(output, sep=" ", compression="gzip")

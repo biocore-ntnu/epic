@@ -37,36 +37,36 @@ chr1    3681903 3681928 U0      0       -"""
 @pytest.fixture()
 def expected_result():
 
-    c = u"""Bin Chromosome
-887600       chr1
-994600       chr1
-1041000       chr1
-1770200       chr1
-1770400       chr1
-1995000       chr1
-2063800       chr1
-2064000       chr1
-2129200       chr1
-2239000       chr1
-2318800       chr1
-3006000       chr1"""
+    c = u"""Bin Chromosome ooo
+887600       chr1 1
+994600       chr1 1
+1041000       chr1 1
+1770200       chr1 1
+1770400       chr1 1
+1995000       chr1 1
+2063800       chr1 1
+2064000       chr1 1
+2129200       chr1 1
+2239000       chr1 1
+2318800       chr1 1
+3006000       chr1 1"""
 
     return pd.read_table(StringIO(c), sep="\s+", index_col=[1, 0])
 
 @pytest.fixture()
 def expected_result2():
-    c = u"""Bin Chromosome
-1325200       chr1
-1541400       chr1
-1541600       chr1
-1599000       chr1
-1820200       chr1
-2448200       chr1
-3046000       chr1
-3437000       chr1
-3504000       chr1
-3637000       chr1
-3681800       chr1"""
+    c = u"""Bin Chromosome ooo2
+1325200       chr1 1
+1541400       chr1 1
+1541600       chr1 1
+1599000       chr1 1
+1820200       chr1 1
+2448200       chr1 1
+3046000       chr1 1
+3437000       chr1 1
+3504000       chr1 1
+3637000       chr1 1
+3681800       chr1 1"""
 
     return pd.read_table(StringIO(c), sep="\s+", index_col=[1, 0])
 
@@ -83,7 +83,7 @@ def matrixes_to_merge(expected_result, expected_result2):
 
 def test_compute_bins(bed_dfs, expected_result):
 
-    result = compute_bins(bed_dfs[0], 200)
+    result = compute_bins(bed_dfs[0], 200, "ooo")
     print(result)
     print(expected_result)
 
@@ -93,30 +93,30 @@ def test_compute_bins(bed_dfs, expected_result):
 
 @pytest.fixture()
 def expected_result_merge_bed_bins():
-    c = u"""Chromosome Bin Enriched_f1 Enriched_f2
-chr1 887600 1.0 0.0
-chr1 994600 1.0 0.0
-chr1 1041000 1.0 0.0
-chr1 1325200 0.0 1.0
-chr1 1541400 0.0 1.0
-chr1 1541600 0.0 1.0
-chr1 1599000 0.0 1.0
-chr1 1770200 1.0 0.0
-chr1 1770400 1.0 0.0
-chr1 1820200 0.0 1.0
-chr1 1995000 1.0 0.0
-chr1 2063800 1.0 0.0
-chr1 2064000 1.0 0.0
-chr1 2129200 1.0 0.0
-chr1 2239000 1.0 0.0
-chr1 2318800 1.0 0.0
-chr1 2448200 0.0 1.0
-chr1 3006000 1.0 0.0
-chr1 3046000 0.0 1.0
-chr1 3437000 0.0 1.0
-chr1 3504000 0.0 1.0
-chr1 3637000 0.0 1.0
-chr1 3681800 0.0 1.0"""
+    c = u"""Chromosome Bin Enriched_f1 ooo Enriched_f2 ooo2
+chr1 887600 1.0 1.0 0.0 0.0
+chr1 994600 1.0 1.0 0.0 0.0
+chr1 1041000 1.0 1.0 0.0 0.0
+chr1 1325200 0.0 0.0 1.0 1.0
+chr1 1541400 0.0 0.0 1.0 1.0
+chr1 1541600 0.0 0.0 1.0 1.0
+chr1 1599000 0.0 0.0 1.0 1.0
+chr1 1770200 1.0 1.0 0.0 0.0
+chr1 1770400 1.0 1.0 0.0 0.0
+chr1 1820200 0.0 0.0 1.0 1.0
+chr1 1995000 1.0 1.0 0.0 0.0
+chr1 2063800 1.0 1.0 0.0 0.0
+chr1 2064000 1.0 1.0 0.0 0.0
+chr1 2129200 1.0 1.0 0.0 0.0
+chr1 2239000 1.0 1.0 0.0 0.0
+chr1 2318800 1.0 1.0 0.0 0.0
+chr1 2448200 0.0 0.0 1.0 1.0
+chr1 3006000 1.0 1.0 0.0 0.0
+chr1 3046000 0.0 0.0 1.0 1.0
+chr1 3437000 0.0 0.0 1.0 1.0
+chr1 3504000 0.0 0.0 1.0 1.0
+chr1 3637000 0.0 0.0 1.0 1.0
+chr1 3681800 0.0 0.0 1.0 1.0"""
 
     return pd.read_table(StringIO(c), sep=" ", header=0, index_col=[0, 1])
 
@@ -125,7 +125,6 @@ def test_merge_bed_bins(matrixes_to_merge, expected_result_merge_bed_bins):
 
     df = merge_bed_bins(matrixes_to_merge)
 
-    print(df.head(2))
-    print(expected_result_merge_bed_bins.head(2))
+    print(df.to_csv(sep=" "))
 
     assert df.equals(expected_result_merge_bed_bins)

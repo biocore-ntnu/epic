@@ -43,7 +43,7 @@ def test_merge_matrixes_no_enriched_raises(merge_matrixes_dfs_no_enriched, expec
     nb_cpus = 2
 
     with pytest.raises(Exception):
-        df = merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus)
+        df = merge_matrixes(dfs, keep_nonenriched, enriched_per_file, False, nb_cpus)
 
 
 @pytest.mark.unit
@@ -55,7 +55,7 @@ def test_merge_matrixes_one_enriched(merge_matrixes_dfs_one_enriched, expected_r
     enriched_per_file = False
     nb_cpus = 2
 
-    df = merge_matrixes(dfs, keep_nonenriched, enriched_per_file, nb_cpus)
+    df = merge_matrixes(dfs, keep_nonenriched, enriched_per_file, False, nb_cpus)
 
     print(df.head().to_csv(sep=" "))
     print(expected_result_one_enriched.head().to_csv(sep=" "))
