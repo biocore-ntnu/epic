@@ -1,3 +1,6 @@
+# 0.2.4 (28.07.17)
+- add pseudocount to input when computing `--individual-log2fc-bigwigs`
+
 # 0.2.3 (25.07.17)
 - fix RPKM normalization in bigwigs
 - add `--individual-log2fc-bigwigs` flag, which creates a log2fc bigwig of the ChIP divided by all the normalized input.

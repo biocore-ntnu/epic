@@ -18,6 +18,7 @@ def create_log2fc_bigwigs(matrix, outdir, args):
 
     input_columns = matrix[args.control]
     input_rpkm_sum = (1e6 * input_columns / input_columns.sum()).sum(axis=1) / len(args.control)
+    input_rpkm_sum[input_rpkm_sum == 0] = 1
 
     outpaths, data = [], []
     for bed_file in matrix[args.treatment]:

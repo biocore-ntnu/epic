@@ -55,25 +55,6 @@ This is the p-value, based on the Poisson-distribution.
 
 FDR is the p-value adjusted for multiple testing with Benjamini-Hochberg.
 
--bw/--bigwig (optional)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-This flag takes a folder to store bigwigs in. One bigwig file is created per
-bed/bedpe file given for epic to analyze.
-
-.. code-block:: bash
-
-    epic -bw bigwigs/ -t examples/test.bed -c examples/control.bed \
-                -o examples/expected_results_log2fc.csv
-    ls bigwigs/
-    # control.bw test.bw
-
-These bigwigs show how epic saw the data. So the data will look like a histogram
-where the bars are bins and the counts within a bin gives the height of the bar.
-The results are RPKM-normalized. Here are two bigwigs displayed in an arbitrary
-genomic region in the UCSC genome browser:
-
-.. image:: img/epic_bigwigs.png
 
 -b/--bed (optional)
 ~~~~~~~~~~~~~~~~~~~
@@ -86,19 +67,6 @@ for a region and is not usable as-is by most tools.)
 The three first columns are the region, the fourth is the FDR score (same as in
 the --outfile), and the fifth contains the log2 fold change * 100 capped at 1000.
 The sixth contains the strand, but ChIP-Seq data is not stranded.
-
-.. code-block:: text
-
-    chr1	23568400	23568599	6.319374393278151e-10	1000.0	.
-    chr1	26401200	26401399	6.319374393278151e-10	1000.0	.
-    chr1	33054800	33055399	3.85690272963484e-09	1000.0	.
-    chr1	33365200	33365399	6.319374393278151e-10	1000.0	.
-    chr1	39422200	39422799	3.85690272963484e-09	1000.0	.
-    chr1	51473600	51474399	6.861688234097e-09	1000.0	.
-    chr1	58785200	58786199	1.1002055753194539e-08	1000.0	.
-    chr1	59430000	59430199	6.319374393278151e-10	1000.0	.
-    chr1	65065600	65066199	3.85690272963484e-09	1000.0	.
-    chr1	91625400	91625799	1.8569048582126885e-09	1000.0	.
 
 -sm/--store-matrix
 ~~~~~~~~~~~~~~~~~~
@@ -138,12 +106,64 @@ analyses. It is gzipped since it can be enormously big.
     # chr1 1820200 0 1 0
     # chr1 1995000 0 0 1
 
+-bw/--bigwig (optional)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+This flag takes a folder to store bigwigs in. One bigwig file is created per
+bed/bedpe file given for epic to analyze. The scores are RPKM-normalized.
+
+.. code-block:: bash
+
+    epic -bw bigwigs/ -t examples/test.bed -c examples/control.bed \
+                -o examples/expected_results_log2fc.csv
+    ls bigwigs/
+    # control.bw test.bw
+
+These bigwigs show how epic saw the data. So the data will look like a histogram
+where the bars are bins and the counts within a bin gives the height of the bar.
+The results are RPKM-normalized. Here are two bigwigs displayed in an arbitrary
+genomic region in the UCSC genome browser:
+
+.. image:: img/epic_bigwigs.png
+
+-i2bw/--individual-log2fc-bigwigs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flag takes a folder to store bigwigs in. One bigwig file is created per
+bed/bedpe file given for epic to analyze. The scores are RPKM-normalized and
+divided by the mean of the summed input RPKM. A pseudocount of one is given to
+bins with no input. I is the number of Input-files in the equation below:
+
+.. math::
+
+   log_2 \frac{RPKM_{ChIP}}{\frac{{\sum_{i=1}^{I} RPKM_{Input_i}}}{I}}
+
+.. code-block:: text
+
+    chr1	23568400	23568599	6.319374393278151e-10	1000.0	.
+    chr1	26401200	26401399	6.319374393278151e-10	1000.0	.
+    chr1	33054800	33055399	3.85690272963484e-09	1000.0	.
+    chr1	33365200	33365399	6.319374393278151e-10	1000.0	.
+    chr1	39422200	39422799	3.85690272963484e-09	1000.0	.
+    chr1	51473600	51474399	6.861688234097e-09	1000.0	.
+    chr1	58785200	58786199	1.1002055753194539e-08	1000.0	.
+    chr1	59430000	59430199	6.319374393278151e-10	1000.0	.
+    chr1	65065600	65066199	3.85690272963484e-09	1000.0	.
+    chr1	91625400	91625799	1.8569048582126885e-09	1000.0	.
+
+
 -cbw/--chip-bigwig
 ~~~~~~~~~~~~~~~~~~
 
 The ChIP-bigwig creates a common bigwig for all the ChIP-Seq files. First the
 RPKM is computed for each bed/bedpe file, then these are added together and
-the --chip-bigwig is produced.
+the `--chip-bigwig` is produced.
+
+The value in each bin is (where C is the number of ChIP-files):
+
+.. math::
+
+   \frac{\sum_{i=1}^{C} RPKM_{ChIP_i}}{C}
 
 -ibw/--input-bigwig
 ~~~~~~~~~~~~~~~~~~~
@@ -152,6 +172,12 @@ The Input-bigwig creates a common bigwig for all the input files. First the
 RPKM is computed for each bed/bedpe file, then these are added together and
 the --input-bigwig is produced.
 
+The value in each bin is (where I is the number of Input-files):
+
+.. math::
+
+   \frac{\sum_{i=1}^{I} RPKM_{Input_i}}{I}
+
 -2bw/--log2fc-bigwig
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -159,6 +185,10 @@ Sums of the RPKM-scores for each library is computed like described in `-cbw`
 and `-ibw`. Then a pseudocount of one is added to each bin with a count of zero
 in the input. Finally the summed ChIP and Input vectors are divided and then the
 log2 is computed.
+
+.. math::
+
+   log_{2} \frac{\frac{\sum_{i=1}^{C} RPKM_{ChIP_i}}{C}}{\frac{\sum_{i=1}^{I} RPKM_{Input_i}}{I}}
 
 -l/--log
 ~~~~~~~~

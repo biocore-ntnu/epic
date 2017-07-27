@@ -135,7 +135,6 @@ parser.add_argument(
     help=
     '''For each file, store a bigwig of both enriched and non-enriched regions to folder <BIGWIG>. Requires different basenames for each file.''')
 
-
 parser.add_argument(
     '--individual-log2fc-bigwigs',
     '-i2bw',

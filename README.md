@@ -56,6 +56,8 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.4 (28.07.17)
+- add pseudocount to input when computing `--individual-log2fc-bigwigs`
 
 # 0.2.3 (25.07.17)
 - fix RPKM normalization in bigwigs
