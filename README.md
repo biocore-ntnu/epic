@@ -56,6 +56,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.5 (unreleased)
+- add epic-count script
+
 # 0.2.4 (28.07.17)
 - add pseudocount to input when computing `--individual-log2fc-bigwigs`
 

@@ -15,7 +15,6 @@ from natsort import natsorted
 from epic.windows.count.remove_out_of_bounds_bins import remove_bins_with_ends_out_of_bounds
 from epic.config.genomes import get_genome_size_file
 
-
 def write_matrix_files(chip_merged, input_merged, df, args):
     # type: (Dict[str, pd.DataFrame], Dict[str, pd.DataFrame], pd.DataFrame, Namespace) -> None
 
@@ -230,3 +229,11 @@ def enriched_bins(df, args):
     islands.loc[:, "Bin"].astype(int)
 
     return islands.set_index("Chromosome Bin".split())
+
+
+# def pure_count_matrixes(chip_merged, input_merged, args):
+
+#     "Just create a pure matrix of counts. No enrichment info included."
+
+#     chip = put_dfs_in_chromosome_dict(chip_merged)
+#     input = put_dfs_in_chromosome_dict(chip_merged)
