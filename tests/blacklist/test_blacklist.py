@@ -10,7 +10,7 @@ from epic.blacklist.compute_poisson import compute_poisson
 @pytest.fixture()
 def matrix():
 
-    return pd.read_table(StringIO("""Chromosome Bin f1.bed f2.bed
+    return pd.read_table(StringIO(u"""Chromosome Bin f1.bed f2.bed
 chr1 0 1.0 1.0
 chr1 200 1.0 1.0
 chr1 400 1.0 10.0
