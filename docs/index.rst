@@ -71,6 +71,8 @@ epic contains a slew of improvements
 
    epic_merge
    epic_cluster
+   epic_count
+   epic_blacklist
 
 
 Indices and tables

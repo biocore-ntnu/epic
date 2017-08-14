@@ -1,8 +1,11 @@
-epic-count
+epic-blacklist
 ==========
 
-epic-count creates a simple matrix of counts from the .bed/.bedpe files it is
-given. These matrixes do not contain information about enrichment.
+epic-blacklist takes one or more ChIP-files that contain data unrelated to the
+experiment (ChIP from another species for example) and finds bins where a lot of
+reads still bind. Bins with a statistically significant number of reads is
+computed according to a Poisson model. These bins are written as a bed-file to
+stdout.
 
 * **-i, --infiles**
 
@@ -39,3 +42,14 @@ given. These matrixes do not contain information about enrichment.
    columns: chromosome names and sizes. Useful to analyze
    custom genomes, assemblies or simulated data. Only
    chromosomes included in the file will be analyzed.
+
+* **-f, --fdr**
+
+   Cut-off to consider a bin enriched (Default: 0.05)
+
+* **-egf, --effective-genome-fraction**
+
+   Use a different effective genome fraction than the one included in epic. Or
+   include an egf for custom genomes that are not a part of epic. Should be a
+   number between 0 and 1. Autoinferred by sampled read-length and genome by
+   default.

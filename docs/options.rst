@@ -58,10 +58,10 @@ execution of epic.
    windows are considered enriched in the optional matrix output and which
    regions are included in the optional bed output.
 
-* **-egs, --effective-genome-size**
+* **-egf, --effective-genome-fraction**
 
    Use a different effective genome fraction than the one included in epic. Or
-   include an egs for custom genomes that are not a part of epic. Should be a
+   include an egf for custom genomes that are not a part of epic. Should be a
    number between 0 and 1. Autoinferred by sampled read-length and genome by
    default.
 

@@ -40,9 +40,9 @@ def mock_args():
 
 @pytest.fixture()
 def expected_result():
-    return pd.read_table(StringIO("""Bin Chromosome
-0   800       chr1
-1  2200       chr1"""), index_col=0, header=0, sep="\s+")
+    return pd.read_table(StringIO("""Chromosome Bin End
+0 chr1   800   999
+1 chr1  2200   2399"""), index_col=0, header=0, sep="\s+")
 
 
 def test_compute_poisson(matrix, mock_args, expected_result):

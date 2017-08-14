@@ -90,18 +90,10 @@ parser.add_argument(
     '--fdr',
     '-f',
     required=False,
+    default=0.05,
     type=str,
     help=
-    '''The fdr-value to use to consider a bin having too many reads in it.''')
-
-parser.add_argument(
-    '--outfile',
-    '-o',
-    required=True,
-    type=str,
-    help=
-    '''File to write gzipped count matrix to.''')
-
+    '''The fdr-value to consider a bin having too many reads in it (Default: 0.05).''')
 
 parser.add_argument(
     '--effective-genome-fraction',
@@ -110,6 +102,15 @@ parser.add_argument(
     type=float,
     help=
     '''Use a different effective genome fraction than the one included in epic. The default value depends on the genome and readlength, but is a number between 0 and 1.''')
+
+
+parser.add_argument(
+    '--outfile',
+    '-o',
+    required=True,
+    type=str,
+    help=
+    '''File to write gzipped count matrix to.''')
 
 
 if __name__ == "__main__":
