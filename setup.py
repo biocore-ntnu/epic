@@ -18,7 +18,7 @@ setup(
     name="bioepic",
     packages=find_packages(),
 
-    scripts=["bin/epic", "bin/epic-effective", "bin/epic-overlaps", "bin/epic-merge", "bin/epic-cluster", "bin/epic-count"],
+    scripts=["bin/epic", "bin/epic-effective", "bin/epic-overlaps", "bin/epic-merge", "bin/epic-cluster", "bin/epic-count", "bin/epic-blacklist"],
     package_data={'epic': ['scripts/effective_sizes/*.txt',
                            'scripts/chromsizes/*chromsizes',
                            'scripts/genome.snakefile']},

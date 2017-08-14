@@ -130,7 +130,7 @@ genomic region in the UCSC genome browser:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This flag takes a folder to store bigwigs in. One bigwig file is created per
-bed/bedpe file given for epic to analyze. The scores are RPKM-normalized and
+ChIP bed/bedpe file given for epic to analyze. The scores are RPKM-normalized and
 divided by the mean of the summed input RPKM. A pseudocount of one is given to
 bins with no input. I is the number of Input-files in the equation below:
 

@@ -5,7 +5,7 @@ import pandas as pd
 
 def compute_poisson(df, args):
 
-    bins = int(args.effective_genome_fraction/int(args.bin_size))
+    bins = int(args.effective_genome_fraction/int(args.window_size))
 
     bad_bins = []
     for s in df:

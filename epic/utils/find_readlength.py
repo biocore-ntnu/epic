@@ -17,7 +17,10 @@ def find_readlength(args):
     # type: (Namespace) -> int
     """Estimate length of reads based on 10000 first."""
 
-    bed_file = args.treatment[0]
+    if "treatment" in args:
+        bed_file = args.treatment[0]
+    else:
+        bed_file = args.infiles[0]
 
     filereader = "cat "
     if bed_file.endswith(".gz") and search("linux", platform, IGNORECASE):

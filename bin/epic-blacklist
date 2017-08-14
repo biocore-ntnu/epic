@@ -112,27 +112,6 @@ parser.add_argument(
     '''Use a different effective genome fraction than the one included in epic. The default value depends on the genome and readlength, but is a number between 0 and 1.''')
 
 
-# def compute_poisson(df, args):
-
-#     bins = int(args.effective_genome_fraction/int(args.bin_size))
-
-#     for s in df:
-#         unique_alignments = s.sum()
-
-#         average = int(unique_alignments)/bins
-
-#         value_counts = s.value_counts().fillna(0)
-#         poisson_scores = pd.Series(poisson.sf(value_counts, mu=average))
-
-#         poisson_p_vals = s.replace(poisson_scores)
-
-#         fdr = multipletests(poisson_p_vals, method="fdr_bh")[1]
-#         fdr = pd.Series(fdr, index=s.index, name=s.name + "_fdr")
-
-#         fdr_df = pd.concat([s, fdr], axis=1)
-
-#     df[df.ix[:,1] > 0.05].to_csv(output.outfile, sep=" ", header=None)
-
 if __name__ == "__main__":
 
     args = parser.parse_args()
@@ -144,7 +123,15 @@ if __name__ == "__main__":
                                      create_genome_size_dict_custom_genome)
     from epic.matrixes.matrixes import put_dfs_in_chromosome_dict
 
-    most_paired_end = sum([f.endswith(".bedpe") for f in args.treatment]) / float(len(args.treatment)) > 0.5
+    from epic.utils.find_readlength import (find_readlength,
+                                            get_closest_readlength)
+
+    from epic.config.genomes import (get_effective_genome_length,
+                                     create_genome_size_dict, create_genome_size_dict_custom_genome)
+
+    from epic.blacklist.compute_poisson import compute_poisson
+
+    most_paired_end = sum([f.endswith(".bedpe") for f in args.infiles]) / float(len(args.infiles)) > 0.5
 
     # in case the user entered no effective genome size
     if not args.effective_genome_fraction and not most_paired_end:
@@ -172,3 +159,6 @@ if __name__ == "__main__":
 
     df = pd.concat(d.values()).fillna(0)
     df = df.set_index("Chromosome Bin".split())
+
+    logging.info("Computing poisson scores and writing result to " + args.outfile)
+    compute_poisson(df, args).to_csv(args.outfile, sep="\t", index=False, header=False)
