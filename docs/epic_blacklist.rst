@@ -3,7 +3,7 @@ epic-blacklist
 
 epic-blacklist takes one or more ChIP-files that contain data unrelated to the
 experiment (ChIP from another species for example) and finds bins where a lot of
-reads still bind. Bins with a statistically significant number of reads is
+reads still bind. Bins with a statistically significant number of reads are
 computed according to a Poisson model. These bins are written as a bed-file to
 stdout.
 
