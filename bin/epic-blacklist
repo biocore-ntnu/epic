@@ -117,8 +117,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    import logging
     from sys import argv
 
+    from epic.config import logging_settings
     from epic.run.run_epic import multiple_files_count_reads_in_windows, _merge_files
     from epic.config.genomes import (create_genome_size_dict,
                                      create_genome_size_dict_custom_genome)

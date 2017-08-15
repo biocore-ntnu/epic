@@ -1,3 +1,6 @@
+import logging
+from epic.config import logging_settings
+
 from scipy.stats.distributions import poisson
 from statsmodels.sandbox.stats.multicomp import multipletests
 
@@ -5,16 +8,18 @@ import pandas as pd
 
 def compute_poisson(df, args):
 
-    bins = int(args.effective_genome_fraction/int(args.window_size))
+    nb_bins = int(args.effective_genome_fraction/int(args.window_size))
 
     bad_bins = []
-    for s in df:
-        s = df[s]
+    for fname in df:
+        s = df[fname]
         unique_alignments = s.sum()
 
-        average = int(unique_alignments)/bins
+        # find average number of reads in bins
+        average = int(unique_alignments)/nb_bins
 
-        value_counts = s.value_counts().fillna(0).index.get_level_values(0)
+        # create series of number of reads:
+        value_counts = s.drop_duplicates().values
         poisson_scores = pd.Series(poisson.sf(value_counts, mu=average))
         poisson_scores = pd.concat([pd.Series(value_counts).to_frame(), poisson_scores], axis=1)
         poisson_scores.columns = ["Value", "Score"]
@@ -30,6 +35,8 @@ def compute_poisson(df, args):
         fdr_df = pd.concat([s, fdr], axis=1)
 
         r = fdr_df[fdr_df.fdr < args.fdr]
+        logging.info(str(len(r)) + " blacklist-bins found in file " + fname + " out of a total of " + str(len(fdr_df)) + " bins (" + str(len(r)/len(fdr_df)) + "%)")
+
         bad_bins.append(r)
 
     outdf = pd.concat(bad_bins, axis=1).index.to_frame().reset_index(drop=True)

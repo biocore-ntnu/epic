@@ -17,9 +17,9 @@ def find_readlength(args):
     # type: (Namespace) -> int
     """Estimate length of reads based on 10000 first."""
 
-    if "treatment" in args._asdict():
+    try:
         bed_file = args.treatment[0]
-    else:
+    except AttributeError:
         bed_file = args.infiles[0]
 
     filereader = "cat "
