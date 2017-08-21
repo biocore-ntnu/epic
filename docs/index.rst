@@ -17,7 +17,7 @@ Novel features
 --------------
 
 * epic creates output files that allow you to leverage state-of-the-art
-  statistical software to do rigorous differential analysis of experimental
+  statistical software to do rigorous differential analyses of experimental
   conditions
 * epic creates bigwigs and bed files that allow you to visualize and explore
   the results in genome browsers

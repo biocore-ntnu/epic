@@ -87,13 +87,13 @@ parser.add_argument(
 
 
 parser.add_argument(
-    '--fdr',
-    '-f',
+    '--bonferroni',
+    '-b',
     required=False,
     default=0.05,
     type=str,
     help=
-    '''The fdr-value to consider a bin having too many reads in it (Default: 0.05).''')
+    '''The bonferroni-value to consider a bin having too many reads in it (Default: 0.05).''')
 
 parser.add_argument(
     '--effective-genome-fraction',

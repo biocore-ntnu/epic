@@ -15,10 +15,8 @@ def compute_poisson(df, args):
         s = df[fname]
         unique_alignments = s.sum()
 
-        # find average number of reads in bins
         average = int(unique_alignments)/nb_bins
 
-        # create series of number of reads:
         value_counts = s.drop_duplicates().values
         poisson_scores = pd.Series(poisson.sf(value_counts, mu=average))
         poisson_scores = pd.concat([pd.Series(value_counts).to_frame(), poisson_scores], axis=1)
@@ -29,13 +27,15 @@ def compute_poisson(df, args):
 
         poisson_p_vals = s.replace(poisson_scores.to_dict())
 
-        fdr = multipletests(poisson_p_vals, method="fdr_bh")[1]
-        fdr = pd.Series(fdr, index=s.index, name="fdr")
+        bonferroni = multipletests(poisson_p_vals, method="bonferroni")[1]
+        bonferroni = pd.Series(bonferroni, index=s.index, name="bonferroni")
 
-        fdr_df = pd.concat([s, fdr], axis=1)
+        bonferroni_df = pd.concat([s, bonferroni], axis=1)
 
-        r = fdr_df[fdr_df.fdr < args.fdr]
-        logging.info(str(len(r)) + " blacklist-bins found in file " + fname + " out of a total of " + str(len(fdr_df)) + " bins (" + str(len(r)/len(fdr_df)) + "%)")
+        print(bonferroni_df.head(10).to_csv(sep=" "))
+
+        r = bonferroni_df[bonferroni_df.bonferroni < args.bonferroni]
+        logging.info(str(len(r)) + " blacklist-bins found in file " + fname + " out of a total of " + str(len(bonferroni_df)) + " bins (" + str(len(r)/len(bonferroni_df)) + "%)")
 
         bad_bins.append(r)
 
