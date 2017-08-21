@@ -24,7 +24,7 @@ chr1 2400 1.0 2.0"""), sep=" ", header=0, index_col=[0, 1])
 
 MockArgs = namedtuple("MockNamespace",
         ["number_cores", "genome", "keep_duplicates", "window_size",
-         "fragment_size", "fdr", "effective_genome_fraction", "chromosome_sizes"])
+         "fragment_size", "bonferroni", "effective_genome_fraction", "chromosome_sizes"])
 
 
 @pytest.fixture()
