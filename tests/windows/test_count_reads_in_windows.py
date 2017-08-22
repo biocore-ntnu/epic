@@ -5,6 +5,8 @@ from io import StringIO
 import pandas as pd
 from numpy import allclose, array_equal, int32
 
+from collections import namedtuple
+
 from epic.windows.count.count_reads_in_windows import (
     count_reads_in_windows, _count_reads_in_windows_paired_end)
 
@@ -96,7 +98,11 @@ def expected_result_pe(paired_end):
 @pytest.mark.integration
 def test_count_reads_in_windows_paired_end(paired_end, expected_result_pe):
 
-    result = _count_reads_in_windows_paired_end(paired_end, False, 249250621,
+
+    MockNamespace = namedtuple("MockNamespace", ["keep_duplicates", "window_size"])
+    args = MockNamespace(False, 200)
+
+    result = _count_reads_in_windows_paired_end(paired_end, args, 249250621,
                                                 "chr1")
 
     print(result)

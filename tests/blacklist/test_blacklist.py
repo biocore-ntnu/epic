@@ -47,6 +47,8 @@ def expected_result():
 
 def test_compute_poisson(matrix, mock_args, expected_result):
 
+    print(matrix)
+
     result = compute_poisson(matrix, mock_args)
 
     print(result)

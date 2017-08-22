@@ -39,7 +39,7 @@ def compute_poisson(df, args):
 
         bad_bins.append(r)
 
-    outdf = pd.concat(bad_bins, axis=1).index.to_frame().reset_index(drop=True)
+    outdf = pd.concat(bad_bins, axis=1).reset_index()
     outdf.insert(1, "End", outdf.Bin + args.window_size - 1)
 
     return outdf["Chromosome Bin End".split()]
