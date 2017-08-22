@@ -107,7 +107,7 @@ def count_reads_in_windows_paired_end(bed_file, args):
     chromosomes = natsorted(list(chromosome_size_dict.keys()))
 
     parallel_count_reads = partial(_count_reads_in_windows_paired_end,
-                                   bed_file, args.keep_duplicates)
+                                   bed_file, args)
 
     info("Binning chromosomes {}".format(", ".join([c.replace("chr", "")
                                                     for c in chromosomes])))
@@ -119,16 +119,17 @@ def count_reads_in_windows_paired_end(bed_file, args):
     return chromosome_dfs
 
 
-def _count_reads_in_windows_paired_end(bed_file, keep_duplicates,
-                                       chromosome_size, chromosome):
+def _count_reads_in_windows_paired_end(bed_file, args, chromosome_size, chromosome):
     # type: (str, bool, int, str) -> pd.DataFrame
 
+    keep_duplicates = args.keep_duplicates
     grep, duplicate_handling = _options(bed_file, keep_duplicates)
+    window_size = args.window_size
 
     command = """
     {grep} -E "^{chromosome}\\b.*\\s{chromosome}\\b.*" {bed_file} | # Both chromos must be equal; no chimeras (?)
     cut -f 1-6  | sort -k2,5n -k3,6n | {duplicate_handling} # get chr start end chr start end for PE; sort on location
-    LC_ALL=C perl -a -ne 'use List::Util qw[min max]; $start = min($F[1], $F[2]); $end = max($F[4], $F[5]); $middle = $start + int(($end - $start)/2); $bin = $middle - $middle % 200; print "$F[0] $bin\\n"' | # Find bin of midpoint between start and ends
+    LC_ALL=C perl -a -ne 'use List::Util qw[min max]; $start = min($F[1], $F[2]); $end = max($F[4], $F[5]); $middle = $start + int(($end - $start)/2); $bin = $middle - $middle % {window_size}; print "$F[0] $bin\\n"' | # Find bin of midpoint between start and ends
     uniq -c |
     sed -e 's/^[ ]*//'
     """.format(**locals())

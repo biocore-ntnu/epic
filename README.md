@@ -55,8 +55,11 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
-# 0.2.5 (unreleased)
+# 0.2.5 (22.08.17)
 - add epic-count script
+- add epic-blacklist script
+- fix bug in paired end mode (thanks to Assa Yeroslaviz for reporting)
+- about 80 new UCSC genomes added!
 
 # 0.2.4 (28.07.17)
 - add pseudocount to input when computing `--individual-log2fc-bigwigs`
@@ -71,17 +74,6 @@ https://github.com/endrebak/epic and running `python setup.py install`
 - Use log2FC in output, not raw fold change
 - Now separate flags for sum bigwigs: --chip-bigwig and --input-bigwig
 - Add support for log2FC bigwig: --log2fc-bigwig
-
-# 0.2.1 (20.07.17)
-- Fix bug
-
-# 0.2.0 (19.07.17)
-- Fix teensy 2.7 bug
-
-# 0.1.29 (19.07.17)
-- Add log flag
-- Add outfile flag
-- Write results before creating bigwigs/matrix in case the latter fails
 ```
 
 ## Quickstart

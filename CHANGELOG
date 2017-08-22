@@ -1,3 +1,9 @@
+# 0.2.5 (22.08.17)
+- add epic-count script
+- add epic-blacklist script
+- fix bug in paired end mode (thanks to Assa Yeroslaviz for reporting)
+- about 80 new UCSC genomes added!
+
 # 0.2.4 (28.07.17)
 - add pseudocount to input when computing `--individual-log2fc-bigwigs`
 
