@@ -13,7 +13,6 @@ epic is an improvement over the original SICER by being faster, more memory
 efficient, multicore, and significantly much easier to install and use.
 
 The MIT-licensed code is available at https://github.com/endrebak/epic
-Please post issues, questions, docrequests or whatever is on your mind on the [epic google groups forum](https://groups.google.com/forum/#!forum/epic-chip-seq).
 
 The [documentation](http://bioepic.readthedocs.io/en/latest/) is currently being worked on.
 
@@ -55,6 +54,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.6 (13.11.17)
+- fix issue #66 (thanks nw11)
+
 # 0.2.5 (22.08.17)
 - add epic-count script
 - add epic-blacklist script
