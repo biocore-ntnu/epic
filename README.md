@@ -54,6 +54,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.7 (Unreleased)
+- Fix for new NA behavior
+
 # 0.2.6 (13.11.17)
 - fix issue #66 (thanks nw11)
 
