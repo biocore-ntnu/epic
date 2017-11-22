@@ -34,15 +34,22 @@ def run_epic(args):
     # type: (Namespace) -> pd.DataFrame
 
     chip_windows = multiple_files_count_reads_in_windows(args.treatment, args)
+    logging.debug("chip_windows:\n" + str(chip_windows))
     input_windows = multiple_files_count_reads_in_windows(args.control, args)
 
     chip_merged = _merge_files(chip_windows.values(), args.number_cores)
+    logging.debug("chip_merged:\n" + str(chip_merged))
+
     input_merged = _merge_files(input_windows.values(), args.number_cores)
 
     chip_merged_sum = sum_columns(chip_merged)
     input_merged_sum = sum_columns(input_merged)
 
+    logging.debug("chip_merged_sum:\n" + str(chip_merged_sum))
+
     nb_chip_reads = get_total_number_of_reads(chip_merged_sum)
+
+    logging.debug("nb_chip_reads:\n" + str(nb_chip_reads))
     nb_input_reads = get_total_number_of_reads(input_merged_sum)
 
     merged_dfs = merge_chip_and_input(chip_merged_sum, input_merged_sum,

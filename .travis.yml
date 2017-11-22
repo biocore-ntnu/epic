@@ -30,6 +30,6 @@ install:
   - ls tests
   - ls -latrh examples
 
-script: python -m pytest --cov=epic tests
+script: python -m pytest -sv --cov=epic tests
 
 after_success: coveralls
