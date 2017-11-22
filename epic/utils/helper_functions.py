@@ -65,7 +65,7 @@ def merge_chip_and_input(chip_dfs, input_dfs, nb_cpu):
 
 def get_total_number_of_reads(dfs):
     # type: (Iterable[pd.DataFrame]) -> int
-    return sum([df.Count.sum() for df in dfs])
+    return sum([df.Count.sum() for df in dfs if not df.empty])
 
 
 def ensure_same_chromosomes_in_list(sample1_dfs, sample2_dfs):
