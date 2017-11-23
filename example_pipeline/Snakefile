@@ -1,0 +1,88 @@
+from snakemake.shell import shell
+
+shell.executable("bash")
+
+samples = "1 2 3".split()
+cells = "fibroblast keratinocyte melanocyte".split()
+
+rule all:
+    input:
+        expand("data/epic-merge/{caller}/matrixes.gz",
+               cell=cells,
+               caller="macs2 epic".split()),
+        "data/epic-merge/test/matrixes.gz"
+
+
+rule download_epigenome_data:
+    output:
+        expand("bed_files/random_sample_{chip}_{sample}_{cell}.bed.gz",
+               chip="ChIP Input".split(), sample=samples,
+               cell=cells)
+    shell:
+        "curl https://zenodo.org/record/1008923/files/subsample_example_data.tar | "
+        "tar -C bed_files/ -xvf -"
+
+
+rule run_epic:
+    input:
+        chip = expand("bed_files/random_sample_{chip}_{sample}_{{cell}}.bed.gz",
+                      chip="ChIP", sample=samples),
+        input = expand("bed_files/random_sample_{chip}_{sample}_{{cell}}.bed.gz",
+                       chip="Input", sample=samples)
+    output:
+        bed = "data/epic/{cell}.bed",
+        matrix = "data/epic/{cell}.matrix.gz",
+    threads:
+        48
+    shell:
+        "epic -cpu {threads} -g 600 -w "
+        "200 -gn hg19 "
+        "-b {output.bed} -t {input.chip} -c {input.input} "
+        "-sm {output.matrix} "
+        "> /dev/null"
+
+
+rule run_macs2:
+    input:
+        chip = expand("bed_files/random_sample_{chip}_{sample}_{{cell}}.bed.gz",
+                      chip="ChIP", sample=samples),
+        input = expand("bed_files/random_sample_{chip}_{sample}_{{cell}}.bed.gz",
+                       chip="Input", sample=samples)
+    output:
+        bed = "data/macs2/{cell}.bed",
+    params:
+        prefix = "data/macs2/{cell}",
+        outfile = "data/macs2/{cell}_peaks.broadPeak"
+    conda:
+        "envs/macs2.yaml"
+    shell:
+        "macs2 callpeak --nomodel --extsize 200 --broad -t {input.chip} -c {input.input} -n {params.prefix} && mv {params.outfile} {output[0]}"
+
+
+
+
+rule run_epic_merge:
+    input:
+        matrixes = expand("data/epic/{cell}.matrix.gz",
+                          cell=cells),
+        bed = expand("data/{{caller}}/{cell}.bed",
+                     cell=cells)
+    output:
+        "data/epic-merge/{caller}/matrixes.gz"
+    threads:
+        48
+    shell:
+        "epic-merge -cpu {threads} -r {input.bed} -o {output[0]} -m {input.matrixes}"
+
+
+
+rule test_epic_merge:
+    input:
+        matrixes = expand("data/epic/{cell}.matrix.gz",
+                            cell=cells),
+    output:
+        "data/epic-merge/test/matrixes.gz"
+    threads:
+        48
+    shell:
+        "epic-merge -cpu {threads} -o {output[0]} -m {input.matrixes}"

@@ -1,3 +1,5 @@
+*.tar
+*.snakemake*
 _build/
 _dist/
 *DS_Store*
