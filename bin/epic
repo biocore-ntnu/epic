@@ -80,7 +80,7 @@ parser.add_argument(
     default=3,
     type=int,
     help=
-    '''Multiple of window size used to determine the gap size. Must be an integer. Default: 3.
+    '''This number is multiplied by the window size to determine the gap size. Must be an integer. Default: 3.
                    ''')
 
 parser.add_argument(

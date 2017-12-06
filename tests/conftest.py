@@ -90,7 +90,7 @@ def epic_overlap_intermediate_region_matrixes():
 
 
 
-df1_no_enriched = u"""Chromosome Bin Enriched_AAG_KO.matrix.gz data/align/AAG_KO_ChIP_1.bed data/align/AAG_KO_ChIP_2.bed data/align/AAG_KO_ChIP_3.bed data/align/AAG_KO_Input_1.bed data/align/AAG_KO_Input_2.bed data/align/AAG_KO_Input_3.bed
+df1_no_enriched = u"""Chromosome Bin Enriched_Gene1_KO.matrix.gz data/align/Gene1_KO_ChIP_1.bed data/align/Gene1_KO_ChIP_2.bed data/align/Gene1_KO_ChIP_3.bed data/align/Gene1_KO_Input_1.bed data/align/Gene1_KO_Input_2.bed data/align/Gene1_KO_Input_3.bed
 chr1 10000 0 0 2 0 5 1 3
 chr1 10200 0 0 0 0 2 0 0
 chr1 10400 0 0 0 0 1 0 1
@@ -101,7 +101,7 @@ chr1 11200 0 0 0 0 4 0 1
 chr1 11400 0 1 0 0 2 0 0
 chr1 12200 0 0 0 0 5 0 1"""
 
-df2_no_enriched = u"""Chromosome Bin Enriched_ELP1.matrix.gz data/align/ELP1_KO_ChIP_1.bed data/align/ELP1_KO_ChIP_2.bed data/align/ELP1_KO_ChIP_3.bed data/align/ELP1_KO_Input_1.bed data/align/ELP1_KO_Input_2.bed data/align/ELP1_KO_Input_3.bed
+df2_no_enriched = u"""Chromosome Bin Enriched_Gene2.matrix.gz data/align/Gene2_KO_ChIP_1.bed data/align/Gene2_KO_ChIP_2.bed data/align/Gene2_KO_ChIP_3.bed data/align/Gene2_KO_Input_1.bed data/align/Gene2_KO_Input_2.bed data/align/Gene2_KO_Input_3.bed
 chr1 10000 0 0 3 0 3 2 1
 chr1 10200 0 0 1 1 2 2 1
 chr1 10400 0 0 0 0 2 1 1
@@ -140,7 +140,7 @@ def merge_matrixes_dfs_no_enriched():
 
     dfs = [pd.read_table(StringIO(c), sep=" ", header=0, index_col=[0, 1]) for c in [df1_no_enriched, df2_no_enriched, df3_no_enriched]]
 
-    names = "AAG_KO.matrix.gz ELP1_KO.matrix.gz WT.matrix.gz".split()
+    names = "Gene1_KO.matrix.gz Gene2_KO.matrix.gz WT.matrix.gz".split()
 
     dfs = {k: v for k, v in zip(names, dfs)}
 
@@ -153,7 +153,7 @@ def merge_matrixes_dfs_one_enriched():
 
     dfs = [pd.read_table(StringIO(c), sep=" ", header=0, index_col=[0, 1]) for c in [df1_no_enriched, df2_no_enriched, df3_enriched]]
 
-    names = "AAG_KO.matrix.gz ELP1_KO.matrix.gz WT.matrix.gz".split()
+    names = "Gene1_KO.matrix.gz Gene2_KO.matrix.gz WT.matrix.gz".split()
 
     dfs = {k: v for k, v in zip(names, dfs)}
 

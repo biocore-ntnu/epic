@@ -6,7 +6,7 @@ def compute_bins(df, bin_size, name):
 
     for chromosome, start, end in zip(df.iloc[:, 0], df.iloc[:, 1], df.iloc[:, 2]):
         start, end = int(start), int(end)
-        for chromosome_bin in range(start - start % bin_size, end - end % bin_size + bin_size, bin_size):
+        for chromosome_bin in range(start - (start % bin_size), end - (end % bin_size) + bin_size, bin_size):
             d = {"Chromosome": chromosome, "Bin": chromosome_bin}
             d[name] = 1
             bins.append(d)

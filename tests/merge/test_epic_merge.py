@@ -8,7 +8,7 @@ from epic.merge.merge import merge_matrixes
 @pytest.fixture()
 def expected_result_no_enriched():
 
-    c = u"""Chromosome Bin TotalEnriched data/align/AAG_KO_ChIP_1.bed data/align/AAG_KO_ChIP_2.bed data/align/AAG_KO_ChIP_3.bed data/align/AAG_KO_Input_1.bed data/align/AAG_KO_Input_2.bed data/align/AAG_KO_Input_3.bed data/align/ELP1_KO_ChIP_1.bed data/align/ELP1_KO_ChIP_2.bed data/align/ELP1_KO_ChIP_3.bed data/align/ELP1_KO_Input_1.bed data/align/ELP1_KO_Input_2.bed data/align/ELP1_KO_Input_3.bed data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
+    c = u"""Chromosome Bin TotalEnriched data/align/Gene1_KO_ChIP_1.bed data/align/Gene1_KO_ChIP_2.bed data/align/Gene1_KO_ChIP_3.bed data/align/Gene1_KO_Input_1.bed data/align/Gene1_KO_Input_2.bed data/align/Gene1_KO_Input_3.bed data/align/Gene2_KO_ChIP_1.bed data/align/Gene2_KO_ChIP_2.bed data/align/Gene2_KO_ChIP_3.bed data/align/Gene2_KO_Input_1.bed data/align/Gene2_KO_Input_2.bed data/align/Gene2_KO_Input_3.bed data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
 chr1 10000 0 0 2 0 5 1 3 0 3 0 3 2 1 0 0 1 2 2 0
 chr1 10200 0 0 0 0 2 0 0 0 1 1 2 2 1 0 1 0 2 0 0
 chr1 10400 0 0 0 0 1 0 1 0 0 0 2 1 1 0 0 0 2 3 4
@@ -25,7 +25,7 @@ chr1 12200 0 0 0 0 5 0 1 0 0 0 3 6 8 0 0 0 3 0 2"""
 @pytest.fixture()
 def expected_result_one_enriched():
 
-    c = u"""Chromosome Bin TotalEnriched data/align/AAG_KO_ChIP_1.bed data/align/AAG_KO_ChIP_2.bed data/align/AAG_KO_ChIP_3.bed data/align/AAG_KO_Input_1.bed data/align/AAG_KO_Input_2.bed data/align/AAG_KO_Input_3.bed data/align/ELP1_KO_ChIP_1.bed data/align/ELP1_KO_ChIP_2.bed data/align/ELP1_KO_ChIP_3.bed data/align/ELP1_KO_Input_1.bed data/align/ELP1_KO_Input_2.bed data/align/ELP1_KO_Input_3.bed data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
+    c = u"""Chromosome Bin TotalEnriched data/align/Gene1_KO_ChIP_1.bed data/align/Gene1_KO_ChIP_2.bed data/align/Gene1_KO_ChIP_3.bed data/align/Gene1_KO_Input_1.bed data/align/Gene1_KO_Input_2.bed data/align/Gene1_KO_Input_3.bed data/align/Gene2_KO_ChIP_1.bed data/align/Gene2_KO_ChIP_2.bed data/align/Gene2_KO_ChIP_3.bed data/align/Gene2_KO_Input_1.bed data/align/Gene2_KO_Input_2.bed data/align/Gene2_KO_Input_3.bed data/align/WT_ChIP_1.bed data/align/WT_ChIP_2.bed data/align/WT_ChIP_3.bed data/align/WT_Input_1.bed data/align/WT_Input_2.bed data/align/WT_Input_3.bed
 chr1 10200 1 0 0 0 2 0 0 0 1 1 2 2 1 0 1 0 2 0 0
 chr1 10400 1 0 0 0 1 0 1 0 0 0 2 1 1 0 0 0 2 3 4
 chr1 10600 1 0 0 0 2 0 3 0 0 0 2 2 1 0 0 0 0 0 1"""

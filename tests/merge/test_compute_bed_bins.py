@@ -6,6 +6,34 @@ import pandas as pd
 
 from epic.merge.compute_bed_bins import compute_bins, merge_bed_bins
 
+
+@pytest.fixture
+def simple_bed_df():
+
+    return pd.read_table(StringIO(u"""chr1 10000 10599 9.697075239701463e-05 67.49046260339546 ."""), sep="\s+", header=None) #chr1    13000   13599   1.4647618648938854e-05  139.85493764902748      ."""
+
+
+@pytest.fixture()
+def expected_result_simple_bed():
+
+    c = u"""Bin Chromosome ooo
+10000       chr1 1
+10200       chr1 1
+10400       chr1 1"""
+
+    return pd.read_table(StringIO(c), sep="\s+", index_col=[1, 0])
+
+
+def test_compute_bins_simple_df(simple_bed_df, expected_result_simple_bed):
+
+    result = compute_bins(simple_bed_df, 200, "ooo")
+    print(result)
+    print(expected_result_simple_bed)
+
+    assert result.equals(expected_result_simple_bed)
+
+
+
 @pytest.fixture
 def bed_dfs():
 

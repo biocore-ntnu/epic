@@ -57,7 +57,9 @@ def run_epic(args):
     dfs = count_to_pvalue(merged_dfs, island_enriched_threshold,
                           average_window_readcount, args.number_cores)
 
+    dfs[0].to_csv("chr1_before_find_islands.csv", sep=" ")
     dfs = find_islands(dfs, score_threshold, args)
+
 
     logging.info("Done finding islands.")
     logging.info("Concating dfs.")
@@ -70,6 +72,7 @@ def run_epic(args):
     # Just in case some ints got promoted to float somewhere
     df[["Start", "End", "ChIP", "Input"]] = df[["Start", "End", "ChIP", "Input"
                                                 ]].astype(int)
+    # redundancy in below code
     outfile = args.outfile if args.outfile else stdout
     if args.outfile:
         with open(outfile, "w+") as h:

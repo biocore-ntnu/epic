@@ -8,6 +8,7 @@ from joblib import Parallel, delayed
 from typing import Iterable
 from argparse import Namespace
 
+
 def find_islands(dfs, score_threshold, args):
     # type: (Iterable[pd.DataFrame], float, Namespace) -> Iterable[pd.DataFrame]
     logging.info("Clustering bins into islands.")
@@ -21,6 +22,7 @@ def find_islands(dfs, score_threshold, args):
 def _find_islands(window_size, gaps_allowed, score_threshold, df):
     # type: (int, int, float, pd.DataFrame) -> pd.DataFrame
 
+
     if df.empty:
         return df
 
@@ -28,6 +30,8 @@ def _find_islands(window_size, gaps_allowed, score_threshold, df):
     # there is no distance between them
     distance_allowed = window_size * (gaps_allowed + 1)
     chromosome = df.iloc[0].Chromosome
+
+    df = df.sort_values("Bin")
 
     # Code below could probably be optimized....
     # Idea: use one function to do everything

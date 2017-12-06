@@ -55,6 +55,7 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ```
 # 0.2.7 (Unreleased)
+- Fix bug that split enriched regions that should have been whole.
 - Fix for new NA behavior
 
 # 0.2.6 (13.11.17)

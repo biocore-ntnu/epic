@@ -1,3 +1,4 @@
+import sys
 import logging
 from os.path import dirname, join, basename
 from subprocess import call
@@ -14,6 +15,7 @@ from natsort import natsorted
 
 from epic.windows.count.remove_out_of_bounds_bins import remove_bins_with_ends_out_of_bounds
 from epic.config.genomes import get_genome_size_file
+
 
 def write_matrix_files(chip_merged, input_merged, df, args):
     # type: (Dict[str, pd.DataFrame], Dict[str, pd.DataFrame], pd.DataFrame, Namespace) -> None
@@ -57,8 +59,15 @@ def _create_matrixes(chromosome, chip, input, islands,
                      chromosome_size, window_size):
     # type: (str, Dict[str, pd.DataFrame], Dict[str, pd.DataFrame], pd.DataFrame, int, int) -> pd.DataFrame
 
+    # print("islands2\n" + islands.head(10).to_csv(sep=" "), file=sys.stderr)
+
     chip_df = get_chromosome_df(chromosome, chip)
     input_df = get_chromosome_df(chromosome, input)
+
+    try:
+        chromo_islands = islands.xs(chromosome, drop_level=False)
+    except KeyError:
+        return pd.DataFrame(index="Chromosome Bin".split())
 
     chip_df["Chromosome"] = chip_df["Chromosome"].astype("category")
 
@@ -71,11 +80,33 @@ def _create_matrixes(chromosome, chip, input, islands,
 
     chip_df.insert(0, "Bin", bins)
 
+    # print("chip_df1\n", chip_df.head(10).to_csv(sep=" "), file=sys.stderr)
+
     # END workaround
 
     chip_df = chip_df.set_index("Chromosome Bin".split())
-    chip_df = islands.join(chip_df, how="right")
+
+    # removing duplicates to avoid joining problems
     chip_df = chip_df[~chip_df.index.duplicated(keep='first')]
+    chromo_islands = chromo_islands[~chromo_islands.index.duplicated(keep='first')]
+
+    # chromo_islands.to_csv("chromo_islands.csv", sep=" ")
+    # chip_df.to_csv("chip_df.csv", sep=" ")
+    # print(chromo_islands.head(20).to_csv(sep=" "), file=sys.stderr)
+
+    # print(chromosome)
+
+    # print("chip_df2\n", chip_df.head(10).to_csv(sep=" "), file=sys.stderr)
+    # print(chromo_islands.head(10).to_csv(sep=" "), file=sys.stderr)
+    chip_df = chromo_islands.join(chip_df, how="outer").fillna(0)
+    # print("chip_df3\n", chip_df.head(10).to_csv(sep=" "), file=sys.stderr)
+
+    # print("chip_df", chip_df.tail().to_csv(sep=" "), file=sys.stderr)
+
+    chip_df = chip_df[~chip_df.index.duplicated(keep='first')]
+    # print("chip_df4\n", chip_df.head(10).to_csv(sep=" "), file=sys.stderr)
+
+    # print("chip_df", chip_df.tail().to_csv(sep=" "), file=sys.stderr)
 
 
     input_df["Chromosome"] = input_df["Chromosome"].astype("category")
@@ -96,9 +127,15 @@ def _create_matrixes(chromosome, chip, input, islands,
     input_df = input_df[~input_df.index.duplicated(keep='first')]
 
     dfm = chip_df.join(input_df, how="outer", sort=False).fillna(0)
+    # print("dfm1\n", dfm.head(10).to_csv(sep=" "), file=sys.stderr)
 
     dfm = remove_bins_with_ends_out_of_bounds(dfm, chromosome_size,
                                               window_size)
+
+    dfm = dfm[~dfm.index.duplicated(keep='first')]
+    # print("dfm2\n", dfm.head(10).to_csv(sep=" "), file=sys.stderr)
+
+    # print(dfm.tail().to_csv(sep=" "), file=sys.stderr)
 
     return dfm
 
@@ -113,7 +150,10 @@ def create_matrixes(chip, input, df, args):
     input = put_dfs_in_chromosome_dict(input)
     all_chromosomes = natsorted(set(list(chip.keys()) + list(input.keys())))
 
+    # print("df1\n", df, file=sys.stderr)
     islands = enriched_bins(df, args)
+    # print("islands1\n", islands, file=sys.stderr)
+
 
     logging.info("Creating matrixes from count data.")
     dfms = Parallel(n_jobs=args.number_cores)(delayed(_create_matrixes)(
@@ -209,6 +249,10 @@ def get_chromosome_df(chromosome, df_dict):
     else:
         df = pd.DataFrame(columns="Chromosome Bin".split())
 
+
+    # print(chromosome, file=sys.stderr)
+    # print(df, file=sys.stderr)
+
     return df
 
 
@@ -220,7 +264,7 @@ def enriched_bins(df, args):
     idx_rowdicts = []
     for _, row in df.iterrows():
         for bin in range(
-                int(row.Start), int(row.End) + 2, int(args.window_size)):
+                int(row.Start), int(row.End), int(args.window_size)):
             idx_rowdicts.append({"Chromosome": row.Chromosome,
                                  "Bin": bin,
                                  "Enriched": 1})
@@ -229,11 +273,3 @@ def enriched_bins(df, args):
     islands.loc[:, "Bin"].astype(int)
 
     return islands.set_index("Chromosome Bin".split())
-
-
-# def pure_count_matrixes(chip_merged, input_merged, args):
-
-#     "Just create a pure matrix of counts. No enrichment info included."
-
-#     chip = put_dfs_in_chromosome_dict(chip_merged)
-#     input = put_dfs_in_chromosome_dict(chip_merged)

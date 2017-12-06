@@ -1,4 +1,3 @@
-
 import logging
 from collections import defaultdict, OrderedDict
 from os.path import basename
@@ -8,6 +7,26 @@ import pandas as pd
 from docopt import docopt
 from natsort import natsorted
 from joblib import Parallel, delayed
+
+
+from epic.merge.compute_bed_bins import merge_bed_bins, compute_bins
+from epic.merge.merge_helpers import compute_bin_size, add_new_enriched_bins_matrixes
+
+
+
+def main(files, regions, keep_nonenriched, enriched_per_file, nb_cpus):
+
+    dfs = read_dfs(files)
+    bin_size = compute_bin_size(dfs)
+
+    if regions:
+        dfs = add_new_enriched_bins_matrixes(regions, dfs, bin_size)
+        keep_nonenriched = False
+
+    merged_df = merge_matrixes(dfs, keep_nonenriched, regions, enriched_per_file, nb_cpus)
+
+    return merged_df
+
 
 
 def enriched_indexes(dfs):
@@ -70,6 +89,10 @@ def split_dfs_into_chromosome_dfs(dfs, chromosomes):
 
 
 def _merge_dfs(dfs):
+
+    # for df in dfs:
+    #     print("dfdfdf" * 10, df.head().to_csv(sep=" "))
+
     return pd.concat(dfs, axis=1).fillna(0)
 
 
@@ -105,6 +128,7 @@ def merge_matrixes(dfs, keep_nonenriched, regions, enriched_per_file, nb_cpus):
     merged_df = merge_dfs(chromosome_dfs, nb_cpus)
 
     enriched_cols = [c for c in merged_df if "Enriched_" in c]
+
     total_enriched = merged_df[enriched_cols].sum(axis=1)
 
     merged_df.insert(0, "TotalEnriched", total_enriched)
@@ -117,6 +141,11 @@ def merge_matrixes(dfs, keep_nonenriched, regions, enriched_per_file, nb_cpus):
         merged_df = merged_df.drop(enriched_cols, axis=1)
 
     column_order = natsorted(merged_df.columns)
+
+    merged_df = merged_df[merged_df.index.get_level_values("TotalEnriched") > 0]
+    merged_df = merged_df.loc[(merged_df!=0).any(1)]
+
+
 
     return merged_df[column_order]
 
@@ -131,6 +160,8 @@ def read_dfs(files):
     dfs = OrderedDict()
     for f in files:
         df = pd.read_table(f, header=0, sep=" ", index_col=[0, 1])
+
+        df = df[~df.index.duplicated(keep='first')]
 
         columns = list(df.columns)
         file_nick = "Enriched_" + basename(f) if not full_path else "Enriched_" + f
