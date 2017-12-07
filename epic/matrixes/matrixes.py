@@ -27,8 +27,10 @@ def write_matrix_files(chip_merged, input_merged, df, args):
 
     # reset and setting index hack to work around pandas bug
 
-    matrixes = [m.astype(np.float64).reset_index() for m in matrixes]
+    matrixes = [m.astype(np.float64).reset_index() for m in matrixes if not m.empty]
+
     matrix = pd.concat(matrixes, axis=0)
+
     matrix = matrix.set_index("Chromosome Bin".split())
 
     matrix = matrix.drop("Enriched", axis=1)

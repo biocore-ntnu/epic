@@ -17,6 +17,7 @@ ss = sample_sheet
 
 rule all:
     input:
+        f"{prefix}/data/epic-cluster/epic/matrixes.gz",
         expand("{prefix}/data/epic-merge/{caller}/matrixes.gz",
                prefix = prefix,
                cell=cells,
@@ -42,6 +43,7 @@ rule run_epic:
         csv = "{prefix}/data/epic/{cell}.csv",
         bed = "{prefix}/data/epic/{cell}.bed",
         matrix = "{prefix}/data/epic/{cell}.matrix.gz",
+        bigwig = "{prefix}/data/epic/{cell}.bw"
     threads:
         48
     shell:
@@ -49,6 +51,7 @@ rule run_epic:
         "200 -gn hg19 " # -fs 200 "
         "-b {output.bed} -t {input.chip} -c {input.input} "
         "-sm {output.matrix} "
+        " --log2fc-bigwig {output.bigwig}"
         "> {output.csv}"
 
 
@@ -94,3 +97,12 @@ rule test_epic_merge:
         24
     shell:
         "epic-merge -cpu {threads} -o {output[0]} -m {input.matrixes}"
+
+
+rule epic_cluster:
+    input:
+        "{prefix}/data/epic-merge/{caller}/matrixes.gz"
+    output:
+        "{prefix}/data/epic-cluster/{caller}/matrixes.gz"
+    shell:
+        "epic-cluster -m {input[0]} -o {output[0]} -t 1 -cpu 25"

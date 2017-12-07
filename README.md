@@ -55,8 +55,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ```
 # 0.2.7 (Unreleased)
+- Fix bug due to new concat of empty dfs behavior in Pandas
 - Fix bug that split enriched regions that should have been whole.
 - Fix for new NA behavior
+- Fix epic-merge with regions
 
 # 0.2.6 (13.11.17)
 - fix issue #66 (thanks nw11)

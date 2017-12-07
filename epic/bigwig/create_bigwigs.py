@@ -82,6 +82,8 @@ def _create_bigwig(bed_column, outpath, genome_size_dict):
 
 def create_sum_bigwigs(matrix, args):
 
+    print(matrix.head().to_csv(sep=" "))
+
     rpkm_matrix = 1e6 * matrix / matrix.sum()
 
     number_chip_files = len(args.treatment)
