@@ -1,7 +1,6 @@
 # epic: diffuse domain ChIP-Seq caller based on SICER
 
-[![Build Status](https://travis-ci.org/biocore-ntnu/epic.svg?branch=master)](https://travis-ci.org/biocore-ntnu/epic) [![Coverage Status](https://coveralls.io/repos/github/biocore-ntnu/epic/badge.svg?branch=master)](https://coveralls.io/github/biocore-ntnu/epic?branch=master) [![Code Health](https://landscape.io/github/endrebak/epic/master/landscape.svg?style=flat)](https://landscape.io/github/endrebak/epic/master)
-<!-- [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/bioepic/README.html) -->
+[![Build Status](https://travis-ci.org/biocore-ntnu/epic.svg?branch=master)](https://travis-ci.org/biocore-ntnu/epic) [![Coverage Status](https://coveralls.io/repos/github/biocore-ntnu/epic/badge.svg?branch=master)](https://coveralls.io/github/biocore-ntnu/epic?branch=master) [![Code Health](https://landscape.io/github/biocore-ntnu/epic/master/landscape.svg?style=flat)](https://landscape.io/github/biocore-ntnu/epic/master) [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/epic/README.html)
 
 epic is a software package for finding medium to diffusely enriched domains in
 chip-seq data. It is a fast, parallel and memory-efficient implementation of the
@@ -55,6 +54,7 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 ```
 # 0.2.7 (Unreleased)
+- Add bed with region statistics to epic-cluster output
 - Fix bug due to new concat of empty dfs behavior in Pandas
 - Fix bug that split enriched regions that should have been whole.
 - Fix for new NA behavior

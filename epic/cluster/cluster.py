@@ -2,7 +2,6 @@ import pandas as pd
 
 from joblib import Parallel, delayed
 
-from natsort import natsorted
 
 
 def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
@@ -34,7 +33,15 @@ def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
             end = str(gdf2.tail(1).Bin.iloc[0] + bin_size - 1)
             region_id = start + ":" + end
 
+            min_enriched = gdf2.TotalEnriched.min()
+            mean_enriched =  gdf2.TotalEnriched.mean()
+
             gdf3 = pd.DataFrame(gdf2.drop("TotalEnriched Chromosome Bin".split(), 1).sum()).T
+            gdf3.insert(0, "MaxEnrichedCluster", max_value)
+            gdf3.insert(0, "MinEnriched", min_enriched)
+            gdf3.insert(0, "MeanEnriched", mean_enriched)
+            gdf3.insert(0, "Start", int(start))
+            gdf3.insert(0, "End", int(end))
             gdf3.insert(0, "Kind", status)
             gdf3.insert(0, "RegionID", region_id)
             gdf3.insert(0, "IslandID", gid)
@@ -57,13 +64,5 @@ def trunks_flanks_valleys(df, bin_size=200, trunk_diff=1, distance_allowed=200, 
                         df, trunk_diff, bin_size, distance_allowed) for (c, df) in df.groupby("Chromosome"))
 
         outdf = pd.concat(dfs, axis=0)
-        # make all nondata columns one column so r can handle it
-        columns_to_join = "IslandID RegionID Kind".split()
-        index = outdf.Chromosome.str.cat([outdf[c].astype(str) for c in columns_to_join], sep="_")
-        columns_to_drop = columns_to_join + ["Chromosome"]
-        outdf = outdf.drop(columns_to_drop, axis=1)
 
-        col_order = ["Index"] + natsorted([c for c in outdf.columns], key=lambda x: x.split("_"))
-        outdf.insert(0, "Index", index)
-
-        return outdf.set_index("Index")
+        return outdf

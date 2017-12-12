@@ -103,6 +103,7 @@ rule epic_cluster:
     input:
         "{prefix}/data/epic-merge/{caller}/matrixes.gz"
     output:
-        "{prefix}/data/epic-cluster/{caller}/matrixes.gz"
+        matrix = "{prefix}/data/epic-cluster/{caller}/matrixes.gz",
+        bed = "{prefix}/data/epic-cluster/{caller}/clusters.bed"
     shell:
-        "epic-cluster -m {input[0]} -o {output[0]} -t 1 -cpu 25"
+        "epic-cluster -m {input[0]} -o {output.matrix} -B {output.bed} -t 1 -cpu 25"

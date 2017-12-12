@@ -25,6 +25,15 @@ parser.add_argument(
     type=str,
     help='''Where to store the merged matrix.''')
 
+
+parser.add_argument(
+    '--bedfile',
+    '-B',
+    required=True,
+    type=str,
+    help='''Where to store the bed file with info about each cluster.''')
+
+
 parser.add_argument(
     '--trunk-diff',
     '-t',
@@ -75,6 +84,8 @@ from functools import reduce
 import pandas as pd
 from io import StringIO
 
+from natsort import natsorted
+
 from epic.config import logging_settings
 from epic.cluster.cluster import trunks_flanks_valleys
 
@@ -97,7 +108,8 @@ if __name__ == '__main__':
     distance_allowed = args.distance_allowed
     trunk_diff = args.trunk_diff
 
-    df = pd.read_table(matrix, sep=" ", header=0)
+    df = pd.read_table(matrix, sep=" ", header=0, index_col=0).astype(int)
+    df = df.reset_index()
 
     if not args.bin_size:
         bin_size = compute_bin_size(df)
@@ -107,6 +119,21 @@ if __name__ == '__main__':
     if not distance_allowed:
         distance_allowed = bin_size
 
-    df = trunks_flanks_valleys(df, bin_size, trunk_diff, distance_allowed, nb_cpus)
+    outdf = trunks_flanks_valleys(df, bin_size, trunk_diff, distance_allowed, nb_cpus)
 
-    df.to_csv(args.outfile, sep=" ", compression="gzip")
+    columns_to_join = "IslandID RegionID Kind".split()
+
+    # make all nondata columns one column so R can handle it
+    index = outdf.Chromosome.str.cat([outdf[c].astype(str) for c in columns_to_join], sep="_")
+    columns_to_drop = "Chromosome Start End".split() + columns_to_join + "MaxEnrichedCluster MinEnriched MeanEnriched".split()
+
+    bed = outdf[columns_to_drop]
+    bed = bed.drop("RegionID", axis=1)
+
+    outdf = outdf.drop(columns_to_drop, axis=1)
+
+    col_order = ["Index"] + natsorted([c for c in outdf.columns], key=lambda x: x.split("_"))
+    outdf.insert(0, "Index", index)
+
+    outdf.to_csv(args.outfile, sep=" ", compression="gzip")
+    bed.to_csv(args.bedfile, sep="\t", index=False)

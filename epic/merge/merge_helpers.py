@@ -1,4 +1,3 @@
-
 import os
 from functools import reduce
 import logging
@@ -12,11 +11,12 @@ import pandas as pd
 
 from epic.merge.compute_bed_bins import compute_bins, merge_bed_bins
 
+
 def compute_bin_size(dfs):
 
     bin_sizes = []
     for df in dfs.values():
-        bins = df.head(100000).index.get_level_values("Bin")
+        bins = df.head(100000).index.get_level_values("Bin").astype(int)
         bin_size = reduce(gcd, bins)
         bin_sizes.append(bin_size)
 
