@@ -23,7 +23,7 @@ parser.add_argument(
     '-o',
     required=True,
     type=str,
-    help='''Where to store the merged matrix.''')
+    help='''Where to store the cluster matrix.''')
 
 
 parser.add_argument(

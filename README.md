@@ -53,7 +53,7 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
-# 0.2.7 (Unreleased)
+# 0.2.7 (12.12.17)
 - Add bed with region statistics to epic-cluster output
 - Fix bug due to new concat of empty dfs behavior in Pandas
 - Fix bug that split enriched regions that should have been whole.

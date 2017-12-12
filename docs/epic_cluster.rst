@@ -55,6 +55,14 @@ Options
 
    A single epic-merge output matrix.
 
+* **-o, --outfile
+
+   Where to store the cluster matrix
+
+* **-B, --bedfile
+
+   Where to store the bed file with info about each cluster.
+
 * **-t, --trunk-diff**
 
    The difference in number of enriched regions that decides when to consider a
