@@ -68,7 +68,7 @@ chr1 2000 1.0 1.0 0.0"""
 @pytest.fixture
 def expected_result2():
 
-    c = """Chromosome IslandID RegionID Kind End Start MeanEnriched MinEnriched MaxEnrichedCluster A B
+    c = u"""Chromosome IslandID RegionID Kind End Start MeanEnriched MinEnriched MaxEnrichedCluster A B
 0 chr1 0 0:199 flank 199 0 1.0 1.0 5.0 1.0 0.0
 0 chr1 0 200:599 trunk 599 200 4.5 4.0 5.0 1.0 1.0
 0 chr1 1 800:1199 flank 1199 800 1.0 1.0 7.0 1.0 1.0
