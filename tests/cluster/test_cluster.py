@@ -28,9 +28,9 @@ chr1 2000 1.0 1.0 0.0"""
 def expected_result():
 
     c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
-0 chr1 0 0:599 trunk 599 0 1.0 1.0 1.0 2.0 1.0
-0 chr1 1 800:1599 trunk 1599 800 1.0 1.0 1.0 2.0 1.0
-0 chr1 2 1800:2199 trunk 2199 1800 1.0 1.0 1.0 2.0 0.0"""
+0 chr1 chr1_0 0:599 trunk 599 0 1.0 1.0 1.0 2.0 1.0
+0 chr1 chr1_1 800:1599 trunk 1599 800 1.0 1.0 1.0 2.0 1.0
+0 chr1 chr1_2 1800:2199 trunk 2199 1800 1.0 1.0 1.0 2.0 0.0"""
 
     return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0)
 
@@ -69,13 +69,13 @@ chr1 2000 1.0 1.0 0.0"""
 def expected_result2():
 
     c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
-0 chr1 0 0:199 flank 199 0 1.0 1.0 5.0 1.0 0.0
-0 chr1 0 200:599 trunk 599 200 4.5 4.0 5.0 1.0 1.0
-0 chr1 1 800:1199 flank 1199 800 1.0 1.0 7.0 1.0 1.0
-0 chr1 1 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
-0 chr1 1 1400:1799 valley 1799 1400 2.0 2.0 7.0 2.0 0.0
-0 chr1 1 1800:1999 trunk 1999 1800 6.0 6.0 7.0 1.0 0.0
-0 chr1 1 2000:2199 flank 2199 2000 1.0 1.0 7.0 1.0 0.0"""
+0 chr1 chr1_0 0:199 flank 199 0 1.0 1.0 5.0 1.0 0.0
+0 chr1 chr1_0 200:599 trunk 599 200 4.5 4.0 5.0 1.0 1.0
+0 chr1 chr1_1 800:1199 flank 1199 800 1.0 1.0 7.0 1.0 1.0
+0 chr1 chr1_1 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
+0 chr1 chr1_1 1400:1799 valley 1799 1400 2.0 2.0 7.0 2.0 0.0
+0 chr1 chr1_1 1800:1999 trunk 1999 1800 6.0 6.0 7.0 1.0 0.0
+0 chr1 chr1_1 2000:2199 flank 2199 2000 1.0 1.0 7.0 1.0 0.0"""
 
     return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0)
 
@@ -159,13 +159,13 @@ chr1 2000 1.0 1.0 0.0"""
 def expected_result4():
 
     c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
-0 chr1 0 0:199 flank 199 0 1.0 1.0 7.0 1.0 0.0
-0 chr1 0 200:599 trunk 599 200 4.5 4.0 7.0 1.0 1.0
-0 chr1 0 800:1199 valley 1199 800 1.0 1.0 7.0 1.0 1.0
-0 chr1 0 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
-0 chr1 0 1400:1799 valley 1799 1400 2.0 2.0 7.0 2.0 0.0
-0 chr1 0 1800:1999 trunk 1999 1800 6.0 6.0 7.0 1.0 0.0
-0 chr1 0 2000:2199 flank 2199 2000 1.0 1.0 7.0 1.0 0.0"""
+0 chr1 chr1_0 0:199 flank 199 0 1.0 1.0 7.0 1.0 0.0
+0 chr1 chr1_0 200:599 trunk 599 200 4.5 4.0 7.0 1.0 1.0
+0 chr1 chr1_0 800:1199 valley 1199 800 1.0 1.0 7.0 1.0 1.0
+0 chr1 chr1_0 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
+0 chr1 chr1_0 1400:1799 valley 1799 1400 2.0 2.0 7.0 2.0 0.0
+0 chr1 chr1_0 1800:1999 trunk 1999 1800 6.0 6.0 7.0 1.0 0.0
+0 chr1 chr1_0 2000:2199 flank 2199 2000 1.0 1.0 7.0 1.0 0.0"""
     return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0)
 
 
@@ -201,16 +201,16 @@ chr1 2000 1.0 1.0 0.0"""
 def expected_result5():
 
     c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
-0 chr1 0 0:199 trunk 199 0 1.0 1.0 1.0 1.0 0.0
-0 chr1 1 200:399 trunk 399 200 5.0 5.0 5.0 1.0 0.0
-0 chr1 2 400:599 trunk 599 400 4.0 4.0 4.0 0.0 1.0
-0 chr1 3 800:999 trunk 999 800 1.0 1.0 1.0 0.0 1.0
-0 chr1 4 1000:1199 trunk 1199 1000 1.0 1.0 1.0 1.0 0.0
-0 chr1 5 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
-0 chr1 6 1400:1599 trunk 1599 1400 2.0 2.0 2.0 1.0 0.0
-0 chr1 7 1600:1799 trunk 1799 1600 2.0 2.0 2.0 1.0 0.0
-0 chr1 8 1800:1999 trunk 1999 1800 6.0 6.0 6.0 1.0 0.0
-0 chr1 9 2000:2199 trunk 2199 2000 1.0 1.0 1.0 1.0 0.0"""
+0 chr1 chr1_0 0:199 trunk 199 0 1.0 1.0 1.0 1.0 0.0
+0 chr1 chr1_1 200:399 trunk 399 200 5.0 5.0 5.0 1.0 0.0
+0 chr1 chr1_2 400:599 trunk 599 400 4.0 4.0 4.0 0.0 1.0
+0 chr1 chr1_3 800:999 trunk 999 800 1.0 1.0 1.0 0.0 1.0
+0 chr1 chr1_4 1000:1199 trunk 1199 1000 1.0 1.0 1.0 1.0 0.0
+0 chr1 chr1_5 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
+0 chr1 chr1_6 1400:1599 trunk 1599 1400 2.0 2.0 2.0 1.0 0.0
+0 chr1 chr1_7 1600:1799 trunk 1799 1600 2.0 2.0 2.0 1.0 0.0
+0 chr1 chr1_8 1800:1999 trunk 1999 1800 6.0 6.0 6.0 1.0 0.0
+0 chr1 chr1_9 2000:2199 trunk 2199 2000 1.0 1.0 1.0 1.0 0.0"""
 
     return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0)
 
