@@ -16,11 +16,14 @@ def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
         max_value = cdf.TotalEnriched.max()
         chromosome = cdf.Chromosome.head(1).iloc[0]
 
+        cluster_start = str(cdf.head(1).Bin.iloc[0])
+        cluster_end = str(cdf.tail(1).Bin.iloc[0] + bin_size - 1)
+
         dfs2 = []
         # group islands into trunks/flanks/valleys
-        for (i, rdf2) in grpby:
+        for (i, rdf) in grpby:
 
-            is_trunk = rdf2.head(1).TotalEnriched.iloc[0] >= (max_value - trunk_diff)
+            is_trunk = rdf.head(1).TotalEnriched.iloc[0] >= (max_value - trunk_diff)
 
             if not is_trunk and (i == 1 or i == (nb_groups)): # first or last, i.e. flank
                 status = "flank"
@@ -29,14 +32,14 @@ def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
             else:
                 status = "trunk"
 
-            start = str(rdf2.head(1).Bin.iloc[0])
-            end = str(rdf2.tail(1).Bin.iloc[0] + bin_size - 1)
+            start = str(rdf.head(1).Bin.iloc[0])
+            end = str(rdf.tail(1).Bin.iloc[0] + bin_size - 1)
             region_id = start + ":" + end
 
-            min_enriched = rdf2.TotalEnriched.min()
-            median_enriched =  rdf2.TotalEnriched.median()
+            min_enriched = rdf.TotalEnriched.min()
+            median_enriched =  rdf.TotalEnriched.median()
 
-            gdf3 = pd.DataFrame(rdf2.drop("TotalEnriched Chromosome Bin".split(), 1).sum()).T
+            gdf3 = pd.DataFrame(rdf.drop("TotalEnriched Chromosome Bin".split(), 1).sum()).T
             gdf3.insert(0, "MaxEnrichedCluster", max_value)
             gdf3.insert(0, "MinEnrichedRegion", min_enriched)
             gdf3.insert(0, "MedianEnrichedRegion", median_enriched)
@@ -44,7 +47,7 @@ def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
             gdf3.insert(0, "End", int(end))
             gdf3.insert(0, "RegionKind", status)
             gdf3.insert(0, "RegionID", region_id)
-            gdf3.insert(0, "ClusterID", cid)
+            gdf3.insert(0, "ClusterID", "_".join([chromosome, cluster_start, cluster_end]))
             gdf3.insert(0, "Chromosome", chromosome)
 
             dfs2.append(gdf3)
