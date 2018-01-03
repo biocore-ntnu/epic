@@ -121,19 +121,19 @@ if __name__ == '__main__':
 
     outdf = trunks_flanks_valleys(df, bin_size, trunk_diff, distance_allowed, nb_cpus)
 
-    columns_to_join = "IslandID RegionID Kind".split()
+    columns_to_join = "ClusterID RegionID RegionKind".split()
 
     # make all nondata columns one column so R can handle it
     index = outdf.Chromosome.str.cat([outdf[c].astype(str) for c in columns_to_join], sep="_")
-    columns_to_drop = "Chromosome Start End".split() + columns_to_join + "MaxEnrichedCluster MinEnriched MeanEnriched".split()
+    columns_to_drop = "Chromosome Start End".split() + columns_to_join + "MaxEnrichedCluster MinEnrichedRegion MedianEnrichedRegion".split()
 
     bed = outdf[columns_to_drop]
-    bed = bed.drop("RegionID", axis=1)
-
     outdf = outdf.drop(columns_to_drop, axis=1)
 
     col_order = ["Index"] + natsorted([c for c in outdf.columns], key=lambda x: x.split("_"))
     outdf.insert(0, "Index", index)
+    outdf.to_csv(args.outfile, sep=" ", compression="gzip", index=False)
 
-    outdf.to_csv(args.outfile, sep=" ", compression="gzip")
+    bed = bed.drop("RegionID", axis=1)
+
     bed.to_csv(args.bedfile, sep="\t", index=False)

@@ -27,7 +27,7 @@ chr1 2000 1.0 1.0 0.0"""
 @pytest.fixture
 def expected_result():
 
-    c = u"""Chromosome IslandID RegionID Kind End Start MeanEnriched MinEnriched MaxEnrichedCluster A B
+    c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
 0 chr1 0 0:599 trunk 599 0 1.0 1.0 1.0 2.0 1.0
 0 chr1 1 800:1599 trunk 1599 800 1.0 1.0 1.0 2.0 1.0
 0 chr1 2 1800:2199 trunk 2199 1800 1.0 1.0 1.0 2.0 0.0"""
@@ -68,7 +68,7 @@ chr1 2000 1.0 1.0 0.0"""
 @pytest.fixture
 def expected_result2():
 
-    c = u"""Chromosome IslandID RegionID Kind End Start MeanEnriched MinEnriched MaxEnrichedCluster A B
+    c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
 0 chr1 0 0:199 flank 199 0 1.0 1.0 5.0 1.0 0.0
 0 chr1 0 200:599 trunk 599 200 4.5 4.0 5.0 1.0 1.0
 0 chr1 1 800:1199 flank 1199 800 1.0 1.0 7.0 1.0 1.0
@@ -115,7 +115,7 @@ def test_trunks_flanks_valleys2(merged_matrix2, expected_result2):
 # @pytest.fixture
 # def expected_result3():
 
-#     c = u"""Chromosome IslandID RegionID Kind End Start MeanEnriched MinEnriched MaxEnrichedCluster A B
+#     c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
 # 0 chr1 0 0:599 trunk 599 0 3.3333333333333335 1.0 5.0 2.0 1.0
 # 0 chr1 1 800:2199 trunk 2199 800 2.857142857142857 1.0 7.0 5.0 1.0"""
 
@@ -158,7 +158,7 @@ chr1 2000 1.0 1.0 0.0"""
 @pytest.fixture
 def expected_result4():
 
-    c = u"""Chromosome IslandID RegionID Kind End Start MeanEnriched MinEnriched MaxEnrichedCluster A B
+    c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
 0 chr1 0 0:199 flank 199 0 1.0 1.0 7.0 1.0 0.0
 0 chr1 0 200:599 trunk 599 200 4.5 4.0 7.0 1.0 1.0
 0 chr1 0 800:1199 valley 1199 800 1.0 1.0 7.0 1.0 1.0
@@ -200,7 +200,7 @@ chr1 2000 1.0 1.0 0.0"""
 @pytest.fixture
 def expected_result5():
 
-    c = u"""Chromosome IslandID RegionID Kind End Start MeanEnriched MinEnriched MaxEnrichedCluster A B
+    c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
 0 chr1 0 0:199 trunk 199 0 1.0 1.0 1.0 1.0 0.0
 0 chr1 1 200:399 trunk 399 200 5.0 5.0 5.0 1.0 0.0
 0 chr1 2 400:599 trunk 599 400 4.0 4.0 4.0 0.0 1.0

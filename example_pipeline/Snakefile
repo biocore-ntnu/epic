@@ -14,6 +14,9 @@ prefix = config["prefix"]
 sample_sheet = pd.read_table(config["sample_sheet"], sep=" ")
 ss = sample_sheet
 
+wildcard_constraints:
+    cell = "({})".format("|".join(ss.Group.drop_duplicates()))
+
 
 rule all:
     input:
@@ -22,8 +25,9 @@ rule all:
                prefix = prefix,
                cell=cells,
                caller="epic".split()), # macs2
-        f"{prefix}/data/epic-merge/test/matrixes.gz"
-
+        f"{prefix}/data/epic-merge/test/matrixes.gz",
+        f"{prefix}/data/epic/chip_bw/all.bw",
+        f"{prefix}/data/epic/input_bw/all.bw"
 
 
 def get_files(w, chip):
@@ -31,6 +35,13 @@ def get_files(w, chip):
     celltype = w.cell
 
     files = list(ss.loc[(ss.ChIP == chip) & (ss.Group == celltype)].Path)
+
+    return files
+
+
+def get_all_files(chip):
+
+    files = list(ss.loc[ss.ChIP == chip].Path)
 
     return files
 
@@ -43,16 +54,45 @@ rule run_epic:
         csv = "{prefix}/data/epic/{cell}.csv",
         bed = "{prefix}/data/epic/{cell}.bed",
         matrix = "{prefix}/data/epic/{cell}.matrix.gz",
-        bigwig = "{prefix}/data/epic/{cell}.bw"
+        log2_fc_bigwig = "{prefix}/data/epic/log2_fc_{cell}.bw",
+        input_bigwig = "{prefix}/data/epic/input_bw/{cell}.bw",
+        chip_bigwig = "{prefix}/data/epic/chip_bw/{cell}.bw"
+    params:
+        individual_bigwig = "{prefix}/data/epic/bw/",
+        individual_log2_fc_bigwig = "{prefix}/data/epic/i2bw/"
     threads:
         48
     shell:
         "epic -cpu {threads} -g 3 -w "
         "200 -gn hg19 " # -fs 200 "
+        "-fs 200 "
         "-b {output.bed} -t {input.chip} -c {input.input} "
         "-sm {output.matrix} "
-        " --log2fc-bigwig {output.bigwig}"
+        " --bigwig {params.individual_bigwig} "
+        " -i2bw {params.individual_log2_fc_bigwig} "
+        " --log2fc-bigwig {output.log2_fc_bigwig} "
+        " --input-bigwig {output.input_bigwig} "
+        " --chip-bigwig {output.chip_bigwig} "
         "> {output.csv}"
+
+
+rule create_chip_input_sum:
+    input:
+        chip = get_all_files("ChIP"),
+        input = get_all_files("Input")
+    output:
+        sum_chip = "{prefix}/data/epic/chip_bw/all.bw",
+        sum_input = "{prefix}/data/epic/input_bw/all.bw"
+    threads:
+        48
+    shell:
+        "epic -cpu {threads} -g 3 -w "
+        "200 -gn hg19 "
+        "-fs 200 "
+        "-t {input.chip} -c {input.input} "
+        " --input-bigwig {output.sum_input} "
+        " --chip-bigwig {output.sum_chip} "
+        "> /dev/null"
 
 
 rule run_macs2:
@@ -70,8 +110,6 @@ rule run_macs2:
         "macs2 callpeak --nomodel --extsize 200 --broad -t {input.chip} -c {input.input} -n {params.prefix} && mv {params.outfile} {output[0]}"
 
 
-
-
 rule run_epic_merge:
     input:
         matrixes = expand("{{prefix}}/data/epic/{cell}.matrix.gz",
@@ -84,7 +122,6 @@ rule run_epic_merge:
         24
     shell:
         "epic-merge -cpu {threads} -r {input.bed} -o {output[0]} -m {input.matrixes}"
-
 
 
 rule test_epic_merge:
