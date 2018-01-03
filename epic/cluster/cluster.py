@@ -47,7 +47,7 @@ def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
             gdf3.insert(0, "End", int(end))
             gdf3.insert(0, "RegionKind", status)
             gdf3.insert(0, "RegionID", region_id)
-            gdf3.insert(0, "ClusterID", "_".join([chromosome, cluster_start, cluster_end]))
+            gdf3.insert(0, "ClusterID", "_".join([chromosome, str(cid)]))
             gdf3.insert(0, "Chromosome", chromosome)
 
             dfs2.append(gdf3)

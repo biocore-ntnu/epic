@@ -124,7 +124,7 @@ if __name__ == '__main__':
     columns_to_join = "ClusterID RegionID RegionKind".split()
 
     # make all nondata columns one column so R can handle it
-    index = outdf.Chromosome.str.cat([outdf[c].astype(str) for c in columns_to_join], sep="_")
+    index = outdf.ClusterID + "_" + outdf.RegionID + "_" + outdf.RegionKind
     columns_to_drop = "Chromosome Start End".split() + columns_to_join + "MaxEnrichedCluster MinEnrichedRegion MedianEnrichedRegion".split()
 
     bed = outdf[columns_to_drop]
@@ -135,5 +135,6 @@ if __name__ == '__main__':
     outdf.to_csv(args.outfile, sep=" ", compression="gzip", index=False)
 
     bed = bed.drop("RegionID", axis=1)
+    bed.insert(4, "Index", index)
 
     bed.to_csv(args.bedfile, sep="\t", index=False)
