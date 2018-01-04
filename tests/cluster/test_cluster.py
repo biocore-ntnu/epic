@@ -229,6 +229,4 @@ def test_trunks_flanks_valleys5(merged_matrix5, expected_result5):
     print(result.index)
     print(expected_result5.index)
 
-    # print(allclose(result, expected_result))
-
     assert result.equals(expected_result5)
