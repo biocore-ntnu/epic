@@ -143,4 +143,4 @@ rule epic_cluster:
         matrix = "{prefix}/data/epic-cluster/{caller}/matrixes.gz",
         bed = "{prefix}/data/epic-cluster/{caller}/clusters.bed"
     shell:
-        "epic-cluster -m {input[0]} -o {output.matrix} -B {output.bed} -t 1 -cpu 25"
+        "epic-cluster -d 600 -m {input[0]} -o {output.matrix} -B {output.bed} -t 1 -cpu 25"

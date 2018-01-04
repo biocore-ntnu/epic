@@ -3,6 +3,7 @@ import pytest
 from io import StringIO
 
 import pandas as pd
+from numpy import allclose, int64, float64
 
 from epic.cluster.cluster import trunks_flanks_valleys
 
@@ -27,12 +28,12 @@ chr1 2000 1.0 1.0 0.0"""
 @pytest.fixture
 def expected_result():
 
-    c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
-0 chr1 chr1_0 0:599 trunk 599 0 1.0 1.0 1.0 2.0 1.0
-0 chr1 chr1_1 800:1599 trunk 1599 800 1.0 1.0 1.0 2.0 1.0
-0 chr1 chr1_2 1800:2199 trunk 2199 1800 1.0 1.0 1.0 2.0 0.0"""
+    c = u"""Chromosome ClusterID RegionID RegionKind End Start MaxEnrichedCluster Bins TotalEnriched A B
+0 chr1 chr1_0 0:599 trunk 599 0 1.0 0,200,400 1.0,1.0,1.0 2.0 1.0
+0 chr1 chr1_1 800:1599 trunk 1599 800 1.0 800,1000,1200,1400 1.0,1.0,1.0,1.0 2.0 1.0
+0 chr1 chr1_2 1800:2199 trunk 2199 1800 1.0 1800,2000 1.0,1.0 2.0 0.0"""
 
-    return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0)
+    return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0, dtype={"Bins": object, "TotalEnriched": object})
 
 
 def test_trunks_flanks_valleys(merged_matrix, expected_result):
@@ -68,16 +69,16 @@ chr1 2000 1.0 1.0 0.0"""
 @pytest.fixture
 def expected_result2():
 
-    c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
-0 chr1 chr1_0 0:199 flank 199 0 1.0 1.0 5.0 1.0 0.0
-0 chr1 chr1_0 200:599 trunk 599 200 4.5 4.0 5.0 1.0 1.0
-0 chr1 chr1_1 800:1199 flank 1199 800 1.0 1.0 7.0 1.0 1.0
-0 chr1 chr1_1 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
-0 chr1 chr1_1 1400:1799 valley 1799 1400 2.0 2.0 7.0 2.0 0.0
-0 chr1 chr1_1 1800:1999 trunk 1999 1800 6.0 6.0 7.0 1.0 0.0
-0 chr1 chr1_1 2000:2199 flank 2199 2000 1.0 1.0 7.0 1.0 0.0"""
+    c = u"""Chromosome ClusterID RegionID RegionKind End Start MaxEnrichedCluster Bins TotalEnriched A B
+0 chr1 chr1_0 0:199 flank 199 0 5.0 0 1.0 1.0 0.0
+0 chr1 chr1_0 200:599 trunk 599 200 5.0 200,400 5.0,4.0 1.0 1.0
+0 chr1 chr1_1 800:1199 flank 1199 800 7.0 800,1000 1.0,1.0 1.0 1.0
+0 chr1 chr1_1 1200:1399 trunk 1399 1200 7.0 1200 7.0 0.0 0.0
+0 chr1 chr1_1 1400:1799 valley 1799 1400 7.0 1400,1600 2.0,2.0 2.0 0.0
+0 chr1 chr1_1 1800:1999 trunk 1999 1800 7.0 1800 6.0 1.0 0.0
+0 chr1 chr1_1 2000:2199 flank 2199 2000 7.0 2000 1.0 1.0 0.0"""
 
-    return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0)
+    return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0, dtype={"Bins": object, "TotalEnriched": object})
 
 
 def test_trunks_flanks_valleys2(merged_matrix2, expected_result2):
@@ -152,21 +153,21 @@ chr1 1600 2.0 1.0 0.0
 chr1 1800 6.0 1.0 0.0
 chr1 2000 1.0 1.0 0.0"""
 
-    return pd.read_table(StringIO(c), sep=" ", header=0)
+    return pd.read_table(StringIO(c), sep=" ", header=0, )
 
 
 @pytest.fixture
 def expected_result4():
 
-    c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
-0 chr1 chr1_0 0:199 flank 199 0 1.0 1.0 7.0 1.0 0.0
-0 chr1 chr1_0 200:599 trunk 599 200 4.5 4.0 7.0 1.0 1.0
-0 chr1 chr1_0 800:1199 valley 1199 800 1.0 1.0 7.0 1.0 1.0
-0 chr1 chr1_0 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
-0 chr1 chr1_0 1400:1799 valley 1799 1400 2.0 2.0 7.0 2.0 0.0
-0 chr1 chr1_0 1800:1999 trunk 1999 1800 6.0 6.0 7.0 1.0 0.0
-0 chr1 chr1_0 2000:2199 flank 2199 2000 1.0 1.0 7.0 1.0 0.0"""
-    return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0)
+    c = u"""Chromosome ClusterID RegionID RegionKind End Start MaxEnrichedCluster Bins TotalEnriched A B
+0 chr1 chr1_0 0:199 flank 199 0 7.0 0 1.0 1.0 0.0
+0 chr1 chr1_0 200:599 trunk 599 200 7.0 200,400 5.0,4.0 1.0 1.0
+0 chr1 chr1_0 800:1199 valley 1199 800 7.0 800,1000 1.0,1.0 1.0 1.0
+0 chr1 chr1_0 1200:1399 trunk 1399 1200 7.0 1200 7.0 0.0 0.0
+0 chr1 chr1_0 1400:1799 valley 1799 1400 7.0 1400,1600 2.0,2.0 2.0 0.0
+0 chr1 chr1_0 1800:1999 trunk 1999 1800 7.0 1800 6.0 1.0 0.0
+0 chr1 chr1_0 2000:2199 flank 2199 2000 7.0 2000 1.0 1.0 0.0"""
+    return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0, dtype={"Bins": object, "TotalEnriched": object})
 
 
 def test_trunks_flanks_valleys4(merged_matrix4, expected_result4):
@@ -200,19 +201,19 @@ chr1 2000 1.0 1.0 0.0"""
 @pytest.fixture
 def expected_result5():
 
-    c = u"""Chromosome ClusterID RegionID RegionKind End Start MedianEnrichedRegion MinEnrichedRegion MaxEnrichedCluster A B
-0 chr1 chr1_0 0:199 trunk 199 0 1.0 1.0 1.0 1.0 0.0
-0 chr1 chr1_1 200:399 trunk 399 200 5.0 5.0 5.0 1.0 0.0
-0 chr1 chr1_2 400:599 trunk 599 400 4.0 4.0 4.0 0.0 1.0
-0 chr1 chr1_3 800:999 trunk 999 800 1.0 1.0 1.0 0.0 1.0
-0 chr1 chr1_4 1000:1199 trunk 1199 1000 1.0 1.0 1.0 1.0 0.0
-0 chr1 chr1_5 1200:1399 trunk 1399 1200 7.0 7.0 7.0 0.0 0.0
-0 chr1 chr1_6 1400:1599 trunk 1599 1400 2.0 2.0 2.0 1.0 0.0
-0 chr1 chr1_7 1600:1799 trunk 1799 1600 2.0 2.0 2.0 1.0 0.0
-0 chr1 chr1_8 1800:1999 trunk 1999 1800 6.0 6.0 6.0 1.0 0.0
-0 chr1 chr1_9 2000:2199 trunk 2199 2000 1.0 1.0 1.0 1.0 0.0"""
+    c = u"""Chromosome ClusterID RegionID RegionKind End Start MaxEnrichedCluster Bins TotalEnriched A B
+0 chr1 chr1_0 0:199 trunk 199 0 1.0 0 1.0 1.0 0.0
+0 chr1 chr1_1 200:399 trunk 399 200 5.0 200 5.0 1.0 0.0
+0 chr1 chr1_2 400:599 trunk 599 400 4.0 400 4.0 0.0 1.0
+0 chr1 chr1_3 800:999 trunk 999 800 1.0 800 1.0 0.0 1.0
+0 chr1 chr1_4 1000:1199 trunk 1199 1000 1.0 1000 1.0 1.0 0.0
+0 chr1 chr1_5 1200:1399 trunk 1399 1200 7.0 1200 7.0 0.0 0.0
+0 chr1 chr1_6 1400:1599 trunk 1599 1400 2.0 1400 2.0 1.0 0.0
+0 chr1 chr1_7 1600:1799 trunk 1799 1600 2.0 1600 2.0 1.0 0.0
+0 chr1 chr1_8 1800:1999 trunk 1999 1800 6.0 1800 6.0 1.0 0.0
+0 chr1 chr1_9 2000:2199 trunk 2199 2000 1.0 2000 1.0 1.0 0.0"""
 
-    return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0)
+    return pd.read_table(StringIO(c), sep="\s+", header=0, index_col=0, dtype={"Bins": object, "TotalEnriched": object})
 
 
 def test_trunks_flanks_valleys5(merged_matrix5, expected_result5):
@@ -221,5 +222,13 @@ def test_trunks_flanks_valleys5(merged_matrix5, expected_result5):
 
     print(result.to_csv(sep=" "))
     print(expected_result5.to_csv(sep=" "))
+
+    print(result.dtypes)
+    print(expected_result5.dtypes)
+
+    print(result.index)
+    print(expected_result5.index)
+
+    # print(allclose(result, expected_result))
 
     assert result.equals(expected_result5)

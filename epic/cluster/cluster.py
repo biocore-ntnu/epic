@@ -3,7 +3,6 @@ import pandas as pd
 from joblib import Parallel, delayed
 
 
-
 def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
 
     dfs = []
@@ -36,13 +35,18 @@ def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
             end = str(rdf.tail(1).Bin.iloc[0] + bin_size - 1)
             region_id = start + ":" + end
 
-            min_enriched = rdf.TotalEnriched.min()
-            median_enriched =  rdf.TotalEnriched.median()
+            total_enriched = ",".join(rdf.TotalEnriched.astype(str))
+            bins = ",".join(rdf.Bin.astype(str))
+
+            # min_enriched = rdf.TotalEnriched.min()
+            # median_enriched =  rdf.TotalEnriched.median()
 
             gdf3 = pd.DataFrame(rdf.drop("TotalEnriched Chromosome Bin".split(), 1).sum()).T
+            gdf3.insert(0, "TotalEnriched", total_enriched)
+            gdf3.insert(0, "Bins", bins)
             gdf3.insert(0, "MaxEnrichedCluster", max_value)
-            gdf3.insert(0, "MinEnrichedRegion", min_enriched)
-            gdf3.insert(0, "MedianEnrichedRegion", median_enriched)
+            # gdf3.insert(0, "MinEnrichedRegion", min_enriched)
+            # gdf3.insert(0, "MedianEnrichedRegion", median_enriched)
             gdf3.insert(0, "Start", int(start))
             gdf3.insert(0, "End", int(end))
             gdf3.insert(0, "RegionKind", status)

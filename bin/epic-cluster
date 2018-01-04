@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     # make all nondata columns one column so R can handle it
     index = outdf.ClusterID + "_" + outdf.RegionID + "_" + outdf.RegionKind
-    columns_to_drop = "Chromosome Start End".split() + columns_to_join + "MaxEnrichedCluster MinEnrichedRegion MedianEnrichedRegion".split()
+    columns_to_drop = "Chromosome Start End".split() + columns_to_join + "MaxEnrichedCluster Bins TotalEnriched".split()
 
     bed = outdf[columns_to_drop]
     outdf = outdf.drop(columns_to_drop, axis=1)
