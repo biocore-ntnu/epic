@@ -28,8 +28,9 @@ TWOBIT_PATTERN = 'http://hgdownload.soe.ucsc.edu/goldenPath/{genome}/bigZips/{ge
 CHROMSIZES_PATTERN = 'http://hgdownload.soe.ucsc.edu/goldenPath/{genome}/bigZips/{genome}.chrom.sizes'
 
 # genomes = ["hg38"] # "susScr3 susScr2".split() # ["danRer10"] # ['dm3', 'dm6', 'mm9', 'mm10', 'hg19', 'hg38']
-genomes = [s.strip() for s in open("genome_names_no_patches.txt").readlines()]
+# genomes = [s.strip() for s in open("genome_names_no_patches.txt").readlines()]
 ucsc_genomes = ['fr2', 'fr1', 'nomLeu3', 'nomLeu2', 'nomLeu1', 'aquChr2', 'rhiRox1', 'gorGor5', 'gorGor4', 'gorGor3', 'chlSab2', 'cavPor3', 'eriEur2', 'eriEur1', 'equCab2', 'equCab1', 'dipOrd1', 'petMar2', 'petMar1', 'braFlo1', 'anoCar2', 'anoCar1', 'galVar1', 'triMan1', 'calJac3', 'calJac1', 'oryLat2', 'geoFor1', 'pteVam1', 'myoLuc2', 'balAcu1', 'micMur2', 'micMur1', 'hetGla2', 'hetGla1', 'oreNil2', 'monDom5', 'monDom4', 'ponAbe2', 'priPac1', 'chrPic1', 'ailMel1', 'susScr3', 'susScr2', 'ochPri3', 'ochPri2', 'ornAna2', 'ornAna1', 'nasLar1', 'oryCun2', 'rn6', 'rn5', 'rn4', 'rn3', 'rheMac8', 'rheMac3', 'rheMac2', 'proCap1', 'sacCer3', 'sacCer2', 'sacCer1', 'strPur2', 'strPur1', 'aplCal1', 'oviAri3', 'oviAri1', 'sorAra2', 'sorAra1', 'choHof1', 'speTri2', 'saiBol1', 'gasAcu1', 'tarSyr2', 'tarSyr1', 'sarHar1', 'echTel2', 'echTel1', 'tetNig2', 'tetNig1', 'nanPar1', 'tupBel1', 'melGal5', 'melGal1', 'macEug2', 'cerSim1', 'xenTro7', 'xenTro3', 'xenTro2', 'xenTro1', 'taeGut2', 'taeGut1', 'danRer10', 'danRer7', 'danRer6', 'danRer5', 'danRer4', 'danRer3', 'ASM18939v1', 'WH8502_v1', 'WH0401_v1', 'WH0402_v1', 'ASM105083v1', 'ASM24754v1', 'RintRC_1']
+ucsc_genomes = ["ce10", "ce11"]
 
 readlengths = [36, 50, 75, 100]
 

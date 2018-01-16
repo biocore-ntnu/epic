@@ -35,6 +35,20 @@ parser.add_argument(
 
 
 parser.add_argument(
+    '--bigwig',
+    '-bw',
+    required=False,
+    type=str,
+    help='''Where to store the bigwig file that displays the number of enriched experiments in each bin.''')
+
+parser.add_argument(
+    '-g',
+    '--genome',
+    required=False,
+    type=str,
+    help='''Which genome the data is from (hg19, mm10 etc.). Only needed when --bigwig is used.''')
+
+parser.add_argument(
     '--trunk-diff',
     '-t',
     required=False,
@@ -74,29 +88,18 @@ import logging
 
 
 
-try: # py3
-    from math import gcd
-except:
-    from fractions import gcd
-
-from functools import reduce
-
 import pandas as pd
 from io import StringIO
+from subprocess import check_output
 
 from natsort import natsorted
 
 from epic.config import logging_settings
-from epic.cluster.cluster import trunks_flanks_valleys
+from epic.cluster.cluster import trunks_flanks_valleys, create_cluster_bigwig
+from epic.config.genomes import (create_genome_size_dict)
 
+from epic.utils.helper_functions import compute_bin_size
 
-def compute_bin_size(df):
-
-    bins = df.head(10000).Bin
-    bin_size = reduce(gcd, bins)
-    logging.info("The bin size is: " + str(bin_size))
-
-    return bin_size
 
 
 if __name__ == '__main__':
@@ -110,6 +113,11 @@ if __name__ == '__main__':
 
     df = pd.read_table(matrix, sep=" ", header=0, index_col=0).astype(int)
     df = df.reset_index()
+
+    if args.bigwig:
+        if not args.genome:
+            raise Exception("Genome must be given if bigwig flag is used")
+        d = create_genome_size_dict(args.genome)
 
     if not args.bin_size:
         bin_size = compute_bin_size(df)
@@ -138,3 +146,8 @@ if __name__ == '__main__':
     bed.insert(4, "Index", index)
 
     bed.to_csv(args.bedfile, sep="\t", index=False)
+
+    if args.bigwig:
+        create_cluster_bigwig(bed, args.bigwig, d, 200)
+
+    # bigbed.to_csv(args.bigbedfile, sep="\t", index=False, header=False)

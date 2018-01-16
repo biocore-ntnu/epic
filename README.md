@@ -53,6 +53,11 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.8 (unreleased)
+- various updates to epic-cluster
+- now also creates bed that can be turned into bigbed
+- add pseudocounts to ChIP to avoid -inf in bigwigs
+
 # 0.2.7 (12.12.17)
 - Add bed with region statistics to epic-cluster output
 - Fix bug due to new concat of empty dfs behavior in Pandas

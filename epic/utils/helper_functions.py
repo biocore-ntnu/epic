@@ -11,6 +11,13 @@ except ImportError:
     from functools32 import lru_cache # type: ignore
 
 
+try: # py3
+    from math import gcd
+except:
+    from fractions import gcd
+
+from functools import reduce
+
 def _merge_chip_and_input(chip_df, input_df):
     # type: (pd.DataFrame, pd.DataFrame) -> pd.DataFrame
 
@@ -141,3 +148,12 @@ def _merge_same_files(sample1_df, sample2_df):
     # merged_df = merged_df[~merged_df.index.duplicated(keep='first')]
 
     return merged_df.fillna(0)
+
+
+def compute_bin_size(df):
+
+    bins = df.head(10000).Bin
+    bin_size = reduce(gcd, bins)
+    logging.info("The bin size is: " + str(bin_size))
+
+    return bin_size

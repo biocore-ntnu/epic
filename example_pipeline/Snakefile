@@ -27,7 +27,8 @@ rule all:
                caller="epic".split()), # macs2
         f"{prefix}/data/epic-merge/test/matrixes.gz",
         f"{prefix}/data/epic/chip_bw/all.bw",
-        f"{prefix}/data/epic/input_bw/all.bw"
+        f"{prefix}/data/epic/input_bw/all.bw",
+        f"{prefix}/data/epic-cluster/epic/clusters.bigwig"
 
 
 def get_files(w, chip):
@@ -141,6 +142,24 @@ rule epic_cluster:
         "{prefix}/data/epic-merge/{caller}/matrixes.gz"
     output:
         matrix = "{prefix}/data/epic-cluster/{caller}/matrixes.gz",
-        bed = "{prefix}/data/epic-cluster/{caller}/clusters.bed"
+        bed = "{prefix}/data/epic-cluster/{caller}/clusters.bed",
+        bigwig = "{prefix}/data/epic-cluster/{caller}/clusters.bigwig"
     shell:
-        "epic-cluster -d 600 -m {input[0]} -o {output.matrix} -B {output.bed} -t 1 -cpu 25"
+        "epic-cluster -d 600 -m {input[0]} -o {output.matrix} -B {output.bed} -t 1 -cpu 25 -bw {output.bigwig} -g hg19"
+
+
+# rule get_chromsizes:
+#     output:
+#         "{prefix}/data/chromsizes/hg19.txt"
+#     shell:
+#         "fetchChromSizes hg19 > {output}"
+
+
+# rule bed_to_bigbed:
+#     input:
+#         bb = "{prefix}/data/epic-cluster/{caller}/clusters.bigbed",
+#         cs = "{prefix}/data/chromsizes/hg19.txt"
+#     output:
+#         "{prefix}/data/epic-cluster/{caller}/clusters.bb"
+#     shell:
+#         "bedToBigBed {input.bb} {input.cs} {output[0]}"

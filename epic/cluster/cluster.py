@@ -2,6 +2,7 @@ import pandas as pd
 
 from joblib import Parallel, delayed
 
+from epic.bigwig.create_bigwigs import _create_bigwig
 
 def _trunks_flanks_valleys(cdf, trunk_diff, bin_size, distance_allowed):
 
@@ -73,3 +74,43 @@ def trunks_flanks_valleys(df, bin_size=200, trunk_diff=1, distance_allowed=200, 
     outdf = pd.concat(dfs, axis=0)
 
     return outdf
+
+
+def create_cluster_bigwig(df, outpath, genome_size_dict, bin_size):
+
+    bins = pd.DataFrame(df.Bins.str.split(',').tolist(), index=df.Chromosome).stack().reset_index().drop("level_1", 1)
+    bins.columns = ["Chromosome", "Bin"]
+    total_enriched = pd.DataFrame(df.TotalEnriched.str.split(',').tolist(), index=df.Chromosome).stack().reset_index().drop("level_1", 1)
+    total_enriched = total_enriched.drop("Chromosome", 1)
+    total_enriched.columns = ["values"]
+
+    bw = bins.join(total_enriched)
+    bw.loc[:, "Bin"] = bw.Bin.astype(int)
+    bw.insert(2, "End", bw.Bin + bin_size - 1)
+
+    bw = bw.set_index(["Chromosome", "Bin", "End"])
+
+    _create_bigwig(bw, outpath, genome_size_dict)
+
+
+
+
+
+# def create_cluster_bed(bed, bin_size):
+
+#     rowdicts = []
+#     for _, row in bed.iterrows():
+
+#         total_enriched = row.TotalEnriched.split(",")
+#         bins = row.Bins.split(",")
+#         cluster_id = row.Index
+#         chromosome = row.Chromosome
+
+#         for _bin, number in zip(bins, total_enriched):
+#             _bin, number = int(_bin), int(number)
+#             rowdict = {"Chromosome": chromosome, "Start": _bin, "End": _bin +
+#                        bin_size - 1, "Name": cluster_id, "Score": 0, "Strand": "."}
+
+#             rowdicts.extend([rowdict] * number)
+
+#     return pd.DataFrame.from_dict(rowdicts)["Chromosome Start End Name Score Strand".split()]
