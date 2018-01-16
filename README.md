@@ -53,9 +53,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
-# 0.2.8 (unreleased)
+# 0.2.8 (16.01.18)
 - various updates to epic-cluster
-- now also creates bed that can be turned into bigbed
+- epic-cluster now can create bigwig
+- add C. Elegans genomes (ce10, ce11)
 - add pseudocounts to ChIP to avoid -inf in bigwigs
 
 # 0.2.7 (12.12.17)
@@ -67,26 +68,6 @@ https://github.com/endrebak/epic and running `python setup.py install`
 
 # 0.2.6 (13.11.17)
 - fix issue #66 (thanks nw11)
-
-# 0.2.5 (22.08.17)
-- add epic-count script
-- add epic-blacklist script
-- fix bug in paired end mode (thanks to Assa Yeroslaviz for reporting)
-- about 80 new UCSC genomes added!
-
-# 0.2.4 (28.07.17)
-- add pseudocount to input when computing `--individual-log2fc-bigwigs`
-
-# 0.2.3 (25.07.17)
-- fix RPKM normalization in bigwigs
-- add `--individual-log2fc-bigwigs` flag, which creates a log2fc bigwig of the ChIP divided by all the normalized input.
-
-# 0.2.2 (21.07.17)
-- Change flag --effective_genome_fraction to --effective-genome-fraction
-- Fix autoinferring of bed/bedpe when files are (b/g)zipped
-- Use log2FC in output, not raw fold change
-- Now separate flags for sum bigwigs: --chip-bigwig and --input-bigwig
-- Add support for log2FC bigwig: --log2fc-bigwig
 ```
 
 ## Quickstart
