@@ -71,7 +71,7 @@ def args():
 @pytest.fixture
 def matrix():
 
-    c = """Chromosome Bin Enriched /mnt/cargo/epigenome_roadmap/ChIP_1_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/ChIP_2_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/ChIP_3_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/Input_1_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/Input_2_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/Input_3_keratinocyte.bed.gz
+    c = u"""Chromosome Bin Enriched /mnt/cargo/epigenome_roadmap/ChIP_1_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/ChIP_2_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/ChIP_3_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/Input_1_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/Input_2_keratinocyte.bed.gz /mnt/cargo/epigenome_roadmap/Input_3_keratinocyte.bed.gz
 chr1 4163800 0 0 3 0 3 0 2
 chr1 41630000 0 0 0 0 0 3 3
 chr1 41630200 0 0 1 0 0 1 6
