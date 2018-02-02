@@ -7,37 +7,35 @@ bed_file = argv[1]
 
 df = pd.read_table(bed_file)
 
+g1 = df.groupby("ClusterID")
+g2 = iter(df.groupby("ClusterID"))
+
+next(g2)
+
 potential_dfs = []
-for group, gdf in df.groupby("ClusterID"):
+for (group1, gdf1), (group2, gdf2) in zip(g1, g2):
 
-    kinds = gdf.RegionKind
+    kinds = gdf1.RegionKind
 
-    # want all three types of regions to be represented
     if len(set(kinds)) != 3:
         continue
 
-    if len(gdf) != 5:
+    if len(gdf1) >= 15:
         continue
 
-    # max_enriched = gdf.MaxEnrichedCluster.iloc[0]
-
-    # if max_enriched != 3:
-    #     continue
-
-    max_median_enriched = gdf.MedianEnrichedRegion.max()
-
-    if max_median_enriched != 3:
+    if abs(gdf1.tail(1).End.iloc[0] - gdf2.head(1).Start.iloc[0]) > 10000:
         continue
 
-    potential_dfs.append(gdf)
+    max_enriched = 0
 
-new_df = pd.concat(potential_dfs)
+    for enriched in gdf1.TotalEnriched:
+        max_enriched = max(max([int(i) for i in enriched.split(",")]), max_enriched)
 
-for group, gdf in new_df.groupby("ClusterID"):
-    chromosome = gdf.head(1).Chromosome.iloc[0]
-    start = gdf.head(1).Start.iloc[0]
-    end = gdf.tail(1).End.iloc[0]
+    if max_enriched != 3:
+        continue
 
-    print(chromosome, start, end, group, sep="\t")
+    chromosome = gdf1.head(1).Chromosome.iloc[0]
+    start = gdf1.head(1).Start.iloc[0]
+    end = gdf2.tail(1).End.iloc[0]
 
-# print(new_df.to_csv(sep="\t", index=False))
+    print(chromosome, start, end, sep="\t")

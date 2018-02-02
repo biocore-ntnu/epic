@@ -1,13 +1,14 @@
 from snakemake.shell import shell
 
-
 shell.executable("bash")
 
 import pandas as pd
 
 samples = "1 2 3".split()
 cells = "fibroblast keratinocyte melanocyte".split()
+colors = "77,175,74 228,26,28 55,126,184".split()
 
+color_dict = {k: v for k, v in zip(cells, colors)}
 
 prefix = config["prefix"]
 
@@ -25,10 +26,14 @@ rule all:
                prefix = prefix,
                cell=cells,
                caller="epic".split()), # macs2
-        f"{prefix}/data/epic-merge/test/matrixes.gz",
+        # f"{prefix}/data/epic-merge/test/matrixes.gz",
         f"{prefix}/data/epic/chip_bw/all.bw",
         f"{prefix}/data/epic/input_bw/all.bw",
-        f"{prefix}/data/epic-cluster/epic/clusters.bigwig"
+        f"{prefix}/data/epic-cluster/epic/clusters.bigwig",
+        expand("{prefix}/data/publish/{cell}.bb",
+               prefix = prefix,
+               cell=cells,
+               caller="epic".split()), # macs2
 
 
 def get_files(w, chip):
@@ -148,18 +153,36 @@ rule epic_cluster:
         "epic-cluster -d 600 -m {input[0]} -o {output.matrix} -B {output.bed} -t 1 -cpu 25 -bw {output.bigwig} -g hg19"
 
 
-# rule get_chromsizes:
-#     output:
-#         "{prefix}/data/chromsizes/hg19.txt"
-#     shell:
-#         "fetchChromSizes hg19 > {output}"
+rule add_color_to_bedfiles:
+    input:
+        "{prefix}/data/epic/{cell}.bed"
+    output:
+        "{prefix}/data/colored_bed/{cell}.bed"
+    params:
+        rgb = lambda w: color_dict[w.cell]
+    shell:
+        "awk '{{print $1, $2, $3, $4, 0, $6, $2, $3, \"{params.rgb}\"}}' {input[0]} | tr ' ' '\t' | sort -k1,1 -k2,2n > {output[0]}"
 
 
-# rule bed_to_bigbed:
+rule get_chromsizes:
+    output:
+        "{prefix}/data/chromsizes/hg19.txt"
+    shell:
+        "fetchChromSizes hg19 > {output}"
+
+
+rule bed_to_bigbed:
+    input:
+        bb = "{prefix}/data/colored_bed/{cell}.bed",
+        cs = "{prefix}/data/chromsizes/hg19.txt"
+    output:
+        "{prefix}/data/publish/{cell}.bb"
+    shell:
+        "bedToBigBed {input.bb} {input.cs} {output[0]}"
+
+
+# rule color_clusters:
 #     input:
-#         bb = "{prefix}/data/epic-cluster/{caller}/clusters.bigbed",
-#         cs = "{prefix}/data/chromsizes/hg19.txt"
+#         "{prefix}/data/epic-cluster/{caller}/clusters.bed"
 #     output:
-#         "{prefix}/data/epic-cluster/{caller}/clusters.bb"
-#     shell:
-#         "bedToBigBed {input.bb} {input.cs} {output[0]}"
+#         "{prefix}/data/epic-cluster/{caller}/"

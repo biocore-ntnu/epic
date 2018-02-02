@@ -10,27 +10,39 @@ import pyBigWig
 from joblib import Parallel, delayed
 
 
-def create_log2fc_bigwigs(matrix, outdir, args):
-    # type: (pd.DataFrame, str, Namespace) -> None
-    """Create bigwigs from matrix."""
-    call("mkdir -p {}".format(outdir), shell=True)
-    genome_size_dict = args.chromosome_sizes
+
+
+def create_log2fc_data(matrix, args):
 
     input_columns = matrix[args.control]
     input_rpkm_sum = (1e6 * input_columns / input_columns.sum()).sum(axis=1) / len(args.control)
     input_rpkm_sum[input_rpkm_sum == 0] = 1
 
-    outpaths, data = [], []
+    data = []
     for bed_file in matrix[args.treatment]:
-        outpath = join(outdir, splitext(basename(bed_file))[0] + "_log2fc.bw")
-        outpaths.append(outpath)
-
         bed_column = matrix[bed_file]
         bed_column = 1e6 * bed_column / bed_column.sum()
         divided = bed_column / input_rpkm_sum
         divided.loc[divided == 0] = 0.01
         log2_fc_column = np.log2(divided)
         data.append(log2_fc_column)
+
+    return data
+
+
+def create_log2fc_bigwigs(matrix, outdir, args):
+    # type: (pd.DataFrame, str, Namespace) -> None
+    """Create bigwigs from matrix."""
+
+    call("mkdir -p {}".format(outdir), shell=True)
+    genome_size_dict = args.chromosome_sizes
+
+    outpaths = []
+    for bed_file in matrix[args.treatment]:
+        outpath = join(outdir, splitext(basename(bed_file))[0] + "_log2fc.bw")
+        outpaths.append(outpath)
+
+    data = create_log2fc_data(matrix, args)
 
     Parallel(n_jobs=args.number_cores)(delayed(_create_bigwig)(bed_column, outpath, genome_size_dict) for outpath, bed_column in zip(outpaths, data))
 
@@ -94,7 +106,11 @@ def create_sum_bigwigs(matrix, args):
 
     input_pseudo = input.copy()
     input_pseudo.loc[input_pseudo == 0] = 1
-    log2fc = np.log2(chip / input_pseudo.values)
+
+    chip_pseudo = chip.copy()
+    chip_pseudo.loc[chip_pseudo == 0] = 1
+
+    log2fc = np.log2(chip_pseudo / input_pseudo.values)
 
     bigwigs_to_create = []
     if args.chip_bigwig:

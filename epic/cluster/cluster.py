@@ -1,6 +1,6 @@
 import pandas as pd
 
-from joblib import Parallel, delayed
+
 
 from epic.bigwig.create_bigwigs import _create_bigwig
 

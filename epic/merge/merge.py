@@ -90,9 +90,6 @@ def split_dfs_into_chromosome_dfs(dfs, chromosomes):
 
 def _merge_dfs(dfs):
 
-    # for df in dfs:
-    #     print("dfdfdf" * 10, df.head().to_csv(sep=" "))
-
     return pd.concat(dfs, axis=1).fillna(0)
 
 
@@ -143,9 +140,6 @@ def merge_matrixes(dfs, keep_nonenriched, regions, enriched_per_file, nb_cpus):
     column_order = natsorted(merged_df.columns)
 
     merged_df = merged_df[merged_df.index.get_level_values("TotalEnriched") > 0]
-    merged_df = merged_df.loc[(merged_df!=0).any(1)]
-
-
 
     return merged_df[column_order]
 

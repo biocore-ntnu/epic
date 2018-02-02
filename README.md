@@ -53,6 +53,10 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.9 (unreleased)
+- add pseudocounts in sum log2fc bigwigs to avoid inf
+- epic-merge: do not remove bins without any counts if they are enriched
+
 # 0.2.8 (16.01.18)
 - various updates to epic-cluster
 - epic-cluster now can create bigwig

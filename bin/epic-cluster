@@ -142,6 +142,8 @@ if __name__ == '__main__':
     outdf.insert(0, "Index", index)
     outdf.to_csv(args.outfile, sep=" ", compression="gzip", index=False)
 
+    bed.to_csv("data_used.txt", sep=" ")
+
     bed = bed.drop("RegionID", axis=1)
     bed.insert(4, "Index", index)
 
