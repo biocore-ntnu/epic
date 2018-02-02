@@ -102,4 +102,4 @@ def test_create_log2fc_data(matrix, args):
 
     print(result)
 
-    assert 0
+    # assert 0
