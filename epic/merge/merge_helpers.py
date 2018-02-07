@@ -1,6 +1,7 @@
 import os
 from functools import reduce
 import logging
+from collections import OrderedDict
 
 try: # py3
     from math import gcd
@@ -37,46 +38,38 @@ def _remove_epic_enriched(dfs):
 
     return new_dfs
 
+def region_files_to_bins(region_files, names, bin_size):
 
-def add_new_enriched_bins_matrixes(regions, dfs, bin_size):
+    region_files = [(name, pd.read_table(r, sep="\s+", usecols=[0, 1, 2], header=None,
+                                    names=["Chromosome", "Start", "End"])) for name, r in zip(names, region_files)]
+    bins = [compute_bins(df, bin_size, name) for name, df in region_files]
+    regions = merge_bed_bins(bins)
+
+    return regions
+
+
+def add_new_enriched_bins_matrixes(region_files, dfs, bin_size):
+
+    """Add enriched bins based on bed files.
+
+    There is no way to find the correspondence between region file and matrix
+    file, but it does not matter."""
 
     dfs = _remove_epic_enriched(dfs)
 
-    # Create new enriched columns with the region file names
+    names = ["Enriched_" + os.path.basename(r) for r in region_files]
 
-    names = ["Enriched_" + os.path.basename(r) for r in regions]
-    regions = [(name, pd.read_table(r, sep="\s+", usecols=[0, 1, 2], header=None,
-                                    names=["Chromosome", "Start", "End"])) for name, r in zip(names, regions)]
-    bins = [compute_bins(df, bin_size, name) for name, df in regions]
-    r = merge_bed_bins(bins)
+    regions = region_files_to_bins(region_files, names, bin_size)
 
-    # intersect each df with the bins
-    # feilen er her:
-    new_dfs = {}
+    new_dfs = OrderedDict()
 
-    for i, (n, df) in enumerate(dfs.items()):
+    assert len(regions.columns) == len(dfs)
+    for region, (n, df) in zip(regions, dfs.items()):
 
-        df = df.join(r, how="outer").fillna(0)
+        region_col = regions[region]
 
-        if i != 0:
-            df = df.drop(r.columns, axis=1)
+        df = df.join(region_col, how="outer").fillna(0)
 
         new_dfs[n] = df
 
     return new_dfs
-
-    # print("r")
-    # print(r)
-
-    # new_dfs = {}
-
-    # for i, (n, df) in enumerate(dfs.items()):
-
-    #     df = df.drop("Enriched", 1).join(r, how="right").fillna(0)
-    #     df = df.set_index("Enriched", append=True)
-
-    #     new_dfs[n] = df
-    #     # print("new df")
-    #     # print(df.to_csv(sep=" "))
-
-    # return new_dfs
