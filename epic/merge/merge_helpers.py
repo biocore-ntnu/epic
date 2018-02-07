@@ -64,3 +64,19 @@ def add_new_enriched_bins_matrixes(regions, dfs, bin_size):
         new_dfs[n] = df
 
     return new_dfs
+
+    # print("r")
+    # print(r)
+
+    # new_dfs = {}
+
+    # for i, (n, df) in enumerate(dfs.items()):
+
+    #     df = df.drop("Enriched", 1).join(r, how="right").fillna(0)
+    #     df = df.set_index("Enriched", append=True)
+
+    #     new_dfs[n] = df
+    #     # print("new df")
+    #     # print(df.to_csv(sep=" "))
+
+    # return new_dfs

@@ -144,6 +144,22 @@ chr1 16000 0.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 2.0 0.0 0.0 1.0 0.0 0.0 2.0 0.0 0
     return pd.read_table(StringIO(c), sep=" ", index_col=[0, 1, 2])
 
 
+@pytest.fixture
+def simple_dfs():
+
+    od = OrderedDict()
+
+    for n, c in [("melanocyte.matrix", """Chromosome Bin Enriched chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz
+chr1 800 1 0 2 0 0
+chr1 1200 1 13 128 2 2"""),
+                 ("fibroblast.matrix", """Chromosome Bin Enriched chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz
+chr1 800 1 0 2 0 0
+chr1 1200 1 13 128 2 2""")]:
+
+        df = pd.read_table(StringIO(c), sep="\s+", header=0, index_col=[0, 1])
+        od[n] = df
+
+    return od
 # Need to fix test data
 # covered in test merge wiht without equal
 # def test_merge_matrixes_with_regions(dfs, regions, expected_result):
@@ -156,3 +172,57 @@ chr1 16000 0.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 2.0 0.0 0.0 1.0 0.0 0.0 2.0 0.0 0
 #     print(expected_result.to_csv(sep=" "))
 
 #     assert df.equals(expected_result)
+
+
+
+
+@pytest.fixture
+def simple_regions(tmpdir):
+
+    fs = []
+    for i, c in enumerate([
+            """chr1	600	1200	2.2761062711783457e-05	67.49046260339546	.""",
+            """chr1	400	1600	0.0048446172754557214	33.652547110032025	."""],):
+
+        name = str(i)
+        f = tmpdir.mkdir(name).join(name)
+        f.write(c)
+        fs.append(str(f))
+
+    return fs
+
+@pytest.fixture
+def simple_expected_result():
+
+    pass
+# melanocyte.matrix
+# Chromosome Bin Enriched chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz
+# chr1 400 1.0 0.0 0.0 0.0 0.0
+# chr1 600 2.0 0.0 0.0 0.0 0.0
+# chr1 800 2.0 0.0 2.0 0.0 0.0
+# chr1 1000 2.0 0.0 0.0 0.0 0.0
+# chr1 1200 2.0 13.0 128.0 2.0 2.0
+# chr1 1400 1.0 0.0 0.0 0.0 0.0
+# chr1 1600 1.0 0.0 0.0 0.0 0.0
+
+# fibroblast.matrix
+# Chromosome Bin Enriched chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz
+# chr1 400 1.0 0.0 0.0 0.0 0.0
+# chr1 600 2.0 0.0 0.0 0.0 0.0
+# chr1 800 2.0 0.0 2.0 0.0 0.0
+# chr1 1000 2.0 0.0 0.0 0.0 0.0
+# chr1 1200 2.0 13.0 128.0 2.0 2.0
+# chr1 1400 1.0 0.0 0.0 0.0 0.0
+# chr1 1600 1.0 0.0 0.0 0.0 0.0
+
+def test_simple_add_regions(simple_dfs, simple_regions):
+
+    result = add_new_enriched_bins_matrixes(simple_regions, simple_dfs, 200)
+
+    for k, v in result.items():
+        print(k)
+        print(v.to_csv(sep=" "))
+
+    # print(result.to_csv(sep=" "))
+
+    assert 0

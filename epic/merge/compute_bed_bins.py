@@ -21,5 +21,6 @@ def merge_bed_bins(dfs):
 
     df = reduce(lambda l, r: l.join(r, how="outer"), dfs).fillna(0)
     df = df[~df.index.duplicated()]
+    # s.name = "Enriched"
 
     return df

@@ -95,11 +95,6 @@ chr1 41632800 0 1 0 0 1 1 1"""
 @pytest.mark.unit
 def test_create_log2fc_data(matrix, args):
 
-    # print(matrix)
-    # print(args)
-
     result = create_log2fc_data(matrix, args)
 
     print(result)
-
-    # assert 0

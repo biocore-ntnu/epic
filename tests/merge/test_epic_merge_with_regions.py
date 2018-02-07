@@ -116,3 +116,53 @@ def test_epic_merge_with_and_without_regions_gives_same_result(regions, files):
     print(result_without.to_csv(sep=" "))
 
     assert result_regions.equals(result_without)
+
+
+@pytest.fixture
+def simple_regions(tmpdir):
+
+    fs = []
+    for n, c in zip(["melanocyte.matrix", "fibroblast.matrix"], [
+            """chr1	600	1200	2.2761062711783457e-05	67.49046260339546	.""",
+            """chr1	400	1600	0.0048446172754557214	33.652547110032025	."""],):
+
+        n = "regions_" + n
+        f = tmpdir.mkdir(n).join(n)
+        f.write(c)
+        fs.append(str(f))
+
+    return fs
+
+
+@pytest.fixture
+def simple_files(tmpdir):
+
+    od = OrderedDict()
+
+    for n, c in [("melanocyte.matrix", """Chromosome Bin Enriched chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz
+chr1 200 1 0 2 0 0
+chr1 1200 1 13 128 2 2"""),
+                 ("fibroblast.matrix", """Chromosome Bin Enriched chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz
+chr1 200 1 0 2 0 0
+chr1 1200 1 13 128 2 2""")]:
+
+        n = n
+        f = tmpdir.mkdir(n).join(n)
+        f.write(c)
+        od[str(f)] = str(f)
+
+    return od
+
+@pytest.mark.integration
+def test_simple_epic_merge_with_and_without_simple_regions_gives_same_result(simple_regions, simple_files):
+
+    result_simple_regions = main(simple_files, simple_regions, False, False, 1)
+
+    result_without = main(simple_files, None, False, False, 1)
+
+    print("with")
+    print(result_simple_regions.to_csv(sep=" "))
+    print("without")
+    print(result_without.to_csv(sep=" "))
+
+    assert 0 # result_regions.equals(result_without)
