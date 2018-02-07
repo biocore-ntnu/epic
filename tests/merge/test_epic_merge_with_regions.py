@@ -2,6 +2,9 @@ import pytest
 
 from collections import OrderedDict
 
+from io import StringIO
+import pandas as pd
+
 from epic.merge.merge import main
 
 
@@ -102,20 +105,63 @@ chr1 10400 1 3 0 4 3 0 7""")]:
 
     return od
 
+@pytest.fixture
+def expected_result():
+
+    c = """Chromosome Bin TotalEnriched chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_1_keratinocyte.bed.gz chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/ChIP_2_keratinocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/ChIP_3_fibroblast.bed.gz chrX/ChIP_3_keratinocyte.bed.gz chrX/ChIP_3_melanocyte.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_1_keratinocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_fibroblast.bed.gz chrX/Input_2_keratinocyte.bed.gz chrX/Input_2_melanocyte.bed.gz chrX/Input_3_fibroblast.bed.gz chrX/Input_3_keratinocyte.bed.gz chrX/Input_3_melanocyte.bed.gz
+chr1 9800 2.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 2.0 0.0 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 10000 3.0 4.0 13.0 13.0 14.0 15.0 3.0 13.0 17.0 128.0 2.0 11.0 2.0 4.0 2.0 2.0 14.0 17.0 21.0
+chr1 10200 3.0 17.0 13.0 15.0 24.0 25.0 8.0 14.0 23.0 96.0 9.0 16.0 5.0 9.0 2.0 3.0 16.0 24.0 23.0
+chr1 10400 3.0 3.0 2.0 3.0 1.0 0.0 0.0 1.0 2.0 4.0 1.0 10.0 3.0 0.0 0.0 0.0 2.0 3.0 7.0
+chr1 10600 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 10800 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 11000 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 11200 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 11400 2.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 11600 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 11800 2.0 1.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 12000 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 12200 2.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 12400 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 12600 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0
+chr1 12800 2.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 13000 2.0 3.0 0.0 0.0 6.0 0.0 0.0 4.0 6.0 0.0 1.0 7.0 0.0 3.0 1.0 0.0 2.0 3.0 0.0
+chr1 13200 2.0 0.0 0.0 0.0 1.0 2.0 0.0 0.0 0.0 0.0 1.0 2.0 0.0 1.0 1.0 0.0 0.0 1.0 0.0
+chr1 13400 2.0 7.0 1.0 0.0 4.0 1.0 0.0 5.0 6.0 0.0 1.0 4.0 0.0 1.0 0.0 0.0 3.0 2.0 0.0
+chr1 13600 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 13800 2.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 14000 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 14200 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 14400 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 14600 2.0 2.0 0.0 0.0 4.0 0.0 0.0 0.0 3.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0
+chr1 14800 2.0 0.0 1.0 0.0 4.0 2.0 0.0 6.0 4.0 0.0 2.0 6.0 0.0 2.0 0.0 0.0 4.0 0.0 0.0
+chr1 15000 2.0 2.0 1.0 0.0 4.0 0.0 0.0 2.0 3.0 0.0 0.0 2.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0
+chr1 15200 1.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0
+chr1 15400 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 15600 1.0 0.0 0.0 0.0 0.0 0.0 0.0 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0
+chr1 15800 1.0 0.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 16000 1.0 1.0 0.0 0.0 8.0 0.0 0.0 3.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 16200 1.0 0.0 0.0 0.0 6.0 0.0 0.0 5.0 0.0 0.0 1.0 0.0 0.0 3.0 0.0 0.0 2.0 0.0 0.0
+chr1 16400 1.0 3.0 0.0 0.0 5.0 0.0 0.0 3.0 0.0 0.0 4.0 0.0 0.0 7.0 0.0 0.0 0.0 0.0 0.0
+chr1 16600 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 16800 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 17000 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 17200 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 17400 1.0 3.0 0.0 0.0 2.0 0.0 0.0 3.0 0.0 0.0 0.0 0.0 0.0 2.0 0.0 0.0 2.0 0.0 0.0"""
+
+    return pd.read_table(StringIO(c), sep=" ", index_col=[0, 1, 2])
+
 
 @pytest.mark.integration
-def test_epic_merge_with_and_without_regions_gives_same_result(regions, files):
+def test_epic_merge_with(regions, files, expected_result):
 
     result_regions = main(files, regions, False, False, 1, )
 
-    result_without = main(files, None, False, False, 1)
-
     print("with")
     print(result_regions.to_csv(sep=" "))
-    print("without")
-    print(result_without.to_csv(sep=" "))
 
-    assert result_regions.equals(result_without)
+    assert expected_result.equals(result_regions)
+    # assert result_regions.equals(result_without)
 
 
 @pytest.fixture
@@ -153,16 +199,29 @@ chr1 1200 1 13 128 2 2""")]:
 
     return od
 
-@pytest.mark.integration
-def test_simple_epic_merge_with_and_without_simple_regions_gives_same_result(simple_regions, simple_files):
+@pytest.fixture
+def expected_result_simple():
+
+    c = """Chromosome Bin TotalEnriched chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_fibroblast.bed.gz chrX/Input_2_melanocyte.bed.gz
+chr1 400 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 600 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 800 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 1000 2.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 1200 2.0 13.0 13.0 128.0 128.0 2.0 2.0 2.0 2.0
+chr1 1400 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+chr1 1600 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0"""
+
+    return pd.read_table(StringIO(c), sep=" ", index_col=[0, 1, 2])
+
+
+def test_simple_epic_merge_with_regions(simple_regions, simple_files, expected_result_simple):
 
     result_simple_regions = main(simple_files, simple_regions, False, False, 1)
 
-    result_without = main(simple_files, None, False, False, 1)
-
-    print("with")
+    print("result")
     print(result_simple_regions.to_csv(sep=" "))
-    print("without")
-    print(result_without.to_csv(sep=" "))
 
-    assert 0 # result_regions.equals(result_without)
+    print("expected_result")
+    print(expected_result_simple.to_csv(sep=" "))
+
+    assert result_simple_regions.equals(expected_result_simple)
