@@ -181,6 +181,28 @@ rule bed_to_bigbed:
         "bedToBigBed {input.bb} {input.cs} {output[0]}"
 
 
+rule create_trunks_flanks_valleys_bed_with_color:
+    input:
+        "{prefix}/data/epic-cluster/{caller}/clusters.bed"
+    output:
+        "{prefix}/data/epic-cluster/publish/{caller}/clusters.bed"
+    script:
+        "scripts/add_color_trunks_flanks_valleys_bed.py"
+
+
+rule turn_trunks_flanks_valleys_bed_into_bigbed:
+    input:
+        bb = "{prefix}/data/epic-cluster/publish/{caller}/clusters.bed",
+        cs = "{prefix}/data/chromsizes/hg19.txt"
+    output:
+        "{prefix}/data/epic-cluster/publish/{caller}/clusters.bb"
+    shell:
+        "bedToBigBed {input.bb} {input.cs} {output[0]}"
+
+
+
+
+
 # rule color_clusters:
 #     input:
 #         "{prefix}/data/epic-cluster/{caller}/clusters.bed"
