@@ -22,11 +22,11 @@ chr1    236000  236199  chr1_5  chr1_5_236000:236199_flank      flank   3       
 def expected_result():
 
     c = """Chromosome Start End Index Score Strand ThickStart ThickEnd RegionKind
-chr1 89000 89799 chr1_3_89000:89799_valley 0 . 89000 89799 255,255,0
+chr1 89000 89799 chr1_3_89000:89799_valley 0 . 89000 89799 128,0,128
 chr1 89800 91199 chr1_3_89800:91199_trunk 0 . 89800 91199 255,215,0
 chr1 123600 125399 chr1_4_123600:125399_trunk 0 . 123600 125399 255,215,0
 chr1 234200 235999 chr1_5_234200:235999_trunk 0 . 234200 235999 255,215,0
-chr1 236000 236199 chr1_5_236000:236199_flank 0 . 236000 236199 255,218,185"""
+chr1 236000 236199 chr1_5_236000:236199_flank 0 . 236000 236199 255,140,0"""
 
     return pd.read_table(StringIO(c), sep="\s+")
 
