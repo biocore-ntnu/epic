@@ -117,10 +117,10 @@ def simple_dfs():
 
     od = OrderedDict()
 
-    for n, c in [("melanocyte.matrix", """Chromosome Bin Enriched_melano chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz
+    for n, c in [("melanocyte.matrix", u"""Chromosome Bin Enriched_melano chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz
 chr1 800 1 0 2 0 0
 chr1 1200 1 13 128 2 2"""),
-                 ("fibroblast.matrix", """Chromosome Bin Enriched_fibro chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz
+                 ("fibroblast.matrix", u"""Chromosome Bin Enriched_fibro chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz
 chr1 800 1 0 2 0 0
 chr1 1200 1 13 128 2 2""")]:
 
@@ -135,8 +135,8 @@ def simple_regions(tmpdir):
 
     fs = []
     for n, c in zip(["melanocyte", "fibroblast"],
-            ["""chr1	600	1200	2.2761062711783457e-05	67.49046260339546	.""",
-            """chr1	200	1600	0.0048446172754557214	33.652547110032025	."""]):
+            [u"""chr1	600	1200	2.2761062711783457e-05	67.49046260339546	.""",
+             u"""chr1	200	1600	0.0048446172754557214	33.652547110032025	."""]):
 
         name = n
         f = tmpdir.mkdir(name).join(name)
@@ -149,7 +149,7 @@ def simple_regions(tmpdir):
 @pytest.fixture
 def simple_expected_result():
 
-    melano = """Chromosome Bin chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz Enriched_melanocyte
+    melano = u"""Chromosome Bin chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz Enriched_melanocyte
 chr1 200 0.0 0.0 0.0 0.0 0.0
 chr1 400 0.0 0.0 0.0 0.0 0.0
 chr1 600 0.0 0.0 0.0 0.0 1.0
@@ -159,7 +159,7 @@ chr1 1200 13.0 128.0 2.0 2.0 1.0
 chr1 1400 0.0 0.0 0.0 0.0 0.0
 chr1 1600 0.0 0.0 0.0 0.0 0.0"""
 
-    fibro = """Chromosome Bin chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz Enriched_fibroblast
+    fibro = u"""Chromosome Bin chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz Enriched_fibroblast
 chr1 200 0.0 0.0 0.0 0.0 1
 chr1 400 0.0 0.0 0.0 0.0 1
 chr1 600 0.0 0.0 0.0 0.0 1
@@ -192,7 +192,7 @@ def test_simple_add_regions(simple_dfs, simple_regions, simple_expected_result):
 @pytest.fixture
 def expected_melano():
 
-    c = """Chromosome Bin chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/ChIP_3_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz chrX/Input_3_melanocyte.bed.gz Enriched_2
+    c = u"""Chromosome Bin chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/ChIP_3_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz chrX/Input_3_melanocyte.bed.gz Enriched_2
 chr1 9800 0.0 0.0 2.0 0.0 0.0 0.0 1.0
 chr1 10000 13.0 3.0 128.0 2.0 2.0 21.0 1.0
 chr1 10200 15.0 8.0 96.0 5.0 3.0 23.0 1.0
@@ -339,7 +339,7 @@ chr1 91400 0.0 0.0 0.0 0.0 0.0 0.0 0.0"""
 @pytest.fixture
 def expected_keratino():
 
-    c = """Chromosome Bin chrX/ChIP_1_keratinocyte.bed.gz chrX/ChIP_2_keratinocyte.bed.gz chrX/ChIP_3_keratinocyte.bed.gz chrX/Input_1_keratinocyte.bed.gz chrX/Input_2_keratinocyte.bed.gz chrX/Input_3_keratinocyte.bed.gz Enriched_1
+    c = u"""Chromosome Bin chrX/ChIP_1_keratinocyte.bed.gz chrX/ChIP_2_keratinocyte.bed.gz chrX/ChIP_3_keratinocyte.bed.gz chrX/Input_1_keratinocyte.bed.gz chrX/Input_2_keratinocyte.bed.gz chrX/Input_3_keratinocyte.bed.gz Enriched_1
 chr1 9800 1.0 0.0 0.0 2.0 0.0 0.0 1.0
 chr1 10000 13.0 15.0 17.0 11.0 2.0 17.0 1.0
 chr1 10200 13.0 25.0 23.0 16.0 2.0 24.0 1.0
@@ -483,7 +483,7 @@ chr1 91400 0.0 0.0 0.0 0.0 0.0 0.0 0.0"""
 @pytest.fixture
 def expected_fibro():
 
-    c = """Chromosome Bin chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/ChIP_3_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz chrX/Input_3_fibroblast.bed.gz Enriched_0
+    c = u"""Chromosome Bin chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/ChIP_3_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz chrX/Input_3_fibroblast.bed.gz Enriched_0
 chr1 9800 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 chr1 10000 4.0 14.0 13.0 2.0 4.0 14.0 1.0
 chr1 10200 17.0 24.0 14.0 9.0 9.0 16.0 1.0
