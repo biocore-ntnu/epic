@@ -1,3 +1,8 @@
+# 0.2.9 (12.02.18)
+- add pseudocounts in sum log2fc bigwigs to avoid inf
+- epic-merge: do not remove bins without any counts if they are enriched
+- fix outputting of debugging info ("chr1_before_find_islands.csv")
+
 # 0.2.8 (16.01.18)
 - various updates to epic-cluster
 - epic-cluster now can create bigwig

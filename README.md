@@ -53,7 +53,7 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
-# 0.2.9 (unreleased)
+# 0.2.9 (12.02.18)
 - add pseudocounts in sum log2fc bigwigs to avoid inf
 - epic-merge: do not remove bins without any counts if they are enriched
 - fix outputting of debugging info ("chr1_before_find_islands.csv")
