@@ -33,7 +33,7 @@ def dfs():
 
     od = OrderedDict()
 
-    for n, c in [("fibroblast.matrix.gz","""Chromosome Bin Enriched_fibroblast chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/ChIP_3_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz chrX/Input_3_fibroblast.bed.gz
+    for n, c in [("fibroblast.matrix.gz",u"""Chromosome Bin Enriched_fibroblast chrX/ChIP_1_fibroblast.bed.gz chrX/ChIP_2_fibroblast.bed.gz chrX/ChIP_3_fibroblast.bed.gz chrX/Input_1_fibroblast.bed.gz chrX/Input_2_fibroblast.bed.gz chrX/Input_3_fibroblast.bed.gz
 chr1 10000 1 4 14 13 2 4 14
 chr1 10200 1 17 24 14 9 9 16
 chr1 10400 1 3 1 1 1 0 2
@@ -53,7 +53,7 @@ chr1 13800 1 0 0 1 0 0 0
 chr1 14000 1 0 0 0 0 0 0
 chr1 14200 1 0 0 0 0 0 0
 chr1 14400 1 0 0 0 0 0 0"""),
-("keratinocyte.matrix.gz", """Chromosome Bin Enriched_keratinocyte chrX/ChIP_1_keratinocyte.bed.gz chrX/ChIP_2_keratinocyte.bed.gz chrX/ChIP_3_keratinocyte.bed.gz chrX/Input_1_keratinocyte.bed.gz chrX/Input_2_keratinocyte.bed.gz chrX/Input_3_keratinocyte.bed.gz
+("keratinocyte.matrix.gz", u"""Chromosome Bin Enriched_keratinocyte chrX/ChIP_1_keratinocyte.bed.gz chrX/ChIP_2_keratinocyte.bed.gz chrX/ChIP_3_keratinocyte.bed.gz chrX/Input_1_keratinocyte.bed.gz chrX/Input_2_keratinocyte.bed.gz chrX/Input_3_keratinocyte.bed.gz
 chr1 9800 1 1 0 0 2 0 0
 chr1 10000 1 13 15 17 11 2 17
 chr1 10200 1 13 25 23 16 2 24
@@ -73,7 +73,7 @@ chr1 12800 1 0 1 1 0 0 0
 chr1 13000 1 0 0 6 7 1 3
 chr1 13200 1 0 2 0 2 1 1
 chr1 13400 1 1 1 6 4 0 2"""),
-        ("melanocyte.matrix.gz", """Chromosome Bin Enriched_melanocyte chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/ChIP_3_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz chrX/Input_3_melanocyte.bed.gz
+        ("melanocyte.matrix.gz", u"""Chromosome Bin Enriched_melanocyte chrX/ChIP_1_melanocyte.bed.gz chrX/ChIP_2_melanocyte.bed.gz chrX/ChIP_3_melanocyte.bed.gz chrX/Input_1_melanocyte.bed.gz chrX/Input_2_melanocyte.bed.gz chrX/Input_3_melanocyte.bed.gz
 chr1 9800 1 0 0 2 0 0 0
 chr1 10000 1 13 3 128 2 2 21
 chr1 10200 1 15 8 96 5 3 23
