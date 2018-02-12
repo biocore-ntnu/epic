@@ -30,7 +30,7 @@ def compute_bin_size(dfs):
 
 def _remove_epic_enriched(dfs):
 
-    new_dfs = {}
+    new_dfs = OrderedDict()
     for n, df in dfs.items():
         bad_cols = [c for c in df.columns if "Enriched_" in c]
         df = df.drop(bad_cols, axis=1)
