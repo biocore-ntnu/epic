@@ -11,7 +11,7 @@ def add_color_trunks_flanks_valleys_bed(df):
     df.insert(6, "ThickStart", df.Start)
     df.insert(7, "ThickEnd", df.End)
 
-    df.loc[:, "RegionKind"] = df.RegionKind.str.replace("trunk", "255,215,0").str.replace("valley", "128,0,128").str.replace("flank", "255,140,0")
+    df.loc[:, "RegionKind"] = df.RegionKind.str.replace("trunk", "31,120,180").str.replace("valley", "178,223,138").str.replace("flank", "166,206,227")
 
     return df
 
