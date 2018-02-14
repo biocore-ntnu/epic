@@ -81,7 +81,7 @@ def _create_bigwig(bed_column, outpath, genome_size_dict):
     unique_chromosomes = list(bed_column.Chromosome.drop_duplicates())
     chromosomes = list(bed_column.Chromosome)
     starts = _to_int(list(bed_column.Bin))
-    ends = _to_int(list(bed_column.End))
+    ends = _to_int(list(bed_column.End + 1))
 
     header = [(c, int(genome_size_dict[c])) for c in unique_chromosomes]
 
