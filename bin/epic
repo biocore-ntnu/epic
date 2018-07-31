@@ -220,11 +220,6 @@ from epic.config.genomes import (get_effective_genome_length,
                                  create_genome_size_dict, create_genome_size_dict_custom_genome)
 
 
-import warnings
-warnings.filterwarnings("ignore",
-                        category=UserWarning,
-                        module="rpy2")  # rpy2 is noisy
-
 if __name__ == '__main__':
 
 
@@ -263,6 +258,9 @@ if __name__ == '__main__':
 
     most_paired_end = sum([f.endswith(".bedpe") for f in args.treatment]) / float(len(args.treatment)) > 0.5
 
+    if args.chromsizes and not args.effective_genome_fraction:
+        raise Exception("If --chromsizes is given, --effective-genome-fraction must also be given.")
+
     # in case the user entered no effective genome size
     if not args.effective_genome_fraction and not most_paired_end:
         estimated_readlength = find_readlength(args)
@@ -280,6 +278,7 @@ if __name__ == '__main__':
     else:
         args.chromosome_sizes = create_genome_size_dict_custom_genome(args.chromsizes)
         total_genome_length = sum(args.chromosome_sizes.values())
-        args.effective_genome_fraction = total_genome_length * args.effective_genome_fraction
+        args.effective_genome_fraction = args.effective_genome_fraction * total_genome_length
+
 
     run_epic(args)

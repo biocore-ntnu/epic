@@ -91,7 +91,7 @@ def _count_reads_in_windows(bed_file, args, chromosome_size,
         BytesIO(output),
         header=None,
         sep=" ",
-        names=[bed_file, "Chromosome", "Bin"])
+        names=[bed_file, "Chromosome", "Bin"], dtype={"Chromosome": "category", "Strand": "category"})
 
     out_table = remove_out_of_bounds_bins(out_table, chromosome_size)
 
@@ -143,7 +143,8 @@ def _count_reads_in_windows_paired_end(bed_file, args, chromosome_size, chromoso
         BytesIO(stdout),
         header=None,
         sep=" ",
-        names=[bed_file, "Chromosome", "Bin"])
+        names=[bed_file, "Chromosome", "Bin"],
+        dtype={"Chromosome": "category", "Strand": "category"})
 
     if len(out_table) != len(out_table.drop_duplicates("Chromosome Bin".split(
     ))):
@@ -154,6 +155,7 @@ def _count_reads_in_windows_paired_end(bed_file, args, chromosome_size, chromoso
     out_table = remove_out_of_bounds_bins(out_table, chromosome_size)
 
     out_table[["Bin", bed_file]] = out_table[["Bin", bed_file]].astype(int32)
+    # out_table["Chromosome"] = out_table.Chromosome.astype("category")
 
     return out_table
 

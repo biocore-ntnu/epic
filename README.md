@@ -53,6 +53,9 @@ https://github.com/endrebak/epic and running `python setup.py install`
 ## Changelog
 
 ```
+# 0.2.10 (31.07.18)
+- Fix bug in epic when using chromsizes
+
 # 0.2.9 (12.02.18)
 - add pseudocounts in sum log2fc bigwigs to avoid inf
 - epic-merge: do not remove bins without any counts if they are enriched

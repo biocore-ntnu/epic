@@ -59,7 +59,6 @@ def run_epic(args):
 
     dfs = find_islands(dfs, score_threshold, args)
 
-
     logging.info("Done finding islands.")
     logging.info("Concating dfs.")
     df = pd.concat([df for df in dfs if not df.empty])

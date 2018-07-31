@@ -22,22 +22,23 @@ def write_matrix_files(chip_merged, input_merged, df, args):
 
     matrixes = create_matrixes(chip_merged, input_merged, df, args)
 
+    matrix = pd.concat(matrixes, axis=0, sort=False)
+
     if args.store_matrix:
-        print_matrixes(matrixes, args)
+        print_matrixes(matrix, args)
 
     # reset and setting index hack to work around pandas bug
 
-    matrixes = [m.astype(np.float64).reset_index() for m in matrixes if not m.empty]
+    if args.bigwig or args.individual_log2fc_bigwigs or args.chip_bigwig or args.input_bigwig or args.log2fc_bigwig:
+        # matrixes = [m.astype(np.float64).reset_index() for m in matrixes if not m.empty]
 
-    matrix = pd.concat(matrixes, axis=0)
+        matrix = matrix.astype(np.float64)
 
-    matrix = matrix.set_index("Chromosome Bin".split())
-
-    matrix = matrix.drop("Enriched", axis=1)
-    ends = matrix.index.get_level_values("Bin") + int(args.window_size) - 1
-    matrix.insert(0, "End", ends)
-    matrix = matrix.set_index("End", append=True)
-    matrix = matrix.sort_index(level="Chromosome")
+        matrix = matrix.drop("Enriched", axis=1)
+        ends = matrix.index.get_level_values("Bin") + int(args.window_size) - 1
+        matrix.insert(0, "End", ends)
+        matrix = matrix.set_index("End", append=True)
+        matrix = matrix.sort_index(level="Chromosome")
 
     # TODO: remove out of bounds bins
 
@@ -165,7 +166,7 @@ def create_matrixes(chip, input, df, args):
     return dfms
 
 
-def print_matrixes(matrixes, args):
+def print_matrixes(matrix, args):
     # type: (Iterable[pd.DataFrame], Namespace) -> None
     outpath = args.store_matrix
 
@@ -174,20 +175,8 @@ def print_matrixes(matrixes, args):
         call("mkdir -p {}".format(dir), shell=True)
 
     logging.info("Writing data matrix to file: " + outpath)
-    for i, df in enumerate(matrixes):
 
-        if i == 0:
-            header, mode = True, "w+"
-        else:
-            header, mode = False, "a"
-
-        df.astype(int).to_csv(outpath,
-                              sep=" ",
-                              na_rep="NA",
-                              header=header,
-                              mode=mode,
-                              compression="gzip",
-                              chunksize=1e6)
+    matrix.to_csv(outpath, sep=" ", header=True, compression="gzip")
 
 
 def get_island_bins(df, window_size, genome, args):

@@ -4,7 +4,9 @@ from setuptools import setup, find_packages
 # from Cython.Build import cythonize
 
 from epic.version import __version__
-install_requires = ["scipy", "pandas", "numpy", "natsort", "joblib", "pyfaidx", "typing"]
+
+install_requires = ["scipy", "pandas>=0.23.0", "numpy", "natsort", "joblib", "pyfaidx", "typing"]
+
 try:
     os.getenv("TRAVIS")
     install_requires.append("coveralls")
