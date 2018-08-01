@@ -1,4 +1,5 @@
 .coverage.*
+*.so
 *.tar
 *.snakemake*
 _build/
