@@ -1,11 +1,20 @@
 import os
 import sys
-from setuptools import setup, find_packages
+from setuptools import find_packages
 # from Cython.Build import cythonize
+
+
+from distutils.core import setup
+from setuptools import find_packages, Extension, Command
+from Cython.Build import cythonize
+
+
+macros = []
+extensions = [Extension("epic.windows.cluster.src.find_islands", ["epic/windows/cluster/src/find_islands.pyx"], define_macros=macros)]
 
 from epic.version import __version__
 
-install_requires = ["scipy", "pandas>=0.23.0", "numpy", "natsort", "joblib", "pyfaidx", "typing"]
+install_requires = ["scipy", "pandas>=0.23.0", "numpy", "natsort", "joblib", "pyfaidx", "typing", "cython"]
 
 try:
     os.getenv("TRAVIS")
@@ -20,6 +29,7 @@ setup(
     name="bioepic",
     packages=find_packages(),
 
+    ext_modules = cythonize(extensions),
     scripts=["bin/epic", "bin/epic-effective", "bin/epic-overlaps", "bin/epic-merge", "bin/epic-cluster", "bin/epic-count", "bin/epic-blacklist"],
     package_data={'epic': ['scripts/effective_sizes/*.txt',
                            'scripts/chromsizes/*chromsizes',
@@ -43,6 +53,8 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Topic :: Scientific/Engineering"
     ],
+    # package_data={'': ['*.pyx', '*.pxd', '*.h', '*.c']},
+    include_dirs=["."],
     long_description=
     ("Chip-Seq broad peak/domain finder based on SICER. See the url for more info."
      ))

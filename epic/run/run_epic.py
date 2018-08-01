@@ -6,7 +6,7 @@ __author__ = "Endre Bakken Stovner https://github.com/endrebak/"
 __license__ = "MIT"
 
 from os.path import dirname, join, basename
-from sys import stdout, argv
+from sys import stdout, argv, stderr
 from itertools import chain
 from collections import OrderedDict
 from subprocess import call
@@ -36,8 +36,10 @@ def run_epic(args):
     chip_windows = multiple_files_count_reads_in_windows(args.treatment, args)
     input_windows = multiple_files_count_reads_in_windows(args.control, args)
 
+    # print("merging chip" * 10, file=stderr)
     chip_merged = _merge_files(chip_windows.values(), args.number_cores)
 
+    # print("merging input" * 10, file=stderr)
     input_merged = _merge_files(input_windows.values(), args.number_cores)
 
     chip_merged_sum = sum_columns(chip_merged)

@@ -35,7 +35,8 @@ def write_matrix_files(chip_merged, input_merged, df, args):
         matrix = matrix.astype(np.float64)
 
         matrix = matrix.drop("Enriched", axis=1)
-        ends = matrix.index.get_level_values("Bin") + int(args.window_size) - 1
+        print(matrix.head())
+        ends = matrix.index.get_level_values("Bin") + (int(args.window_size) - 1)
         matrix.insert(0, "End", ends)
         matrix = matrix.set_index("End", append=True)
         matrix = matrix.sort_index(level="Chromosome")

@@ -1,4 +1,5 @@
 import logging
+import sys
 from natsort import natsorted
 
 from joblib import Parallel, delayed
@@ -33,7 +34,7 @@ def _merge_chip_and_input(chip_df, input_df):
     merged_df = merged_df[["Chromosome", "Bin", "Count ChIP", "Count Input"]]
     merged_df.columns = ["Chromosome", "Bin", "ChIP", "Input"]
 
-    merged_df = merged_df.fillna(0)
+    merged_df.loc[:, ["ChIP", "Input"]] = merged_df[["ChIP", "Input"]].fillna(0)
 
     if not len(merged_df) == chip_df_nb_bins:
         assertion_message = [
@@ -140,14 +141,20 @@ def merge_same_files(sample1_dfs, sample2_dfs, nb_cpu):
 
 def _merge_same_files(sample1_df, sample2_df):
     # type: (pd.DataFrame, pd.DataFrame) -> pd.DataFrame
+    chromosome = sample1_df.head(1).Chromosome.iloc[0]
 
     # copying here due to pandas multiprocessing bug; source array is read only
     merged_df = sample1_df.copy().merge(sample2_df.copy(),
                                  how="outer",
                                  on=["Chromosome", "Bin"])
-    # merged_df = merged_df[~merged_df.index.duplicated(keep='first')]
 
-    return merged_df.fillna(0)
+    # merged_df.to_csv("merged_df_{chromosome}.txt".format(chromosome=chromosome), sep=" ", na_rep="NA")
+    merged_df.Chromosome = merged_df.Chromosome.astype("category")
+
+    non_idx_cols = [c for c in merged_df.columns if c not in "Chromosome Bin".split()]
+    merged_df[non_idx_cols] = merged_df[non_idx_cols].fillna(0)
+
+    return merged_df
 
 
 def compute_bin_size(df):
