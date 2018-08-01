@@ -4,7 +4,7 @@ import sys
 
 
 from distutils.core import setup
-from setuptools import find_packages, Extension, Command
+from setuptools import find_packages, Extension
 from Cython.Build import cythonize
 
 

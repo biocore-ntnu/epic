@@ -24,6 +24,7 @@ install:
   - conda info -a
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION joblib numpy scipy pandas pytest pytest-cov pybigwig typing statsmodels cython
   - source activate test-environment
+  - python setup.py build_ext --inplace
   - python setup.py install
   - python --version
   - python -c 'import pandas as pd; print(pd.__version__)'
