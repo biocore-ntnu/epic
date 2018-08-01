@@ -1,6 +1,5 @@
 import os
 import sys
-from setuptools import find_packages
 # from Cython.Build import cythonize
 
 
@@ -33,7 +32,8 @@ setup(
     scripts=["bin/epic", "bin/epic-effective", "bin/epic-overlaps", "bin/epic-merge", "bin/epic-cluster", "bin/epic-count", "bin/epic-blacklist"],
     package_data={'epic': ['scripts/effective_sizes/*.txt',
                            'scripts/chromsizes/*chromsizes',
-                           'scripts/genome.snakefile']},
+                           'scripts/genome.snakefile'],
+                  '': ['*.pyx', '*.pxd', '*.h', '*.c']},
     version=__version__,
     description="Chip-Seq broad peak/domain finder.",
     author="Endre Bakken Stovner",
@@ -53,7 +53,6 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Topic :: Scientific/Engineering"
     ],
-    # package_data={'': ['*.pyx', '*.pxd', '*.h', '*.c']},
     include_dirs=["."],
     long_description=
     ("Chip-Seq broad peak/domain finder based on SICER. See the url for more info."
