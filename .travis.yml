@@ -29,6 +29,7 @@ install:
   - python -c 'import pandas as pd; print(pd.__version__)'
   - ls tests
   - ls -latrh examples
+  - ls epic/src
 
 script: python -m pytest -sv --cov=epic tests
 
