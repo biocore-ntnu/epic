@@ -9,7 +9,7 @@ from Cython.Build import cythonize
 
 
 macros = []
-extensions = [Extension("epic.windows.cluster.src.find_islands", ["epic/windows/cluster/src/find_islands.pyx"], define_macros=macros)]
+extensions = [Extension("epic.src.find_islands", ["epic/src/find_islands.pyx"], define_macros=macros)]
 
 from epic.version import __version__
 

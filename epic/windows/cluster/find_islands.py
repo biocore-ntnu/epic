@@ -9,7 +9,7 @@ from joblib import Parallel, delayed
 from typing import Iterable
 from argparse import Namespace
 
-from epic.windows.cluster.src.find_islands import _find_islands_cython
+from epic.src.find_islands import _find_islands_cython
 
 def find_islands(dfs, score_threshold, args):
     # type: (Iterable[pd.DataFrame], float, Namespace) -> Iterable[pd.DataFrame]
