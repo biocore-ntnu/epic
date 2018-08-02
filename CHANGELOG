@@ -1,3 +1,14 @@
+# 0.2.12 (02.08.18)
+- Fix bug in bigwig creation (due to new pd behavior)
+
+# 0.2.11 (01.08.18)
+- Massive speedup with Cython
+- Fix bugs added by 0.2.10
+
+# 0.2.10 (31.07.18)
+- Use categoricals for memory efficiency and speed
+- Fix bug in epic when using chromsizes
+
 # 0.2.9 (12.02.18)
 - add pseudocounts in sum log2fc bigwigs to avoid inf
 - epic-merge: do not remove bins without any counts if they are enriched

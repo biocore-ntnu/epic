@@ -23,21 +23,19 @@ def write_matrix_files(chip_merged, input_merged, df, args):
     matrixes = create_matrixes(chip_merged, input_merged, df, args)
 
     matrix = pd.concat(matrixes, axis=0, sort=False)
+    matrix = matrix.dropna()
+
+    matrix = matrix.set_index("Chromosome Bin".split())
 
     if args.store_matrix:
         print_matrixes(matrix, args)
 
-    # reset and setting index hack to work around pandas bug
-
     if args.bigwig or args.individual_log2fc_bigwigs or args.chip_bigwig or args.input_bigwig or args.log2fc_bigwig:
-        # matrixes = [m.astype(np.float64).reset_index() for m in matrixes if not m.empty]
-
         matrix = matrix.astype(np.float64)
-
         matrix = matrix.drop("Enriched", axis=1)
-        print(matrix.head())
-        ends = matrix.index.get_level_values("Bin") + (int(args.window_size) - 1)
+        ends = pd.Series(matrix.index.get_level_values("Bin"), index=matrix.index) + (int(args.window_size) - 1)
         matrix.insert(0, "End", ends)
+
         matrix = matrix.set_index("End", append=True)
         matrix = matrix.sort_index(level="Chromosome")
 
@@ -89,6 +87,7 @@ def _create_matrixes(chromosome, chip, input, islands,
     # END workaround
 
     chip_df = chip_df.set_index("Chromosome Bin".split())
+    # print("chilp_df", chip_df.head())
 
     # removing duplicates to avoid joining problems
     chip_df = chip_df[~chip_df.index.duplicated(keep='first')]
@@ -140,7 +139,9 @@ def _create_matrixes(chromosome, chip, input, islands,
     # print("dfm2\n", dfm.head(10).to_csv(sep=" "), file=sys.stderr)
 
     # print(dfm.tail().to_csv(sep=" "), file=sys.stderr)
+    # print(dfm.head(), file=sys.stderr)
 
+    dfm.reset_index(inplace=True)
     return dfm
 
 
