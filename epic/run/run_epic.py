@@ -33,6 +33,8 @@ from epic.matrixes.matrixes import write_matrix_files
 def run_epic(args):
     # type: (Namespace) -> pd.DataFrame
 
+    print(args.effective_genome_fraction)
+
     chip_windows = multiple_files_count_reads_in_windows(args.treatment, args)
     input_windows = multiple_files_count_reads_in_windows(args.control, args)
 
@@ -46,6 +48,8 @@ def run_epic(args):
     input_merged_sum = sum_columns(input_merged)
 
     nb_chip_reads = get_total_number_of_reads(chip_merged_sum)
+
+    print(nb_chip_reads)
 
     nb_input_reads = get_total_number_of_reads(input_merged_sum)
 
