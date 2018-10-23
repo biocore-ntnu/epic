@@ -1,3 +1,5 @@
+# DEPRECATED. See https://github.com/endrebak/SICER2
+
 # epic: diffuse domain ChIP-Seq caller based on SICER
 
 [![Build Status](https://travis-ci.org/biocore-ntnu/epic.svg?branch=master)](https://travis-ci.org/biocore-ntnu/epic) [![Coverage Status](https://coveralls.io/repos/github/biocore-ntnu/epic/badge.svg?branch=master)](https://coveralls.io/github/biocore-ntnu/epic?branch=master) [![Code Health](https://landscape.io/github/biocore-ntnu/epic/master/landscape.svg?style=flat)](https://landscape.io/github/biocore-ntnu/epic/master) [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/epic/README.html) [![Documentation Status](https://readthedocs.org/projects/bioepic/badge/?version=latest)](http://bioepic.readthedocs.org/en/latest/)
