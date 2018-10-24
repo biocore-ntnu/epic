@@ -15,11 +15,8 @@ from epic.version import __version__
 
 install_requires = ["scipy", "pandas>=0.23.0", "numpy", "natsort", "joblib", "pyfaidx", "typing", "cython"]
 
-try:
-    os.getenv("TRAVIS")
+if os.getenv("TRAVIS"):
     install_requires.append("coveralls")
-except:
-    pass
 
 if sys.version_info[0] == 2:
     install_requires.append("functools32")
