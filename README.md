@@ -1,6 +1,6 @@
 # DEPRECATED. See https://github.com/endrebak/SICER2
 
-There were some issues with the statistics in epic. I would recommend you rerun your analyses with epic2 as it uses the exact same recurrence relation computation as SICER, without any heuristics.
+I would recommend you rerun your analyses with epic2 as it uses the exact same recurrence relation computation as SICER, without any heuristics. This is a very minor issue though :)
 
 # epic: diffuse domain ChIP-Seq caller based on SICER
 
